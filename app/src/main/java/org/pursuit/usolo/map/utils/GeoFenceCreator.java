@@ -1,8 +1,8 @@
 package org.pursuit.usolo.map.utils;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -25,18 +25,20 @@ public class GeoFenceCreator {
     private GeofencingClient geofencingClient;
     private Geofence geofence;
     private MapboxMap map;
-    private Activity activity;
+    private Context context;
+    private LatLng latLng;
 
-    public GeoFenceCreator(MapboxMap map, Activity activity) {
+    public GeoFenceCreator(MapboxMap map, Context context, LatLng latLng) {
         this.map = map;
-        this.activity = activity;
+        this.context = context;
+        this.latLng = latLng;
     }
 
     public void initGeoFenceClient() {
-        geofencingClient = LocationServices.getGeofencingClient(activity);
+        geofencingClient = LocationServices.getGeofencingClient(context);
     }
 
-    public void buildGeoFence(LatLng latLng) {
+    public void buildGeoFence() {
         geofence = new Geofence.Builder()
                 .setRequestId("TestFence")
                 .setCircularRegion(latLng.getLatitude(), latLng.getLongitude(), 20f)
@@ -45,7 +47,7 @@ public class GeoFenceCreator {
                 .build();
     }
 
-    public void createVisualGeoFence(LatLng latLng) {
+    public void createVisualGeoFence() {
         map.addPolygon(new PolygonOptions()
                 .add(latLng)
                 .strokeColor(Color.argb(50, 70, 70, 70))
@@ -54,12 +56,12 @@ public class GeoFenceCreator {
     }
 
     public void addGeoFenceToClient() {
-        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestLocationPermission();
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            geofencingClient.addGeofences(getGeoFencingRequest(), getGeoFencePendingIntent())
+              .addOnSuccessListener(aVoid -> Log.d(TAG, "onSuccess: added fence"))
+              .addOnFailureListener(e -> Log.d(TAG, "onFailure: " + e));
         }
-        geofencingClient.addGeofences(getGeoFencingRequest(), getGeoFencePendingIntent())
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "onSuccess: added fence"))
-                .addOnFailureListener(e -> Log.d(TAG, "onFailure: " + e));
+
     }
 
     private GeofencingRequest getGeoFencingRequest() {
@@ -71,20 +73,12 @@ public class GeoFenceCreator {
 
     private PendingIntent getGeoFencePendingIntent() {
         PendingIntent geoFencePendingIntent;
-        Intent intent = new Intent(activity, GeoFencingIntentService.class);
-        geoFencePendingIntent = PendingIntent.getService(activity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intent = new Intent(context, GeoFencingIntentService.class);
+        geoFencePendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return geoFencePendingIntent;
     }
 
-    private void requestLocationPermission() {
-        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1020);
-        } else {
-        }
-    }
-
     public void tearDown(){
-
+        context = null;
     }
 }
