@@ -13,9 +13,9 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.LatLng;
+import com.mapbox.mapboxsdk.annotations.PolygonOptions;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 import org.pursuit.usolo.map.services.GeoFencingIntentService;
 
@@ -24,11 +24,11 @@ public class GeoFenceCreator {
     private static final String TAG = "GeoFenceCreator";
     private GeofencingClient geofencingClient;
     private Geofence geofence;
-    private GoogleMap mMap;
+    private MapboxMap map;
     private Activity activity;
 
-    public GeoFenceCreator(GoogleMap mMap, Activity activity) {
-        this.mMap = mMap;
+    public GeoFenceCreator(MapboxMap map, Activity activity) {
+        this.map = map;
         this.activity = activity;
     }
 
@@ -39,19 +39,18 @@ public class GeoFenceCreator {
     public void buildGeoFence(LatLng latLng) {
         geofence = new Geofence.Builder()
                 .setRequestId("TestFence")
-                .setCircularRegion(latLng.latitude, latLng.longitude, 20f)
+                .setCircularRegion(latLng.getLatitude(), latLng.getLongitude(), 20f)
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
                 .build();
     }
 
     public void createVisualGeoFence(LatLng latLng) {
-        mMap.addCircle(new CircleOptions()
-                .center(new LatLng(latLng.latitude, latLng.longitude))
+        map.addPolygon(new PolygonOptions()
+                .add(latLng)
                 .strokeColor(Color.argb(50, 70, 70, 70))
-                .fillColor(Color.argb(100, 150, 150, 150))
-                .clickable(true)
-                .radius(20f));
+                .fillColor(Color.argb(100, 150, 150, 150)));
+
     }
 
     public void addGeoFenceToClient() {
@@ -82,7 +81,6 @@ public class GeoFenceCreator {
                 ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1020);
         } else {
-            mMap.setMyLocationEnabled(true);
         }
     }
 
