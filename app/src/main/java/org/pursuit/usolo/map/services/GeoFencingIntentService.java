@@ -24,7 +24,7 @@ public class GeoFencingIntentService extends IntentService {
 
         int TransitionType = geofencingEvent.getGeofenceTransition();
 
-        switch (TransitionType){
+        switch (TransitionType) {
             case Geofence.GEOFENCE_TRANSITION_ENTER:
                 sendNotification("Just Entered Fence");
                 break;
@@ -42,7 +42,7 @@ public class GeoFencingIntentService extends IntentService {
     }
 
     private void sendNotification(String message) {
-        new Notification(this,message);
+        new Notification(this, message);
     }
 
 

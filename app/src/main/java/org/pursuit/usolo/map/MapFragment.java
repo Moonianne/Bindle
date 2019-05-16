@@ -47,10 +47,10 @@ public final class MapFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mapView = view.findViewById(R.id.mapView);
         mapView.getMapAsync(mapboxMap ->
-                mapboxMap.setStyle(Style.MAPBOX_STREETS,
-                        style -> {
-    // TODO: Map is set up and the style has loaded. Now you can add data or make other map adjustments
-                }));
+          mapboxMap.setStyle(Style.MAPBOX_STREETS,
+            style -> {
+                // TODO: Map is set up and the style has loaded. Now you can add data or make other map adjustments
+            }));
     }
 
     @Override

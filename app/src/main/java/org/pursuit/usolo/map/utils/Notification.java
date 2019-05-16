@@ -23,14 +23,14 @@ public class Notification {
         sendNotification();
     }
 
-    private android.app.Notification buildNotification(){
-    NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
-            .setContentTitle("Test Maps")
-            .setContentText("GeoFenceActivated - " + message)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-    return builder.build();
-}
+    private android.app.Notification buildNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+          .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+          .setContentTitle("Test Maps")
+          .setContentText("GeoFenceActivated - " + message)
+          .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        return builder.build();
+    }
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -43,7 +43,7 @@ public class Notification {
     }
 
     private void sendNotification() {
-        notificationManager.notify(NOTIFICATION_ID,buildNotification());
+        notificationManager.notify(NOTIFICATION_ID, buildNotification());
         context = null;
     }
 

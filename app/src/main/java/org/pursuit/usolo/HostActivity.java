@@ -18,8 +18,8 @@ public final class HostActivity extends AppCompatActivity {
 
     private void inflateFragment(Fragment fragment) {
         getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.main_container, fragment)
-                .commit();
+          .beginTransaction()
+          .replace(R.id.main_container, fragment)
+          .commit();
     }
 }

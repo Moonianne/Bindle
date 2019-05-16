@@ -36,11 +36,11 @@ public class GeoFenceCreator {
 
     public void buildGeoFence() {
         geofence = new Geofence.Builder()
-                .setRequestId("TestFence")
-                .setCircularRegion(latLng.getLatitude(), latLng.getLongitude(), 20f)
-                .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
-                .build();
+          .setRequestId("TestFence")
+          .setCircularRegion(latLng.getLatitude(), latLng.getLongitude(), 20f)
+          .setExpirationDuration(Geofence.NEVER_EXPIRE)
+          .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+          .build();
     }
 
     public void addGeoFenceToClient() {
@@ -61,11 +61,11 @@ public class GeoFenceCreator {
 
     private PendingIntent getGeoFencePendingIntent() {
         return PendingIntent.getService(context, 0,
-            new Intent(context, GeoFencingIntentService.class),
+          new Intent(context, GeoFencingIntentService.class),
           PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    public void tearDown(){
+    public void tearDown() {
         context = null;
     }
 }
