@@ -24,12 +24,10 @@ public class GeoFenceCreator {
     private static final String TAG = "GeoFenceCreator";
     private GeofencingClient geofencingClient;
     private Geofence geofence;
-    private MapboxMap map;
     private Context context;
     private LatLng latLng;
 
-    public GeoFenceCreator(MapboxMap map, Context context, LatLng latLng) {
-        this.map = map;
+    public GeoFenceCreator(Context context, LatLng latLng) {
         this.context = context;
         this.latLng = latLng;
     }
@@ -45,14 +43,6 @@ public class GeoFenceCreator {
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
                 .build();
-    }
-
-    public void createVisualGeoFence() {
-        map.addPolygon(new PolygonOptions()
-                .add(latLng)
-                .strokeColor(Color.argb(50, 70, 70, 70))
-                .fillColor(Color.argb(100, 150, 150, 150)));
-
     }
 
     public void addGeoFenceToClient() {
