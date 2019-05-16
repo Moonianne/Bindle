@@ -29,8 +29,6 @@ public final class HostActivity extends AppCompatActivity {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
         Zone zone = new Zone("Pursuit", new LatLng(40.7430877d, -73.9419287d), 0);
         ref.setValue(zone);
-        ZoneRepository zoneRepository = new ZoneRepository();
-        zoneRepository.subscribeToUpdates();
         requestUserLocationPermission();
 
         inflateFragment(MapFragment.newInstance());

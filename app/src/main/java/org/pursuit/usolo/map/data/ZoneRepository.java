@@ -30,12 +30,13 @@ public final class ZoneRepository {
         });
     }
 
-    public void subscribeToUpdates() {
+    public void subscribeToUpdates(OnUpdatesEmittedListener listener) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(PATH);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Zone value = dataSnapshot.getValue(Zone.class);
+                listener.emitUpdate(value);
                 Log.d(TAG, "onDataChange: " + value.name);
             }
 
@@ -44,5 +45,9 @@ public final class ZoneRepository {
                 //No-op
             }
         });
+    }
+
+    public interface OnUpdatesEmittedListener{
+        void emitUpdate(Zone zone);
     }
 }

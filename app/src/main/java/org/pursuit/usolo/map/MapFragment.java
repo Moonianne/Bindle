@@ -22,10 +22,13 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 
 import org.pursuit.usolo.R;
+import org.pursuit.usolo.map.data.ZoneRepository;
+import org.pursuit.usolo.map.model.Zone;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
 
-public final class MapFragment extends Fragment {
+public final class MapFragment extends Fragment implements ZoneRepository.OnUpdatesEmittedListener {
     private MapView mapView;
+    private ZoneRepository zoneRepository;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -46,6 +49,9 @@ public final class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        zoneRepository = new ZoneRepository();
+        zoneRepository.loginToFirebase(getString(R.string.firebase_email), getString(R.string.firebase_password));
+        zoneRepository.subscribeToUpdates(this);
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
@@ -60,11 +66,10 @@ public final class MapFragment extends Fragment {
                 mapboxMap.setStyle(new Style.Builder().fromUrl("mapbox://styles/naomyp/cjvpowkpn0yd01co7844p4m6w"), style -> {
                     // TODO: Map is set up and the style has loaded. Now you can add data or make other map adjustments
                 }));
-
     }
 
-    private void makeGeoFence() {
-        GeoFenceCreator geoFenceCreator = new GeoFenceCreator(getContext(),new LatLng(40,122));
+    private void makeGeoFence(LatLng latLng) {
+        GeoFenceCreator geoFenceCreator = new GeoFenceCreator(getContext(),latLng);
         geoFenceCreator.initGeoFenceClient();
         geoFenceCreator.buildGeoFence();
         geoFenceCreator.addGeoFenceToClient();
@@ -104,5 +109,10 @@ public final class MapFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mapView.onDestroy();
+    }
+
+    @Override
+    public void emitUpdate(Zone zone) {
+        makeGeoFence(zone.location);
     }
 }
