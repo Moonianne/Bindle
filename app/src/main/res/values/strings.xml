@@ -5,4 +5,10 @@
     <string name="firebase_email" translatable="false">metalraidernt@gmail.com</string>
     <string name="firebase_password" translatable="false">password123</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="your_current_activity">Your current activity</string>
+    <string name="happening_now_nearby">Happening now nearby</string>
+    <string name="search_for_groups_by_category">Search for groups by category</string>
+    <string name="nightlife">NIGHTLIFE</string>
+    <string name="sightseeing">SIGHTSEEING</string>
+    <string name="eat_and_drink">EAT AND DRINK</string>
 </resources>
