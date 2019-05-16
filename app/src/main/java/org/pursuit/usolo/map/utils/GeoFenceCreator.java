@@ -49,7 +49,6 @@ public class GeoFenceCreator {
               .addOnSuccessListener(aVoid -> Log.d(TAG, "onSuccess: added fence"))
               .addOnFailureListener(e -> Log.d(TAG, "onFailure: " + e));
         }
-
     }
 
     private GeofencingRequest getGeoFencingRequest() {

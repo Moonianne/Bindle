@@ -22,6 +22,7 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 
 import org.pursuit.usolo.R;
+import org.pursuit.usolo.map.utils.GeoFenceCreator;
 
 public final class MapFragment extends Fragment {
     private MapView mapView;
@@ -59,6 +60,14 @@ public final class MapFragment extends Fragment {
                 mapboxMap.setStyle(new Style.Builder().fromUrl("mapbox://styles/naomyp/cjvpowkpn0yd01co7844p4m6w"), style -> {
                     // TODO: Map is set up and the style has loaded. Now you can add data or make other map adjustments
                 }));
+
+    }
+
+    private void makeGeoFence() {
+        GeoFenceCreator geoFenceCreator = new GeoFenceCreator(getContext(),new LatLng(40,122));
+        geoFenceCreator.initGeoFenceClient();
+        geoFenceCreator.buildGeoFence();
+        geoFenceCreator.addGeoFenceToClient();
     }
 
     @Override
