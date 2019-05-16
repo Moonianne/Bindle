@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "101383024131",
+    "firebase_url": "https://usolo-8afc9.firebaseio.com",
+    "project_id": "usolo-8afc9",
+    "storage_bucket": "usolo-8afc9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:101383024131:android:1f82e24090998a5a",
+        "android_client_info": {
+          "package_name": "org.pursuit.usolo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "101383024131-tr5mkhtiqs66r9jh0vi7o50fp4p44t85.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.pursuit.usolo",
+            "certificate_hash": "49832d795cff03d8cdad424a719745ee8957c668"
+          }
+        },
+        {
+          "client_id": "101383024131-liof937frpt2a455nesoo84c2ubfhdn7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAD5VBNRulfrDrtWZF7m660spijfzYZyOc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "101383024131-liof937frpt2a455nesoo84c2ubfhdn7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,7 +10,7 @@ import com.google.android.gms.location.GeofencingEvent;
 import org.pursuit.usolo.map.utils.Notification;
 
 
-public class GeoFencingIntentService extends IntentService {
+public final class GeoFencingIntentService extends IntentService {
     private static final String TAG = "GeoFencingIntentService";
 
     public GeoFencingIntentService() {
