@@ -10,9 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mapbox.android.telemetry.MapboxTelemetry;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.MapboxMapOptions;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 
@@ -47,10 +51,12 @@ public final class MapFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mapView = view.findViewById(R.id.mapView);
         mapView.getMapAsync(mapboxMap ->
-          mapboxMap.setStyle(Style.MAPBOX_STREETS,
-            style -> {
-                // TODO: Map is set up and the style has loaded. Now you can add data or make other map adjustments
-            }));
+                mapboxMap.setStyle(new Style.Builder().fromUrl("mapbox://styles/naomyp/cjvpowkpn0yd01co7844p4m6w"), new Style.OnStyleLoaded() {
+                    @Override
+                    public void onStyleLoaded(@NonNull Style style) {
+                        // TODO: Map is set up and the style has loaded. Now you can add data or make other map adjustments
+                    }
+                }));
     }
 
     @Override
@@ -88,5 +94,4 @@ public final class MapFragment extends Fragment {
         super.onDestroyView();
         mapView.onDestroy();
     }
-
 }
