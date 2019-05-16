@@ -13,9 +13,7 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
-import com.mapbox.mapboxsdk.annotations.PolygonOptions;
 import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 import org.pursuit.usolo.map.services.GeoFencingIntentService;
 
@@ -62,10 +60,9 @@ public class GeoFenceCreator {
     }
 
     private PendingIntent getGeoFencePendingIntent() {
-        PendingIntent geoFencePendingIntent;
-        Intent intent = new Intent(context, GeoFencingIntentService.class);
-        geoFencePendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        return geoFencePendingIntent;
+        return PendingIntent.getService(context, 0,
+            new Intent(context, GeoFencingIntentService.class),
+          PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     public void tearDown(){
