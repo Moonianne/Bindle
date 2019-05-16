@@ -51,16 +51,13 @@ public final class MapFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         View bottomSheet = view.findViewById( R.id.bottom_sheet );
-        BottomSheetBehavior mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        mBottomSheetBehavior.setPeekHeight(150);
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setPeekHeight(130);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         mapView = view.findViewById(R.id.mapView);
         mapView.getMapAsync(mapboxMap ->
-                mapboxMap.setStyle(new Style.Builder().fromUrl("mapbox://styles/naomyp/cjvpowkpn0yd01co7844p4m6w"), new Style.OnStyleLoaded() {
-                    @Override
-                    public void onStyleLoaded(@NonNull Style style) {
-                        // TODO: Map is set up and the style has loaded. Now you can add data or make other map adjustments
-                    }
+                mapboxMap.setStyle(new Style.Builder().fromUrl("mapbox://styles/naomyp/cjvpowkpn0yd01co7844p4m6w"), style -> {
+                    // TODO: Map is set up and the style has loaded. Now you can add data or make other map adjustments
                 }));
     }
 
