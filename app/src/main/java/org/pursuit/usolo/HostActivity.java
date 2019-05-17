@@ -1,5 +1,7 @@
 package org.pursuit.usolo;
 
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,9 +29,16 @@ public final class HostActivity extends AppCompatActivity {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
         Zone zone = new Zone("Pursuit", new LatLng(40.7430877d, -73.9419287d), 0);
         ref.setValue(zone);
-        ZoneRepository zoneRepository = new ZoneRepository();
-        zoneRepository.subscribeToUpdates();
+        requestUserLocationPermission();
+
         inflateFragment(MapFragment.newInstance());
+    }
+
+    private void requestUserLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+          ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1020);
+        }
     }
 
     private void inflateFragment(Fragment fragment) {

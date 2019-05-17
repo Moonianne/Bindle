@@ -30,26 +30,25 @@ public class GeoFenceCreator {
         this.latLng = latLng;
     }
 
-    public void initGeoFenceClient() {
+    private void initGeoFenceClient() {
         geofencingClient = LocationServices.getGeofencingClient(context);
     }
 
-    public void buildGeoFence() {
+    private void buildGeoFence() {
         geofence = new Geofence.Builder()
           .setRequestId("TestFence")
-          .setCircularRegion(latLng.getLatitude(), latLng.getLongitude(), 20f)
+          .setCircularRegion(latLng.getLatitude(), latLng.getLongitude(), 25f)
           .setExpirationDuration(Geofence.NEVER_EXPIRE)
           .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
           .build();
     }
 
-    public void addGeoFenceToClient() {
+    private void addGeoFenceToClient() {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             geofencingClient.addGeofences(getGeoFencingRequest(), getGeoFencePendingIntent())
               .addOnSuccessListener(aVoid -> Log.d(TAG, "onSuccess: added fence"))
               .addOnFailureListener(e -> Log.d(TAG, "onFailure: " + e));
         }
-
     }
 
     private GeofencingRequest getGeoFencingRequest() {
@@ -63,6 +62,12 @@ public class GeoFenceCreator {
         return PendingIntent.getService(context, 0,
           new Intent(context, GeoFencingIntentService.class),
           PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    public void createGeoFence() {
+        initGeoFenceClient();
+        buildGeoFence();
+        addGeoFenceToClient();
     }
 
     public void tearDown() {
