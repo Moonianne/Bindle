@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
@@ -22,6 +21,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 
+import org.pursuit.usolo.HostActivity;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.data.ZoneRepository;
 import org.pursuit.usolo.map.model.Zone;
@@ -30,7 +30,7 @@ import org.pursuit.usolo.map.utils.GeoFenceCreator;
 public final class MapFragment extends Fragment
   implements ZoneRepository.OnUpdatesEmittedListener {
 
-    PermissionRequestListener permissionRequestListener;
+    private static final String TAG = "MapFragment";
     private static final String MAPBOX_ACCESS_TOKEN =
       "pk.eyJ1IjoibmFvbXlwIiwiYSI6ImNqdnBvMWhwczJhdzA0OWw2Z2R1bW9naGoifQ.h-ujnDnmD5LbLhyegylCNA";
     private static final String MAPBOX_STYLE_URL =
@@ -47,11 +47,6 @@ public final class MapFragment extends Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         Mapbox.getInstance(context, MAPBOX_ACCESS_TOKEN);
-        if (context instanceof PermissionRequestListener) {
-            permissionRequestListener = (PermissionRequestListener) context;
-        } else {
-            throw new RuntimeException("Host Activity Must Implement PermissionRequestListener.");
-        }
     }
 
     @Override
@@ -79,9 +74,9 @@ public final class MapFragment extends Fragment
         mapView = view.findViewById(R.id.mapView);
         mapView.getMapAsync(mapboxMap -> {
             this.mapboxMap = mapboxMap;
+
             // TODO: Map is set up and the style has loaded. Now you can add data or make other map adjustments
-            mapboxMap.setStyle(new Style.Builder().fromUrl(MAPBOX_STYLE_URL),
-              this::enableLocationComponent);
+            mapboxMap.setStyle(new Style.Builder().fromUrl(MAPBOX_STYLE_URL), this::enableLocationComponent);
         });
     }
 
@@ -91,29 +86,24 @@ public final class MapFragment extends Fragment
 
     @SuppressWarnings({"MissingPermission"})
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
-// Check if permissions are enabled and if not request
-        if (PermissionsManager.areLocationPermissionsGranted(getContext())) {
+        // Check if permissions are enabled and if not request
+        if (HostActivity.granted) {
 
-// Get an instance of the LocationComponent.
+            // Get an instance of the LocationComponent.
             LocationComponent locationComponent = mapboxMap.getLocationComponent();
 
-// Activate the LocationComponent
+            // Activate the LocationComponent
             locationComponent.activateLocationComponent(
               LocationComponentActivationOptions.builder(getContext(), loadedMapStyle).build());
 
-// Enable the LocationComponent so that it's actually visible on the map
+            // Enable the LocationComponent so that it's actually visible on the map
             locationComponent.setLocationComponentEnabled(true);
 
-// Set the LocationComponent's camera mode
+            // Set the LocationComponent's camera mode
             locationComponent.setCameraMode(CameraMode.TRACKING);
 
-// Set the LocationComponent's render mode
+            // Set the LocationComponent's render mode
             locationComponent.setRenderMode(RenderMode.NORMAL);
-        } else {
-            boolean isGranted = permissionRequestListener.requestUserLocationPermission();
-            if (isGranted) {
-                enableLocationComponent(loadedMapStyle);
-            }
         }
     }
 
