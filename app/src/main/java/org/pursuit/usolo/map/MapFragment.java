@@ -8,29 +8,24 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.mapbox.android.telemetry.MapboxTelemetry;
 import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.MapboxMapOptions;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 
 import org.pursuit.usolo.R;
 
-public final class MapFragment extends Fragment implements View.OnClickListener {
+public final class MapFragment extends Fragment implements View.OnClickListener, View.OnTouchListener {
     private MapView mapView;
     private Boolean isFabOpen = false;
     private FloatingActionButton fab, fab1, fab2;
+    BottomSheetBehavior bottomSheetBehavior;
     private Animation fab_open, fab_close, rotate_forward, rotate_backward;
 
     public static MapFragment newInstance() {
@@ -58,10 +53,13 @@ public final class MapFragment extends Fragment implements View.OnClickListener 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
-        loadFabAnimations();
-        setOnClicks();
+        assignAnimations();
+        setOnClick(fab);
+        setOnClick(fab1);
+        setOnClick(fab2);
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
-        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheet.setOnTouchListener(this);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setPeekHeight(130);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         mapView = view.findViewById(R.id.mapView);
@@ -71,13 +69,11 @@ public final class MapFragment extends Fragment implements View.OnClickListener 
           }));
     }
 
-    private void setOnClicks() {
-        fab.setOnClickListener(this);
-        fab1.setOnClickListener(this);
-        fab2.setOnClickListener(this);
+    private void setOnClick(View view) {
+        view.setOnClickListener(this);
     }
 
-    private void loadFabAnimations() {
+    private void assignAnimations() {
         fab_open = AnimationUtils.loadAnimation(getContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
         rotate_forward = AnimationUtils.loadAnimation(getContext(), R.anim.fab_rotate_forward);
@@ -128,7 +124,6 @@ public final class MapFragment extends Fragment implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
             case R.id.fab:
                 animateFAB();
@@ -156,5 +151,38 @@ public final class MapFragment extends Fragment implements View.OnClickListener 
             fab2.setClickable(true);
             isFabOpen = true;
         }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+            enableFabs();
+        }
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_DRAGGING) {
+            fab.hide();
+            if (isFabOpen) {
+                disableFabs();
+                isFabOpen = false;
+            }
+        }
+        return false;
+        // TODO: 2019-05-17 Figure out how to automatically
+        //  show fab once collapsed instead of clicking on View
+
+    }
+
+    private void disableFabs() {
+        fab1.startAnimation(fab_close);
+        fab2.startAnimation(fab_close);
+        fab1.setClickable(false);
+        fab2.setClickable(false);
+        fab.setClickable(false);
+    }
+
+    private void enableFabs() {
+        fab.show();
+        fab.setClickable(true);
+        fab1.setClickable(true);
+        fab2.setClickable(true);
     }
 }
