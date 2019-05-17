@@ -10,9 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -29,18 +27,16 @@ import org.pursuit.usolo.map.data.ZoneRepository;
 import org.pursuit.usolo.map.model.Zone;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
 
-import java.util.List;
-
 public final class MapFragment extends Fragment
-  implements ZoneRepository.OnUpdatesEmittedListener, PermissionsListener {
+  implements ZoneRepository.OnUpdatesEmittedListener {
 
+    PermissionRequestListener permissionRequestListener;
     private static final String MAPBOX_ACCESS_TOKEN =
       "pk.eyJ1IjoibmFvbXlwIiwiYSI6ImNqdnBvMWhwczJhdzA0OWw2Z2R1bW9naGoifQ.h-ujnDnmD5LbLhyegylCNA";
     private static final String MAPBOX_STYLE_URL =
       "mapbox://styles/naomyp/cjvpowkpn0yd01co7844p4m6w";
 
     private MapView mapView;
-    private PermissionsManager permissionsManager;
     private MapboxMap mapboxMap;
 
     public static MapFragment newInstance() {
@@ -51,6 +47,11 @@ public final class MapFragment extends Fragment
     public void onAttach(Context context) {
         super.onAttach(context);
         Mapbox.getInstance(context, MAPBOX_ACCESS_TOKEN);
+        if (context instanceof PermissionRequestListener) {
+            permissionRequestListener = (PermissionRequestListener) context;
+        } else {
+            throw new RuntimeException("Host Activity Must Implement PermissionRequestListener.");
+        }
     }
 
     @Override
@@ -109,8 +110,10 @@ public final class MapFragment extends Fragment
 // Set the LocationComponent's render mode
             locationComponent.setRenderMode(RenderMode.NORMAL);
         } else {
-            permissionsManager = new PermissionsManager(this);
-            permissionsManager.requestLocationPermissions(getActivity());
+            boolean isGranted = permissionRequestListener.requestUserLocationPermission();
+            if (isGranted) {
+                enableLocationComponent(loadedMapStyle);
+            }
         }
     }
 
@@ -148,30 +151,6 @@ public final class MapFragment extends Fragment
     public void onDestroyView() {
         super.onDestroyView();
         mapView.onDestroy();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    @Override
-    public void onExplanationNeeded(List<String> permissionsToExplain) {
-        Toast.makeText(getContext(), "Get Permissions", Toast.LENGTH_LONG).show();
-
-    }
-
-    @Override
-    public void onPermissionResult(boolean granted) {
-        if (granted) {
-            mapboxMap.getStyle(this::enableLocationComponent);
-        } else {
-            Toast.makeText(getContext(), "Permission not granted", Toast.LENGTH_LONG).show();
-            //finish();
-        }
-
     }
 
     @Override
