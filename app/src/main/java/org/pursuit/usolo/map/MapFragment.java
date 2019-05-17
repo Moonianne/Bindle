@@ -26,7 +26,7 @@ public final class MapFragment extends Fragment implements View.OnClickListener,
     private Boolean isFabOpen = false;
     private FloatingActionButton fab, fab1, fab2;
     BottomSheetBehavior bottomSheetBehavior;
-    private Animation fab_open, fab_close, rotate_forward, rotate_backward;
+    private Animation fabOpen, fabClose, rotateForward, rotateBackward;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -74,10 +74,10 @@ public final class MapFragment extends Fragment implements View.OnClickListener,
     }
 
     private void assignAnimations() {
-        fab_open = AnimationUtils.loadAnimation(getContext(), R.anim.fab_open);
-        fab_close = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
-        rotate_forward = AnimationUtils.loadAnimation(getContext(), R.anim.fab_rotate_forward);
-        rotate_backward = AnimationUtils.loadAnimation(getContext(), R.anim.fab_rotate_backward);
+        fabOpen = AnimationUtils.loadAnimation(getContext(), R.anim.fab_open);
+        fabClose = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
+        rotateForward = AnimationUtils.loadAnimation(getContext(), R.anim.fab_rotate_forward);
+        rotateBackward = AnimationUtils.loadAnimation(getContext(), R.anim.fab_rotate_backward);
     }
 
     private void findViews(@NonNull View view) {
@@ -137,16 +137,16 @@ public final class MapFragment extends Fragment implements View.OnClickListener,
 
     public void animateFAB() {
         if (isFabOpen) {
-            fab.startAnimation(rotate_backward);
-            fab1.startAnimation(fab_close);
-            fab2.startAnimation(fab_close);
+            fab.startAnimation(rotateBackward);
+            fab1.startAnimation(fabClose);
+            fab2.startAnimation(fabClose);
             fab1.setClickable(false);
             fab2.setClickable(false);
             isFabOpen = false;
         } else {
-            fab.startAnimation(rotate_forward);
-            fab1.startAnimation(fab_open);
-            fab2.startAnimation(fab_open);
+            fab.startAnimation(rotateForward);
+            fab1.startAnimation(fabOpen);
+            fab2.startAnimation(fabOpen);
             fab1.setClickable(true);
             fab2.setClickable(true);
             isFabOpen = true;
@@ -168,12 +168,11 @@ public final class MapFragment extends Fragment implements View.OnClickListener,
         return false;
         // TODO: 2019-05-17 Figure out how to automatically
         //  show fab once collapsed instead of clicking on View
-
     }
 
     private void disableFabs() {
-        fab1.startAnimation(fab_close);
-        fab2.startAnimation(fab_close);
+        fab1.startAnimation(fabClose);
+        fab2.startAnimation(fabClose);
         fab1.setClickable(false);
         fab2.setClickable(false);
         fab.setClickable(false);
