@@ -16,6 +16,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.model.Zone;
+import org.pursuit.zonechat.view.ZoneChatView;
 
 public final class HostActivity extends AppCompatActivity {
     private static final String TAG = "HostActivity";
@@ -38,7 +39,7 @@ public final class HostActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
           ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
-        }else{
+        } else {
             granted = true;
             inflateFragment(MapFragment.newInstance());
         }
