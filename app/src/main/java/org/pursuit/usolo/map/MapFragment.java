@@ -1,16 +1,22 @@
 package org.pursuit.usolo.map;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.Mapbox;
@@ -124,15 +130,12 @@ public final class MapFragment extends Fragment
         mapView = view.findViewById(R.id.mapView);
         mapView.getMapAsync(mapboxMap -> {
             MapFragment.this.mapboxMap = mapboxMap;
-            mapboxMap.setStyle(new Style.Builder().fromUrl(MAPBOX_STYLE_URL), new Style.OnStyleLoaded() {
-                @Override
-                public void onStyleLoaded(@NonNull Style style) {
-                    enableLocationComponent(style);
+            mapboxMap.setStyle(new Style.Builder().fromUrl(MAPBOX_STYLE_URL), style -> {
+                enableLocationComponent(style);
 
-                    LatLng pursuit = new LatLng(40.7430877, -73.9419287);
-                    addZoneMarker(style, pursuit);
+                LatLng pursuit = new LatLng(40.7430877, -73.9419287);
+                addZoneMarker(style, pursuit);
 
-                }
             });
         });
     }
@@ -227,6 +230,7 @@ public final class MapFragment extends Fragment
         mapView.onDestroy();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
