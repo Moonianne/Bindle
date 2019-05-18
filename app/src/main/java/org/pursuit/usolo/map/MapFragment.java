@@ -31,21 +31,19 @@ import org.pursuit.usolo.map.data.ZoneRepository;
 import org.pursuit.usolo.map.model.Zone;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
 
+public final class MapFragment extends Fragment
+  implements ZoneRepository.OnUpdatesEmittedListener, View.OnTouchListener {
 
-public final class MapFragment extends Fragment implements View.OnClickListener, View.OnTouchListener {
-private static final String TAG = "MapFragment";
     private static final String MAPBOX_ACCESS_TOKEN =
       "pk.eyJ1IjoibmFvbXlwIiwiYSI6ImNqdnBvMWhwczJhdzA0OWw2Z2R1bW9naGoifQ.h-ujnDnmD5LbLhyegylCNA";
     private static final String MAPBOX_STYLE_URL =
       "mapbox://styles/naomyp/cjvpowkpn0yd01co7844p4m6w";
-      
-    private MapView mapView;
-    private Boolean isFabOpen = false;
-    private FloatingActionButton fab, fab1, fab2;
-    BottomSheetBehavior bottomSheetBehavior;
-    private Animation fabOpen, fabClose, rotateForward, rotateBackward;
 
     private MapView mapView;
+    private boolean isFabOpen;
+    private FloatingActionButton fab, fab1, fab2;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private Animation fabOpen, fabClose, rotateForward, rotateBackward;
     private MapboxMap mapboxMap;
 
 
@@ -95,7 +93,7 @@ private static final String TAG = "MapFragment";
     }
 
     private void setOnClick(View view) {
-        view.setOnClickListener(this);
+        view.setOnClickListener(v -> animateFAB());
     }
 
     private void assignAnimations() {
@@ -184,20 +182,6 @@ private static final String TAG = "MapFragment";
         mapView.onDestroy();
     }
 
-    @Override
-
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fab:
-                animateFAB();
-                break;
-            case R.id.fab1:
-                break;
-            case R.id.fab2:
-                break;
-        }
-    }
-
     public void animateFAB() {
         if (isFabOpen) {
             fab.startAnimation(rotateBackward);
@@ -246,6 +230,7 @@ private static final String TAG = "MapFragment";
         fab.setClickable(true);
         fab1.setClickable(true);
         fab2.setClickable(true);
+    }
 
     public void emitUpdate(Zone zone) {
         makeGeoFence(zone.location);
