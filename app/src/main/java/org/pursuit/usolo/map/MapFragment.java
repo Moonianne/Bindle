@@ -16,17 +16,38 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.location.LocationComponent;
+import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
+import com.mapbox.mapboxsdk.location.modes.CameraMode;
+import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 
+import org.pursuit.usolo.HostActivity;
 import org.pursuit.usolo.R;
+import org.pursuit.usolo.map.data.ZoneRepository;
+import org.pursuit.usolo.map.model.Zone;
+import org.pursuit.usolo.map.utils.GeoFenceCreator;
+
 
 public final class MapFragment extends Fragment implements View.OnClickListener, View.OnTouchListener {
+private static final String TAG = "MapFragment";
+    private static final String MAPBOX_ACCESS_TOKEN =
+      "pk.eyJ1IjoibmFvbXlwIiwiYSI6ImNqdnBvMWhwczJhdzA0OWw2Z2R1bW9naGoifQ.h-ujnDnmD5LbLhyegylCNA";
+    private static final String MAPBOX_STYLE_URL =
+      "mapbox://styles/naomyp/cjvpowkpn0yd01co7844p4m6w";
+      
     private MapView mapView;
     private Boolean isFabOpen = false;
     private FloatingActionButton fab, fab1, fab2;
     BottomSheetBehavior bottomSheetBehavior;
     private Animation fabOpen, fabClose, rotateForward, rotateBackward;
+
+    private MapView mapView;
+    private MapboxMap mapboxMap;
+
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -35,8 +56,7 @@ public final class MapFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Mapbox.getInstance(context, "pk.eyJ1IjoibWltZWRyb2lkIiwiYSI6ImNqdnByOWN2bTB1bXQzem8xOWRjdG41b2EifQ.UwtQ-KOGSh0K0dUBJbZT6Q");
-        //TODO: Key Extraction
+        Mapbox.getInstance(context, MAPBOX_ACCESS_TOKEN);
     }
 
     @Override
@@ -47,6 +67,11 @@ public final class MapFragment extends Fragment implements View.OnClickListener,
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ZoneRepository zoneRepository = new ZoneRepository();
+        zoneRepository.loginToFirebase(
+          getString(R.string.firebase_email),
+          getString(R.string.firebase_password));
+        zoneRepository.subscribeToUpdates(this);
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
@@ -84,6 +109,43 @@ public final class MapFragment extends Fragment implements View.OnClickListener,
         fab = view.findViewById(R.id.fab);
         fab1 = view.findViewById(R.id.fab1);
         fab2 = view.findViewById(R.id.fab2);
+        View bottomSheet = view.findViewById(R.id.bottom_sheet);
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setPeekHeight(130);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        mapView = view.findViewById(R.id.mapView);
+        mapView.getMapAsync(mapboxMap -> {
+            this.mapboxMap = mapboxMap;
+            // TODO: Map is set up and the style has loaded. Now you can add data or make other map adjustments
+            mapboxMap.setStyle(new Style.Builder().fromUrl(MAPBOX_STYLE_URL), this::enableLocationComponent);
+        });
+    }
+
+    private void makeGeoFence(LatLng latLng) {
+        new GeoFenceCreator(getContext(), latLng).createGeoFence();
+    }
+
+    @SuppressWarnings({"MissingPermission"})
+    private void enableLocationComponent(@NonNull Style loadedMapStyle) {
+        // Check if permissions are enabled and if not request
+        if (HostActivity.granted) {
+
+            // Get an instance of the LocationComponent.
+            LocationComponent locationComponent = mapboxMap.getLocationComponent();
+
+            // Activate the LocationComponent
+            locationComponent.activateLocationComponent(
+              LocationComponentActivationOptions.builder(getContext(), loadedMapStyle).build());
+
+            // Enable the LocationComponent so that it's actually visible on the map
+            locationComponent.setLocationComponentEnabled(true);
+
+            // Set the LocationComponent's camera mode
+            locationComponent.setCameraMode(CameraMode.TRACKING);
+
+            // Set the LocationComponent's render mode
+            locationComponent.setRenderMode(RenderMode.NORMAL);
+        }
     }
 
     @Override
@@ -123,6 +185,7 @@ public final class MapFragment extends Fragment implements View.OnClickListener,
     }
 
     @Override
+
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab:
@@ -183,5 +246,8 @@ public final class MapFragment extends Fragment implements View.OnClickListener,
         fab.setClickable(true);
         fab1.setClickable(true);
         fab2.setClickable(true);
+
+    public void emitUpdate(Zone zone) {
+        makeGeoFence(zone.location);
     }
 }
