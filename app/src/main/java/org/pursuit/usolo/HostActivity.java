@@ -14,11 +14,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
+
 import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.model.Zone;
 import org.pursuit.zonechat.view.ZoneChatView;
 
-public final class HostActivity extends AppCompatActivity {
+public final class HostActivity extends AppCompatActivity{
     private static final String TAG = "HostActivity";
     public static boolean granted;
 

@@ -7,14 +7,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.Mapbox;
@@ -31,6 +27,7 @@ import com.mapbox.mapboxsdk.plugins.annotation.CircleManager;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
+import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 
 import org.pursuit.usolo.HostActivity;
@@ -50,6 +47,7 @@ public final class MapFragment extends Fragment
     private static final String ID_ICON_DEFAULT = "icon-default";
     private static final String MARKER_IMAGE = "custom-marker";
 
+    private AlertDialog zoneSelectionDialog;
     private MapView mapView;
     private boolean isFabOpen;
     private FloatingActionButton fab, fab1, fab2;
