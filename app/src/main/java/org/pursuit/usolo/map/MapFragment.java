@@ -74,7 +74,6 @@ public final class MapFragment extends Fragment
         mapView = view.findViewById(R.id.mapView);
         mapView.getMapAsync(mapboxMap -> {
             this.mapboxMap = mapboxMap;
-
             // TODO: Map is set up and the style has loaded. Now you can add data or make other map adjustments
             mapboxMap.setStyle(new Style.Builder().fromUrl(MAPBOX_STYLE_URL), this::enableLocationComponent);
         });
