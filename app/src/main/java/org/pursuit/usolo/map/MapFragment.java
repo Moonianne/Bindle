@@ -73,6 +73,7 @@ public final class MapFragment extends Fragment
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
@@ -87,9 +88,7 @@ public final class MapFragment extends Fragment
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         mapView = view.findViewById(R.id.mapView);
         mapView.getMapAsync(mapboxMap ->
-          mapboxMap.setStyle(new Style.Builder().fromUrl("mapbox://styles/naomyp/cjvpowkpn0yd01co7844p4m6w"), style -> {
-              // TODO: Map is set up and the style has loaded. Now you can add data or make other map adjustments
-          }));
+          this.mapboxMap = mapboxMap);
     }
 
     private void setOnClick(View view) {
@@ -125,25 +124,13 @@ public final class MapFragment extends Fragment
 
     @SuppressWarnings({"MissingPermission"})
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
-        // Check if permissions are enabled and if not request
-        if (HostActivity.granted) {
+        final LocationComponent locationComponent = mapboxMap.getLocationComponent();
 
-            // Get an instance of the LocationComponent.
-            LocationComponent locationComponent = mapboxMap.getLocationComponent();
-
-            // Activate the LocationComponent
-            locationComponent.activateLocationComponent(
-              LocationComponentActivationOptions.builder(getContext(), loadedMapStyle).build());
-
-            // Enable the LocationComponent so that it's actually visible on the map
-            locationComponent.setLocationComponentEnabled(true);
-
-            // Set the LocationComponent's camera mode
-            locationComponent.setCameraMode(CameraMode.TRACKING);
-
-            // Set the LocationComponent's render mode
-            locationComponent.setRenderMode(RenderMode.NORMAL);
-        }
+        locationComponent.activateLocationComponent(
+          LocationComponentActivationOptions.builder(getContext(), loadedMapStyle).build());
+        locationComponent.setLocationComponentEnabled(true);
+        locationComponent.setCameraMode(CameraMode.TRACKING);
+        locationComponent.setRenderMode(RenderMode.NORMAL);
     }
 
     @Override
@@ -182,6 +169,23 @@ public final class MapFragment extends Fragment
         mapView.onDestroy();
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+            enableFabs();
+        }
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_DRAGGING) {
+            fab.hide();
+            if (isFabOpen) {
+                disableFabs();
+                isFabOpen = false;
+            }
+        }
+        return false;
+        // TODO: 2019-05-17 Figure out how to automatically
+        //  show fab once collapsed instead of clicking on View
+    }
+
     public void animateFAB() {
         if (isFabOpen) {
             fab.startAnimation(rotateBackward);
@@ -198,23 +202,6 @@ public final class MapFragment extends Fragment
             fab2.setClickable(true);
             isFabOpen = true;
         }
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-            enableFabs();
-        }
-        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_DRAGGING) {
-            fab.hide();
-            if (isFabOpen) {
-                disableFabs();
-                isFabOpen = false;
-            }
-        }
-        return false;
-        // TODO: 2019-05-17 Figure out how to automatically
-        //  show fab once collapsed instead of clicking on View
     }
 
     private void disableFabs() {
