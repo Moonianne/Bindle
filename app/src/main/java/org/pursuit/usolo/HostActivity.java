@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.group.view.StartGroupFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -28,7 +29,8 @@ public final class HostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_host);
 
         loginToFirebase();
-        requestUserLocationPermission();
+//        requestUserLocationPermission();
+        inflateFragment(new StartGroupFragment());
         final String path = getString(R.string.firebase_path) + "2/";
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
         ref.setValue(new Zone("Pursuit",

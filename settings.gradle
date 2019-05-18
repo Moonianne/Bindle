@@ -1,1 +1,1 @@
-include ':app', ':zonechat'
+include ':app', ':zonechat', ':group'
