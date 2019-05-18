@@ -1,6 +1,6 @@
 package org.pursuit.zonechat.view;
 
-
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,40 +18,25 @@ import android.widget.EditText;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.firebase.ui.database.SnapshotParser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import org.pursuit.zonechat.R;
 import org.pursuit.zonechat.model.Message;
+import org.pursuit.zonechat.viewmodel.ChatViewModel;
 
 public final class ZoneChatView extends Fragment {
 
-    public static final String ZONE_MESSAGES_CHILD = "zoneMessages";
     private static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
-    public static String ZONE_CHAT = "zoneChat";
-    public static final String ANONYMOUS = "anonymous";
 
-    private String username;
+    private ChatViewModel viewModel;
     private EditText messageEditText;
     private Button sendButton;
-
-    RecyclerView chatRecycler;
-    LinearLayoutManager layoutManager;
-
-    // Firebase instance variables
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser firebaseUser;
-    private FirebaseRecyclerAdapter<Message, MessageViewHolder> firebaseAdapter;
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference messageDatabaseReference;
-    FirebaseRecyclerOptions<Message> options;
-    private SnapshotParser<Message> parser;
+    private RecyclerView chatRecycler;
+    private LinearLayoutManager layoutManager;
+    private FirebaseUser fireBaseUser; //TODO: pass user
+    private FirebaseRecyclerAdapter<Message, MessageViewHolder> fireBaseAdapter;
 
     public static ZoneChatView newInstance() {
         return new ZoneChatView();
@@ -62,16 +46,14 @@ public final class ZoneChatView extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        username = ANONYMOUS;
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        ZONE_CHAT = "zonechat2";
+        viewModel = ViewModelProviders.of(this).get(ChatViewModel.class);
 
         //add code for database messages reference (read and write)
-        messageDatabaseReference = firebaseDatabase.getReference().child(ZONE_CHAT).child(ZONE_MESSAGES_CHILD);
 
         // Initialize Firebase Auth
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
+        // Firebase instance variables
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        fireBaseUser = firebaseAuth.getCurrentUser();
     }
 
     @Override
@@ -91,62 +73,32 @@ public final class ZoneChatView extends Fragment {
         messageEditText = view.findViewById(R.id.messageEditText);
         sendButton = view.findViewById(R.id.sendButton);
 
-        Query messageQuery = messageDatabaseReference;
-        parseMessage();
-        updateMessageList(messageQuery);
+        viewModel.parseMessage();
+        updateMessageList(viewModel.getMessageDatabaseReference());
         editTextListener();
         sendMessageOnClick();
         registerAdapter();
-        chatRecycler.setAdapter(firebaseAdapter);
+        chatRecycler.setAdapter(fireBaseAdapter);
     }
 
-    private void registerAdapter() {
-        firebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                int friendlyMessageCount = firebaseAdapter.getItemCount();
-                int lastVisiblePosition = layoutManager.findLastCompletelyVisibleItemPosition();
-                // If the recycler view is initially being loaded or the
-                // user is at the bottom of the list, scroll to the bottom
-                // of the list to show the newly added message.
-                if (lastVisiblePosition == -1 ||
-                  (positionStart >= (friendlyMessageCount - 1) &&
-                    lastVisiblePosition == (positionStart - 1))) {
-                    chatRecycler.scrollToPosition(positionStart);
-                }
-            }
-        });
+    @Override
+    public void onStart() {
+        super.onStart();
+        fireBaseAdapter.startListening();
     }
 
-    private void parseMessage() {
-        // New child entries
-        parser = new SnapshotParser<Message>() {
-            @Override
-            public Message parseSnapshot(DataSnapshot dataSnapshot) {
-                Message message = dataSnapshot.getValue(Message.class);
-                if (message != null) {
-                    message.setId(dataSnapshot.getKey());
-                    Log.d("naomy dS.getKey(): ", dataSnapshot.getKey() + " message.getId(): " + message.getId());
-                }
-                return message;
-            }
-        };
+    @Override
+    public void onStop() {
+        super.onStop();
+        fireBaseAdapter.stopListening();
     }
 
-    private void sendMessageOnClick() {
-        // Send button sends a message and clears the EditText
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //for firebase write data
-                Message message = new Message(username, messageEditText.getText().toString(), null, System.currentTimeMillis());
-                messageDatabaseReference.push().setValue(message);
-
-                // Clear input box
-                messageEditText.setText("");
-            }
-        });
+    private void updateMessageList(Query query) {
+        FirebaseRecyclerOptions<Message> options = new FirebaseRecyclerOptions.Builder<Message>()
+          .setQuery(query, viewModel.getParser())
+          .build();
+        fireBaseAdapter = new MessageAdapter(options);
+        fireBaseAdapter.notifyDataSetChanged();
     }
 
     private void editTextListener() {
@@ -157,7 +109,7 @@ public final class ZoneChatView extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.toString().trim().length() > 0) {
+                if (viewModel.hasText(charSequence)) {
                     sendButton.setEnabled(true);
                 } else {
                     sendButton.setEnabled(false);
@@ -171,23 +123,28 @@ public final class ZoneChatView extends Fragment {
         messageEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(DEFAULT_MSG_LENGTH_LIMIT)});
     }
 
-    private void updateMessageList(Query query) {
-        options = new FirebaseRecyclerOptions.Builder<Message>()
-          .setQuery(query, parser)
-          .build();
-        firebaseAdapter = new MessageAdapter(options);
-        firebaseAdapter.notifyDataSetChanged();
+    private void sendMessageOnClick() {
+        sendButton.setOnClickListener(view -> {
+            viewModel.pushMessage(messageEditText.getText().toString());
+            messageEditText.setText("");
+        });
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        firebaseAdapter.startListening();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        firebaseAdapter.stopListening();
+    private void registerAdapter() {
+        fireBaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                int lastVisiblePosition = layoutManager.findLastCompletelyVisibleItemPosition();
+                // If the recycler view is initially being loaded or the
+                // user is at the bottom of the list, scroll to the bottom
+                // of the list to show the newly added message.
+                if (lastVisiblePosition == -1 ||
+                  (positionStart >= (fireBaseAdapter.getItemCount() - 1) &&
+                    lastVisiblePosition == (positionStart - 1))) {
+                    chatRecycler.scrollToPosition(positionStart);
+                }
+            }
+        });
     }
 }

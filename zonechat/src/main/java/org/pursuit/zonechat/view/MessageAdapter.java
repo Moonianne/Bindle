@@ -10,9 +10,9 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import org.pursuit.zonechat.R;
 import org.pursuit.zonechat.model.Message;
 
-public class MessageAdapter extends FirebaseRecyclerAdapter<Message, MessageViewHolder> {
+public final class MessageAdapter extends FirebaseRecyclerAdapter<Message, MessageViewHolder> {
 
-    public MessageAdapter(@NonNull FirebaseRecyclerOptions<Message> options) {
+    MessageAdapter(@NonNull FirebaseRecyclerOptions<Message> options) {
         super(options);
     }
 

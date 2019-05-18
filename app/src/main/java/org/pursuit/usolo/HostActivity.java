@@ -19,7 +19,7 @@ import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.model.Zone;
 import org.pursuit.zonechat.view.ZoneChatView;
 
-public final class HostActivity extends AppCompatActivity{
+public final class HostActivity extends AppCompatActivity {
     private static final String TAG = "HostActivity";
     public static boolean granted;
 
@@ -28,15 +28,13 @@ public final class HostActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host);
 
-        ZoneChatView zoneChatView = ZoneChatView.newInstance();
-
         loginToFirebase();
-        inflateFragment(zoneChatView);
-//        requestUserLocationPermission();
-//        final String path = getString(R.string.firebase_path) + "2/";
-//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
-//        Zone zone = new Zone("Pursuit", new LatLng(40.7430877d, -73.9419287d), 0);
-//        ref.setValue(zone);
+        requestUserLocationPermission();
+        final String path = getString(R.string.firebase_path) + "2/";
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
+        ref.setValue(new Zone("Pursuit",
+          new LatLng(40.7430877d, -73.9419287d),
+          0));
     }
 
     public void requestUserLocationPermission() {
