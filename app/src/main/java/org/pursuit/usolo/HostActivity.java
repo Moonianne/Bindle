@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
+
 import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.model.Zone;
 import org.pursuit.zonechat.view.ZoneChatView;
@@ -31,8 +32,9 @@ public final class HostActivity extends AppCompatActivity {
         requestUserLocationPermission();
         final String path = getString(R.string.firebase_path) + "2/";
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
-        Zone zone = new Zone("Pursuit", new LatLng(40.7430877d, -73.9419287d), 0);
-        ref.setValue(zone);
+        ref.setValue(new Zone("Pursuit",
+          new LatLng(40.7430877d, -73.9419287d),
+          0));
     }
 
     public void requestUserLocationPermission() {
