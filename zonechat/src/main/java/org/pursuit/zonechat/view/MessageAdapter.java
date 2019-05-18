@@ -27,6 +27,6 @@ public class MessageAdapter extends FirebaseRecyclerAdapter<Message, MessageView
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         return new MessageViewHolder(
           LayoutInflater.from(viewGroup.getContext())
-            .inflate(R.layout.item_message, viewGroup, false));
+            .inflate(R.layout.message_item_view, viewGroup, false));
     }
 }

@@ -8,16 +8,15 @@ import android.widget.TextView;
 import org.pursuit.zonechat.R;
 import org.pursuit.zonechat.model.Message;
 
-public class MessageViewHolder extends RecyclerView.ViewHolder {
+final class MessageViewHolder extends RecyclerView.ViewHolder {
 
-
-    public MessageViewHolder(@NonNull View itemView) {
+    MessageViewHolder(@NonNull View itemView) {
         super(itemView);
     }
 
-    public void onBind(final Message message) {
+    final void onBind(@NonNull final Message message) {
         itemView.<TextView>findViewById(R.id.nameTextView).setText(message.getName());
         itemView.<TextView>findViewById(R.id.messageTextView).setText(message.getMessage());
-        itemView.<TextView>findViewById(R.id.timeTextView).setText(String.valueOf(message.getTimeStamp()));
+        itemView.<TextView>findViewById(R.id.timeTV).setText(String.valueOf(message.getTimeStamp()));
     }
 }
