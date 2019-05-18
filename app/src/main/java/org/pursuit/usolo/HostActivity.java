@@ -29,8 +29,7 @@ public final class HostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_host);
 
         loginToFirebase();
-//        requestUserLocationPermission();
-        inflateFragment(new StartGroupFragment());
+        requestUserLocationPermission();
         final String path = getString(R.string.firebase_path) + "2/";
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
         ref.setValue(new Zone("Pursuit",
