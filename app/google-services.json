@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "101383024131-5bst0htb4mesp9gqbm0r5lgn0a42ufii.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.pursuit.usolo",
+            "certificate_hash": "893fad60a53bc9c2eb51ac5e064207a5cac6abf6"
+          }
+        },
+        {
           "client_id": "101383024131-tr5mkhtiqs66r9jh0vi7o50fp4p44t85.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

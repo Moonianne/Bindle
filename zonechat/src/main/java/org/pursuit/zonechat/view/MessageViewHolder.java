@@ -10,17 +10,14 @@ import org.pursuit.zonechat.model.Message;
 
 public class MessageViewHolder extends RecyclerView.ViewHolder {
 
-    private TextView messageTextView;
-    private TextView messengerNameTextView;
 
     public MessageViewHolder(@NonNull View itemView) {
         super(itemView);
-        messageTextView = itemView.findViewById(R.id.messageTextView);
-        messengerNameTextView = itemView.findViewById(R.id.nameTextView);
     }
 
-    public void onBind(final Message message){
-        messengerNameTextView.setText(message.getName());
-        messageTextView.setText(message.getMessage());
+    public void onBind(final Message message) {
+        itemView.<TextView>findViewById(R.id.nameTextView).setText(message.getName());
+        itemView.<TextView>findViewById(R.id.messageTextView).setText(message.getMessage());
+        itemView.<TextView>findViewById(R.id.timeTextView).setText(String.valueOf(message.getTimeStamp()));
     }
 }

@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,14 +64,14 @@ public final class ZoneChatView extends Fragment {
 
         username = ANONYMOUS;
         firebaseDatabase = FirebaseDatabase.getInstance();
-        ZONE_CHAT = "zonechat1";
+        ZONE_CHAT = "zonechat2";
 
         //add code for database messages reference (read and write)
         messageDatabaseReference = firebaseDatabase.getReference().child(ZONE_CHAT).child(ZONE_MESSAGES_CHILD);
 
         // Initialize Firebase Auth
-//        firebaseAuth = FirebaseAuth.getInstance();
-//        firebaseUser = firebaseAuth.getCurrentUser()
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
     }
 
     @Override
@@ -91,10 +92,10 @@ public final class ZoneChatView extends Fragment {
         sendButton = view.findViewById(R.id.sendButton);
 
         Query messageQuery = messageDatabaseReference;
+        parseMessage();
         updateMessageList(messageQuery);
         editTextListener();
         sendMessageOnClick();
-        parseMessage();
         registerAdapter();
         chatRecycler.setAdapter(firebaseAdapter);
     }
@@ -126,6 +127,7 @@ public final class ZoneChatView extends Fragment {
                 Message message = dataSnapshot.getValue(Message.class);
                 if (message != null) {
                     message.setId(dataSnapshot.getKey());
+                    Log.d("naomy dS.getKey(): ", dataSnapshot.getKey() + " message.getId(): " + message.getId());
                 }
                 return message;
             }
@@ -173,20 +175,7 @@ public final class ZoneChatView extends Fragment {
         options = new FirebaseRecyclerOptions.Builder<Message>()
           .setQuery(query, parser)
           .build();
-
-        firebaseAdapter = new FirebaseRecyclerAdapter<Message, MessageViewHolder>(options) {
-            @Override
-            protected void onBindViewHolder(@NonNull MessageViewHolder holder, int position, @NonNull Message model) {
-                holder.onBind(model);
-            }
-
-            @NonNull
-            @Override
-            public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_message, viewGroup, false);
-                return new MessageViewHolder(view);
-            }
-        };
+        firebaseAdapter = new MessageAdapter(options);
         firebaseAdapter.notifyDataSetChanged();
     }
 

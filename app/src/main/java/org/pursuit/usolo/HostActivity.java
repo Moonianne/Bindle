@@ -29,9 +29,9 @@ public final class HostActivity extends AppCompatActivity{
         setContentView(R.layout.activity_host);
 
         ZoneChatView zoneChatView = ZoneChatView.newInstance();
-        inflateFragment(zoneChatView);
 
-//        loginToFirebase();
+        loginToFirebase();
+        inflateFragment(zoneChatView);
 //        requestUserLocationPermission();
 //        final String path = getString(R.string.firebase_path) + "2/";
 //        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
