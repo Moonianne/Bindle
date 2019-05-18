@@ -4,6 +4,7 @@ package org.pursuit.usolo.map;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,11 +31,13 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.CircleManager;
+import com.mapbox.mapboxsdk.plugins.annotation.CircleOptions;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
+import com.mapbox.mapboxsdk.utils.ColorUtils;
 
 import org.pursuit.usolo.HostActivity;
 import org.pursuit.usolo.R;
@@ -166,16 +169,16 @@ public final class MapFragment extends Fragment
         symbol = symbolManager.create(symbolOptions);
 
 //        // create circle manager
-//        circleManager = new CircleManager(mapView, mapboxMap, style);
-//        circleManager.addClickListener(circle -> Toast.makeText(getContext(), String.format("Circle clicked %s", circle.getId()), Toast.LENGTH_SHORT).show());
-//        circleManager.addLongClickListener(circle -> Toast.makeText(getContext(), String.format("Circle long clicked %s", circle.getId()), Toast.LENGTH_SHORT).show());
-//
-//        // create a fixed circle
-//        CircleOptions circleOptions = new CircleOptions()
-//          .withLatLng(zone)
-//          .withCircleColor(ColorUtils.colorToRgbaString(Color.LTGRAY))
-//          .withCircleRadius(20f);
-//        circleManager.create(circleOptions);
+        circleManager = new CircleManager(mapView, mapboxMap, style);
+        circleManager.addClickListener(circle -> Toast.makeText(getContext(), String.format("Circle clicked %s", circle.getId()), Toast.LENGTH_SHORT).show());
+        circleManager.addLongClickListener(circle -> Toast.makeText(getContext(), String.format("Circle long clicked %s", circle.getId()), Toast.LENGTH_SHORT).show());
+
+        // create a fixed circle
+        CircleOptions circleOptions = new CircleOptions()
+          .withLatLng(zone)
+          .withCircleColor(ColorUtils.colorToRgbaString(Color.LTGRAY))
+          .withCircleRadius(20f);
+        circleManager.create(circleOptions);
 
     }
 
