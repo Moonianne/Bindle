@@ -28,12 +28,15 @@ public final class HostActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host);
 
-        loginToFirebase();
-        requestUserLocationPermission();
-        final String path = getString(R.string.firebase_path) + "2/";
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
-        Zone zone = new Zone("Pursuit", new LatLng(40.7430877d, -73.9419287d), 0);
-        ref.setValue(zone);
+        ZoneChatView zoneChatView = ZoneChatView.newInstance();
+        inflateFragment(zoneChatView);
+
+//        loginToFirebase();
+//        requestUserLocationPermission();
+//        final String path = getString(R.string.firebase_path) + "2/";
+//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
+//        Zone zone = new Zone("Pursuit", new LatLng(40.7430877d, -73.9419287d), 0);
+//        ref.setValue(zone);
     }
 
     public void requestUserLocationPermission() {
