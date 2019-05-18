@@ -7,11 +7,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+
 import org.pursuit.usolo.R;
+import org.pursuit.usolo.zoneChat.model.ZoneMessage;
 
 public class ZoneChatFragment extends Fragment {
 
 
+    // Firebase instance variables
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
+    private DatabaseReference mFirebaseDatabaseReference;
+    private FirebaseRecyclerAdapter<ZoneMessage, MessageViewHolder> mFirebaseAdapter;
 
     public ZoneChatFragment() {
         // Required empty public constructor
