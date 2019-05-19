@@ -1,9 +1,3 @@
 <resources>
     <string name="app_name">authentication</string>
-<<<<<<< HEAD
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-=======
->>>>>>> a2a79c4d9f29620e73ab960200304188ffefb04e
 </resources>
