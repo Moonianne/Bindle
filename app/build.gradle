@@ -43,4 +43,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
     implementation project(path: ':zonechat')
     implementation project(path: ':group')
+    implementation project(path: ':authentication')
 }
