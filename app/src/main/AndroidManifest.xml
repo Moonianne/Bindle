@@ -16,7 +16,7 @@
 
 
 
-        <activity android:name=".HostActivity">
+        <activity android:name=".view.HostActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

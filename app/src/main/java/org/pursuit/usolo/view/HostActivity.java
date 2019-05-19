@@ -1,4 +1,4 @@
-package org.pursuit.usolo;
+package org.pursuit.usolo.view;
 
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -9,17 +9,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.android.group.view.StartGroupFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 
+import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.model.Zone;
 
-public final class HostActivity extends AppCompatActivity {
+public final class HostActivity extends AppCompatActivity implements OnFragmentInteractionListener{
     private static final String TAG = "HostActivity";
     public static boolean granted;
 
@@ -37,16 +37,6 @@ public final class HostActivity extends AppCompatActivity {
           0));
     }
 
-    public void requestUserLocationPermission() {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-          ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
-        } else {
-            granted = true;
-            inflateFragment(MapFragment.newInstance());
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -59,12 +49,22 @@ public final class HostActivity extends AppCompatActivity {
         }
     }
 
-
-    private void inflateFragment(Fragment fragment) {
+    @Override
+    public void inflateFragment(Fragment fragment) {
         getSupportFragmentManager()
           .beginTransaction()
           .replace(R.id.main_container, fragment)
           .commit();
+    }
+
+    public void requestUserLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+          ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+        } else {
+            granted = true;
+            inflateFragment(MapFragment.newInstance());
+        }
     }
 
     private void loginToFirebase() {
