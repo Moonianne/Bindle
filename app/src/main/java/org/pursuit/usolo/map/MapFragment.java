@@ -2,22 +2,26 @@ package org.pursuit.usolo.map;
 
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.Mapbox;
@@ -28,22 +32,18 @@ import com.mapbox.mapboxsdk.location.modes.CameraMode;
 import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.CircleManager;
-import com.mapbox.mapboxsdk.plugins.annotation.CircleOptions;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
-import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
-import com.mapbox.mapboxsdk.utils.ColorUtils;
 
-import org.pursuit.usolo.HostActivity;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.data.ZoneRepository;
 import org.pursuit.usolo.map.model.Zone;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
+import org.pursuit.zonechat.view.ZoneChatView;
 
 public final class MapFragment extends Fragment
   implements ZoneRepository.OnUpdatesEmittedListener, View.OnTouchListener {
@@ -56,7 +56,6 @@ public final class MapFragment extends Fragment
     private static final String ID_ICON_DEFAULT = "icon-default";
     private static final String MARKER_IMAGE = "custom-marker";
 
-    private AlertDialog zoneSelectionDialog;
     private MapView mapView;
     private boolean isFabOpen;
     private FloatingActionButton fab, fab1, fab2;
@@ -66,6 +65,9 @@ public final class MapFragment extends Fragment
     private SymbolManager symbolManager;
     private Symbol symbol;
     private CircleManager circleManager;
+
+    Dialog zoneDialog;
+    Button viewZoneForumButton;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -85,6 +87,7 @@ public final class MapFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        zoneDialog = new Dialog(getContext());
         ZoneRepository zoneRepository = new ZoneRepository();
         zoneRepository.loginToFirebase(
           getString(R.string.firebase_email),
@@ -151,8 +154,7 @@ public final class MapFragment extends Fragment
         // create symbol manager
         GeoJsonOptions geoJsonOptions = new GeoJsonOptions().withTolerance(0.4f);
         symbolManager = new SymbolManager(mapView, mapboxMap, style, null, geoJsonOptions);
-        symbolManager.addClickListener(symbol -> Toast.makeText(getContext(),
-          String.format("Symbol clicked %s", symbol.getId()), Toast.LENGTH_SHORT).show());
+        symbolManager.addClickListener(symbol -> showZoneDialog());
         symbolManager.addLongClickListener(symbol ->
           Toast.makeText(getContext(),
             String.format("Symbol long clicked %s", symbol.getId()), Toast.LENGTH_SHORT).show());
@@ -169,17 +171,34 @@ public final class MapFragment extends Fragment
         symbol = symbolManager.create(symbolOptions);
 
 //        // create circle manager
-        circleManager = new CircleManager(mapView, mapboxMap, style);
-        circleManager.addClickListener(circle -> Toast.makeText(getContext(), String.format("Circle clicked %s", circle.getId()), Toast.LENGTH_SHORT).show());
-        circleManager.addLongClickListener(circle -> Toast.makeText(getContext(), String.format("Circle long clicked %s", circle.getId()), Toast.LENGTH_SHORT).show());
+//        circleManager = new CircleManager(mapView, mapboxMap, style);
+//        circleManager.addClickListener(circle -> Toast.makeText(getContext(), String.format("Circle clicked %s", circle.getId()), Toast.LENGTH_SHORT).show());
+//        circleManager.addLongClickListener(circle -> Toast.makeText(getContext(), String.format("Circle long clicked %s", circle.getId()), Toast.LENGTH_SHORT).show());
+//
+//        // create a fixed circle
+//        CircleOptions circleOptions = new CircleOptions()
+//          .withLatLng(zone)
+//          .withCircleColor(ColorUtils.colorToRgbaString(Color.LTGRAY))
+//          .withCircleRadius(20f);
+//        circleManager.create(circleOptions);
 
-        // create a fixed circle
-        CircleOptions circleOptions = new CircleOptions()
-          .withLatLng(zone)
-          .withCircleColor(ColorUtils.colorToRgbaString(Color.LTGRAY))
-          .withCircleRadius(20f);
-        circleManager.create(circleOptions);
+    }
 
+    private void showZoneDialog() {
+        zoneDialog.setContentView(R.layout.zone_dialog_layout);
+        viewZoneForumButton = zoneDialog.findViewById(R.id.view_zone_button);
+        viewZoneForumButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ZoneChatView zoneChatView = ZoneChatView.newInstance();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.main_container, zoneChatView).commit();
+                zoneDialog.dismiss();
+            }
+        });
+        zoneDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        zoneDialog.show();
     }
 
     private void makeGeoFence(LatLng latLng) {
