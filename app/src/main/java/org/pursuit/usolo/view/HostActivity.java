@@ -18,6 +18,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.model.Zone;
+import org.pursuit.zonechat.view.ZoneChatView;
 
 public final class HostActivity extends AppCompatActivity implements OnFragmentInteractionListener{
     private static final String TAG = "HostActivity";
@@ -29,7 +30,8 @@ public final class HostActivity extends AppCompatActivity implements OnFragmentI
         setContentView(R.layout.activity_host);
 
         loginToFirebase();
-        requestUserLocationPermission();
+        inflateFragment(ZoneChatView.newInstance());
+//        requestUserLocationPermission();
         final String path = getString(R.string.firebase_path) + "2/";
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
         ref.setValue(new Zone("Pursuit",

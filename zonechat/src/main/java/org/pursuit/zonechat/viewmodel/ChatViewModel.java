@@ -1,26 +1,41 @@
 package org.pursuit.zonechat.viewmodel;
 
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
+import org.pursuit.zonechat.data.repository.ZoneRepository;
 import org.pursuit.zonechat.model.Message;
-import org.pursuit.zonechat.view.MessageAdapter;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 public final class ChatViewModel extends ViewModel {
+    private static final String ZONE_CHAT = "zoneChat";
     private static final String ZONE_MESSAGES_CHILD = "zoneMessages";
-    private final static String ZONE_CHAT = "zoneChat";
-    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference messageDatabaseReference = firebaseDatabase.getReference().child(ZONE_CHAT).child(ZONE_MESSAGES_CHILD);
+
+    private final ZoneRepository zoneRepository =
+      new ZoneRepository(ZONE_CHAT, ZONE_MESSAGES_CHILD);
+
     private SnapshotParser<Message> parser;
     private String username = "anonymous";
 
+    public boolean hasText(CharSequence charSequence) {
+        return charSequence.toString().trim().length() > 0;
+    }
+
     public DatabaseReference getMessageDatabaseReference() {
-        return messageDatabaseReference;
+        return zoneRepository.getMessageDatabaseReference();
+    }
+
+    public void pushMessage(String message) {
+        zoneRepository.pushMessage()
+          .setValue(new Message(
+            username, message, null, System.currentTimeMillis()));
     }
 
     public SnapshotParser<Message> getParser() {
@@ -28,7 +43,6 @@ public final class ChatViewModel extends ViewModel {
     }
 
     public void parseMessage() {
-        // New child entries
         parser = dataSnapshot -> {
             Message message = dataSnapshot.getValue(Message.class);
             if (message != null) {
@@ -38,13 +52,9 @@ public final class ChatViewModel extends ViewModel {
         };
     }
 
-    public boolean hasText(CharSequence charSequence) {
-        return charSequence.toString().trim().length() > 0;
-    }
-
-    public void pushMessage(String message) {
-        messageDatabaseReference.push()
-          .setValue(new Message(
-            username, message, null, System.currentTimeMillis()));
+    @NonNull
+    public String convertToReadableTime(@NonNull final Message message) {
+        DateFormat formatter = DateFormat.getDateTimeInstance();
+        return formatter.format(new Date(message.getTimeStamp()));
     }
 }

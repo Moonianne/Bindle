@@ -94,10 +94,9 @@ public final class ZoneChatView extends Fragment {
     }
 
     private void updateMessageList(Query query) {
-        FirebaseRecyclerOptions<Message> options = new FirebaseRecyclerOptions.Builder<Message>()
+        fireBaseAdapter = new MessageAdapter(new FirebaseRecyclerOptions.Builder<Message>()
           .setQuery(query, viewModel.getParser())
-          .build();
-        fireBaseAdapter = new MessageAdapter(options);
+          .build());
         fireBaseAdapter.notifyDataSetChanged();
     }
 
@@ -120,7 +119,8 @@ public final class ZoneChatView extends Fragment {
             public void afterTextChanged(Editable editable) {
             }
         });
-        messageEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(DEFAULT_MSG_LENGTH_LIMIT)});
+        messageEditText
+          .setFilters(new InputFilter[]{new InputFilter.LengthFilter(DEFAULT_MSG_LENGTH_LIMIT)});
     }
 
     private void sendMessageOnClick() {
@@ -136,9 +136,6 @@ public final class ZoneChatView extends Fragment {
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
                 int lastVisiblePosition = layoutManager.findLastCompletelyVisibleItemPosition();
-                // If the recycler view is initially being loaded or the
-                // user is at the bottom of the list, scroll to the bottom
-                // of the list to show the newly added message.
                 if (lastVisiblePosition == -1 ||
                   (positionStart >= (fireBaseAdapter.getItemCount() - 1) &&
                     lastVisiblePosition == (positionStart - 1))) {
