@@ -20,9 +20,12 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.model.Zone;
+import org.pursuit.zonechat.view.ZoneChatView;
+
 
 public final class HostActivity extends AppCompatActivity implements OnFragmentInteractionListener,
         StartGroupFragment.OnFragmentInteractionListener {
+
     private static final String TAG = "HostActivity";
     public static boolean granted;
 
