@@ -29,9 +29,10 @@ public class AddLocationFragment extends Fragment {
     private NetworkViewModel viewModel;
     private AddLocationAdapter adapter;
 
-    public AddLocationFragment() {}
+    public AddLocationFragment() {
+    }
 
-    public static AddLocationFragment getInstance(){
+    public static AddLocationFragment getInstance() {
         return new AddLocationFragment();
     }
 
@@ -43,7 +44,7 @@ public class AddLocationFragment extends Fragment {
         setViewModelListener();
         initSearchView();
         initCategorySpinner();
-        initRecyclerViewAdapter();
+        initRecyclerView();
         return rootView;
     }
 
@@ -55,7 +56,6 @@ public class AddLocationFragment extends Fragment {
         viewModel.setOnDataLoadedListener(new NetworkViewModel.OnDataLoadedListener() {
             @Override
             public void dataLoaded(List<Venue> venues) {
-                Log.d(TAG, "dataLoaded: " + venues.get(0).getName());
                 adapter.setData(venues);
             }
         });
@@ -79,7 +79,7 @@ public class AddLocationFragment extends Fragment {
     private void initCategorySpinner() {
         Spinner categorySpinner = rootView.findViewById(R.id.category_spinner);
         categorySpinner.setAdapter(ArrayAdapter.createFromResource(
-                getContext(),R.array.category_array,android.R.layout.simple_dropdown_item_1line));
+                getContext(), R.array.category_array, android.R.layout.simple_dropdown_item_1line));
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -94,7 +94,7 @@ public class AddLocationFragment extends Fragment {
         });
     }
 
-    private void initRecyclerViewAdapter() {
+    private void initRecyclerView() {
         RecyclerView recyclerView = rootView.findViewById(R.id.add_location_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new AddLocationAdapter();

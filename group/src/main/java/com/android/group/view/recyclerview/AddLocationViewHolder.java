@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.android.group.R;
 import com.android.group.model.Venue;
+import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.viewmodel.NetworkViewModel;
 import com.squareup.picasso.Picasso;
 
@@ -18,11 +19,21 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
     private TextView venueAddressTextView;
     private TextView selectButton;
     private NetworkViewModel viewModel;
+    private OnFragmentInteractionCompleteListener listener;
 
     public AddLocationViewHolder(@NonNull View itemView) {
         super(itemView);
-        viewModel = NetworkViewModel.getSingleInstance();
+        initViewModel();
+        initListener(itemView);
         findViews(itemView);
+    }
+
+    private void initViewModel() {
+        viewModel = NetworkViewModel.getSingleInstance();
+    }
+
+    private void initListener(@NonNull View itemView) {
+        listener = (OnFragmentInteractionCompleteListener) itemView.getContext();
     }
 
 
@@ -33,7 +44,7 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
         selectButton = itemView.findViewById(R.id.select_text_view);
     }
 
-    public void onBind(final Venue venue) {
+    void onBind(final Venue venue) {
         Picasso.get().load(R.drawable.ic_pin_drop_black_24dp).into(venueImageView);
         venueNameTextView.setText(venue.getName());
         venueAddressTextView.setText(venue.getLocation().getAddress());
@@ -41,6 +52,7 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 viewModel.setUserSelectedVenue(venue);
+                listener.closeFragment();
             }
         });
     }
