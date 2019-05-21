@@ -9,17 +9,21 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 import org.pursuit.zonechat.R;
 import org.pursuit.zonechat.model.Message;
+import org.pursuit.zonechat.viewmodel.ChatViewModel;
 
 public final class MessageAdapter extends FirebaseRecyclerAdapter<Message, MessageViewHolder> {
+    private final ChatViewModel chatViewModel;
 
-    MessageAdapter(@NonNull FirebaseRecyclerOptions<Message> options) {
+    MessageAdapter(@NonNull FirebaseRecyclerOptions<Message> options,
+                   @NonNull final ChatViewModel chatViewModel) {
         super(options);
+        this.chatViewModel = chatViewModel;
     }
 
     @Override
     protected void onBindViewHolder(@NonNull MessageViewHolder holder,
                                     int position, @NonNull Message model) {
-        holder.onBind(model);
+        holder.onBind(model, chatViewModel);
     }
 
     @NonNull

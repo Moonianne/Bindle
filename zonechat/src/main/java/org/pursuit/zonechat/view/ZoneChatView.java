@@ -96,7 +96,7 @@ public final class ZoneChatView extends Fragment {
     private void updateMessageList(Query query) {
         fireBaseAdapter = new MessageAdapter(new FirebaseRecyclerOptions.Builder<Message>()
           .setQuery(query, viewModel.getParser())
-          .build());
+          .build(), viewModel);
         fireBaseAdapter.notifyDataSetChanged();
     }
 
