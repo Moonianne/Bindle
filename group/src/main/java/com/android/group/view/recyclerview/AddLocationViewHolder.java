@@ -3,7 +3,6 @@ package com.android.group.view.recyclerview;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,7 +30,7 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
         venueImageView = itemView.findViewById(R.id.venue_image);
         venueNameTextView = itemView.findViewById(R.id.venue_name);
         venueAddressTextView = itemView.findViewById(R.id.venue_address);
-        selectButton = itemView.findViewById(R.id.select_button);
+        selectButton = itemView.findViewById(R.id.select_text_view);
     }
 
     public void onBind(final Venue venue) {
