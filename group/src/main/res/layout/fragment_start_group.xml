@@ -1,14 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".view.StartGroupFragment">
+    android:layout_height="400dp"
+    android:background="#FFF"
+    tools:context=".view.StartGroupFragment"
+    android:layout_marginTop="200dp"
+    android:clickable="true"
+    android:focusable="true">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/form_group_header_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/start_group_margin"
+        android:layout_marginTop="@dimen/start_group_margin"
+        android:text="Form Your Group"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/group_name_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/start_group_margin"
+        android:layout_marginTop="@dimen/start_group_margin"
+        android:layout_marginEnd="@dimen/start_group_margin"
+        android:hint="Group Name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/form_group_header_text_view" />
+
+    <LinearLayout
+        android:id="@+id/add_location_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/start_group_margin"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/start_group_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/group_name_text_view"
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/add_location_icon_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_pin_drop_black_24dp"/>
+
+        <TextView
+            android:id="@+id/add_location_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Location" />
+
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>

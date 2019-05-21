@@ -13,10 +13,10 @@ import retrofit2.Response;
 
 public class Repository {
 
-    public void getApiData(final onDataReceivedListener listener) {
+    public void getApiData(final onDataReceivedListener listener, String category) {
         RetrofitSingleton.getInstance()
           .create(BusinessService.class)
-          .getBusinesses()
+          .getBusinesses(category)
           .enqueue(new Callback<FourSquareResponse>() {
               @Override
               public void onResponse(Call<FourSquareResponse> call, Response<FourSquareResponse> response) {

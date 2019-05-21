@@ -1,22 +1,58 @@
 package com.android.group.viewmodel;
 
+import com.android.group.model.Venue;
 import com.android.group.model.VenueResponse;
 import com.android.group.respository.Repository;
 
+import java.util.List;
+
 public class NetworkViewModel implements Repository.onDataReceivedListener {
 
+    private static NetworkViewModel viewModel;
+    private OnDataLoadedListener dataLoadedListener;
+    private OnVenueSelectedListener venueSelectedListener;
     private Repository repository;
 
-    public NetworkViewModel() {
+
+    private NetworkViewModel() {
         repository = new Repository();
     }
 
-    public void makeNetworkCall(String query) {
-        repository.getApiData(this);
+    public static NetworkViewModel getSingleInstance() {
+        if (viewModel == null) {
+            viewModel = new NetworkViewModel();
+        }
+        return viewModel;
+    }
+
+    public void setOnDataLoadedListener(OnDataLoadedListener listener) {
+        this.dataLoadedListener = listener;
+    }
+
+    public void makeNetworkCall(String category) {
+        repository.getApiData(this, category);
+    }
+
+    public void setUserSelectedVenue(Venue venue){
+        venueSelectedListener.venueSelected(venue);
+
     }
 
     @Override
     public void dataReceived(VenueResponse venueResponse) {
         // TODO: 2019-05-18 do something with response
+        dataLoadedListener.dataLoaded(venueResponse.getVenues());
+    }
+
+    public void setVenueSelectedListener(OnVenueSelectedListener listener){
+        this.venueSelectedListener = listener;
+    }
+
+    public interface OnDataLoadedListener {
+        void dataLoaded(List<Venue> venues);
+    }
+
+    public interface OnVenueSelectedListener{
+        void venueSelected(Venue venue);
     }
 }
