@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.group.view.AddLocationFragment;
+import com.android.group.view.StartGroupFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -20,7 +22,10 @@ import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.model.Zone;
 import org.pursuit.zonechat.view.ZoneChatView;
 
-public final class HostActivity extends AppCompatActivity implements OnFragmentInteractionListener {
+
+public final class HostActivity extends AppCompatActivity implements OnFragmentInteractionListener,
+        StartGroupFragment.OnFragmentInteractionListener {
+
     private static final String TAG = "HostActivity";
     public static boolean granted;
 
@@ -58,6 +63,15 @@ public final class HostActivity extends AppCompatActivity implements OnFragmentI
           .commit();
     }
 
+    @Override
+    public void inflateFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.main_container, StartGroupFragment.getInstance())
+                .addToBackStack(null)
+                .commit();
+    }
+
     public void requestUserLocationPermission() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
           ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -80,5 +94,14 @@ public final class HostActivity extends AppCompatActivity implements OnFragmentI
                 Log.d(TAG, "firebase auth failed");
             }
         });
+    }
+
+    @Override
+    public void inflateAddLocationFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.main_container,AddLocationFragment.getInstance())
+                .addToBackStack(null)
+                .commit();
     }
 }

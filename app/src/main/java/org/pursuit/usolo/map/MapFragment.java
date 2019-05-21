@@ -15,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,6 +50,7 @@ import org.pursuit.zonechat.view.ZoneChatView;
 public final class MapFragment extends Fragment
   implements ZoneRepository.OnUpdatesEmittedListener, View.OnTouchListener {
 
+    private static final String TAG = "MapFragment";
     private static final String MAPBOX_ACCESS_TOKEN =
       "pk.eyJ1IjoibmFvbXlwIiwiYSI6ImNqdnBvMWhwczJhdzA0OWw2Z2R1bW9naGoifQ.h-ujnDnmD5LbLhyegylCNA";
     private static final String MAPBOX_STYLE_URL =
@@ -116,7 +118,16 @@ public final class MapFragment extends Fragment
     }
 
     private void setOnClick(View view) {
-        view.setOnClickListener(v -> animateFAB());
+        view.setOnClickListener(v -> {
+            animateFAB();
+            Log.d(TAG, "setOnClick: " + v.getId() + " " + R.id.fab1);
+            switch (v.getId()){
+
+                case R.id.fab1:
+                    listener.inflateFragment();
+                    break;
+            }
+        });
     }
 
     private void assignAnimations() {
