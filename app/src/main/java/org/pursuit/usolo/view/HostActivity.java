@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.group.view.AddLocationFragment;
+import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.view.StartGroupFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -24,8 +25,7 @@ import org.pursuit.zonechat.view.ZoneChatView;
 
 
 public final class HostActivity extends AppCompatActivity implements OnFragmentInteractionListener,
-        StartGroupFragment.OnFragmentInteractionListener {
-
+        StartGroupFragment.OnFragmentInteractionListener , OnFragmentInteractionCompleteListener {
     private static final String TAG = "HostActivity";
     public static boolean granted;
 
@@ -41,6 +41,30 @@ public final class HostActivity extends AppCompatActivity implements OnFragmentI
         ref.setValue(new Zone("Pursuit",
           new LatLng(40.7430877d, -73.9419287d),
           0));
+    }
+
+    private void loginToFirebase() {
+        // Authenticate with Firebase, and request location updates
+        String email = getString(R.string.firebase_email);
+        String password = getString(R.string.firebase_password);
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(
+                email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d(TAG, "firebase auth success");
+            } else {
+                Log.d(TAG, "firebase auth failed");
+            }
+        });
+    }
+
+    public void requestUserLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+        } else {
+            granted = true;
+            inflateFragment(MapFragment.newInstance());
+        }
     }
 
     @Override
@@ -67,33 +91,9 @@ public final class HostActivity extends AppCompatActivity implements OnFragmentI
     public void inflateFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.main_container, StartGroupFragment.getInstance())
+                .replace(R.id.main_container, StartGroupFragment.getInstance())
                 .addToBackStack(null)
                 .commit();
-    }
-
-    public void requestUserLocationPermission() {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-          ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
-        } else {
-            granted = true;
-            inflateFragment(MapFragment.newInstance());
-        }
-    }
-
-    private void loginToFirebase() {
-        // Authenticate with Firebase, and request location updates
-        String email = getString(R.string.firebase_email);
-        String password = getString(R.string.firebase_password);
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(
-          email, password).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Log.d(TAG, "firebase auth success");
-            } else {
-                Log.d(TAG, "firebase auth failed");
-            }
-        });
     }
 
     @Override
@@ -103,5 +103,10 @@ public final class HostActivity extends AppCompatActivity implements OnFragmentI
                 .add(R.id.main_container,AddLocationFragment.getInstance())
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void closeFragment() {
+        getSupportFragmentManager().popBackStackImmediate();
     }
 }

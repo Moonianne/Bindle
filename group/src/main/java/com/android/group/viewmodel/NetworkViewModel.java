@@ -38,14 +38,13 @@ public class NetworkViewModel implements Repository.onDataReceivedListener {
 
     }
 
-    @Override
-    public void dataReceived(VenueResponse venueResponse) {
-        // TODO: 2019-05-18 do something with response
-        dataLoadedListener.dataLoaded(venueResponse.getVenues());
-    }
-
     public void setVenueSelectedListener(OnVenueSelectedListener listener){
         this.venueSelectedListener = listener;
+    }
+
+    @Override
+    public void dataReceived(VenueResponse venueResponse) {
+        dataLoadedListener.dataLoaded(venueResponse.getVenues());
     }
 
     public interface OnDataLoadedListener {
