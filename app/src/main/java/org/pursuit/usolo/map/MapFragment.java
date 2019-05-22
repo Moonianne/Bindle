@@ -116,11 +116,8 @@ public final class MapFragment extends Fragment
         view.setOnClickListener(v -> {
             animateFAB();
             Log.d(TAG, "setOnClick: " + v.getId() + " " + R.id.fab1);
-            switch (v.getId()){
-
-                case R.id.fab1:
-                    listener.inflateStartGroupFragment();
-                    break;
+            if (v.getId() == R.id.fab1) {
+                listener.inflateStartGroupFragment();
             }
         });
     }
