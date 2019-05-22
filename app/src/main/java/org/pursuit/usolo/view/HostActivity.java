@@ -4,6 +4,7 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,8 +25,10 @@ import org.pursuit.usolo.map.model.Zone;
 import org.pursuit.zonechat.view.ZoneChatView;
 
 
-public final class HostActivity extends AppCompatActivity implements OnFragmentInteractionListener,
-        StartGroupFragment.OnFragmentInteractionListener , OnFragmentInteractionCompleteListener {
+public final class HostActivity extends AppCompatActivity
+  implements OnFragmentInteractionListener, StartGroupFragment.OnFragmentInteractionListener,
+  OnFragmentInteractionCompleteListener {
+
     private static final String TAG = "HostActivity";
     public static boolean granted;
 
@@ -43,30 +46,6 @@ public final class HostActivity extends AppCompatActivity implements OnFragmentI
           0));
     }
 
-    private void loginToFirebase() {
-        // Authenticate with Firebase, and request location updates
-        String email = getString(R.string.firebase_email);
-        String password = getString(R.string.firebase_password);
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(
-                email, password).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Log.d(TAG, "firebase auth success");
-            } else {
-                Log.d(TAG, "firebase auth failed");
-            }
-        });
-    }
-
-    public void requestUserLocationPermission() {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
-        } else {
-            granted = true;
-            inflateFragment(MapFragment.newInstance());
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -80,33 +59,59 @@ public final class HostActivity extends AppCompatActivity implements OnFragmentI
     }
 
     @Override
-    public void inflateFragment(Fragment fragment) {
-        getSupportFragmentManager()
-          .beginTransaction()
-          .replace(R.id.main_container, fragment)
-          .commit();
-    }
-
-    @Override
-    public void inflateFragment() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.main_container, StartGroupFragment.getInstance())
-                .addToBackStack(null)
-                .commit();
-    }
-
-    @Override
     public void inflateAddLocationFragment() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.main_container,AddLocationFragment.getInstance())
-                .addToBackStack(null)
-                .commit();
+        inflateFragment(AddLocationFragment.newInstance());
+    }
+
+    @Override
+    public void inflateStartGroupFragment() {
+        inflateFragment(StartGroupFragment.newInstance());
+    }
+
+    @Override
+    public void inflateZoneChatFragment() {
+        inflateFragment(ZoneChatView.newInstance());
     }
 
     @Override
     public void closeFragment() {
         getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    private void loginToFirebase() {
+        // Authenticate with Firebase, and request location updates
+        String email = getString(R.string.firebase_email);
+        String password = getString(R.string.firebase_password);
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(
+          email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d(TAG, "firebase auth success");
+            } else {
+                Log.d(TAG, "firebase auth failed");
+            }
+        });
+    }
+
+    public void requestUserLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+          ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+        } else {
+            granted = true;
+            inflateFragment(MapFragment.newInstance());
+        }
+    }
+
+    public void inflateFragment(Fragment fragment) {
+        inflateFragment(fragment, false);
+    }
+
+    public void inflateFragment(Fragment fragment, boolean addToBack) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager()
+          .beginTransaction();
+        if (addToBack) {
+            fragmentTransaction.replace(R.id.main_container, fragment);
+        }
+        fragmentTransaction.commit();
     }
 }

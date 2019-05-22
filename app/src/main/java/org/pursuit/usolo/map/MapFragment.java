@@ -13,8 +13,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -23,7 +21,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -34,7 +31,6 @@ import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.plugins.annotation.CircleManager;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
@@ -45,7 +41,6 @@ import org.pursuit.usolo.map.data.ZoneRepository;
 import org.pursuit.usolo.map.model.Zone;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
 import org.pursuit.usolo.view.OnFragmentInteractionListener;
-import org.pursuit.zonechat.view.ZoneChatView;
 
 public final class MapFragment extends Fragment
   implements ZoneRepository.OnUpdatesEmittedListener, View.OnTouchListener {
@@ -124,7 +119,7 @@ public final class MapFragment extends Fragment
             switch (v.getId()){
 
                 case R.id.fab1:
-                    listener.inflateFragment();
+                    listener.inflateStartGroupFragment();
                     break;
             }
         });
@@ -177,7 +172,7 @@ public final class MapFragment extends Fragment
         zoneDialog.setContentView(R.layout.zone_dialog_layout);
         Button viewZoneForumButton = zoneDialog.findViewById(R.id.view_zone_button);
         viewZoneForumButton.setOnClickListener(v -> {
-            listener.inflateFragment(ZoneChatView.newInstance());
+            listener.inflateZoneChatFragment();
             zoneDialog.dismiss();
         });
         zoneDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

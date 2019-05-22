@@ -2,7 +2,7 @@ package com.android.group.respository;
 
 import android.util.Log;
 
-import com.android.group.model.FourSquareResponse;
+import com.android.group.model.foursquare.FourSquareResponse;
 import com.android.group.model.VenueResponse;
 import com.android.group.network.BusinessService;
 import com.android.group.network.RetrofitSingleton;

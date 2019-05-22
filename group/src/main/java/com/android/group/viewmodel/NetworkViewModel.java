@@ -35,7 +35,6 @@ public class NetworkViewModel implements Repository.onDataReceivedListener {
 
     public void setUserSelectedVenue(Venue venue){
         venueSelectedListener.venueSelected(venue);
-
     }
 
     public void setVenueSelectedListener(OnVenueSelectedListener listener){
