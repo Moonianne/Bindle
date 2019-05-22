@@ -1,6 +1,6 @@
 package com.android.group.network;
 
-import com.android.group.model.FourSquareResponse;
+import com.android.group.model.foursquare.FourSquareResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

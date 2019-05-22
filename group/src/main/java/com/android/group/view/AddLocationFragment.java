@@ -29,10 +29,9 @@ public class AddLocationFragment extends Fragment {
     private NetworkViewModel viewModel;
     private AddLocationAdapter adapter;
 
-    public AddLocationFragment() {
-    }
+    public AddLocationFragment() {}
 
-    public static AddLocationFragment getInstance() {
+    public static AddLocationFragment newInstance(){
         return new AddLocationFragment();
     }
 
@@ -56,6 +55,7 @@ public class AddLocationFragment extends Fragment {
         viewModel.setOnDataLoadedListener(new NetworkViewModel.OnDataLoadedListener() {
             @Override
             public void dataLoaded(List<Venue> venues) {
+                Log.d(TAG, "dataLoaded: " + venues.get(0).getName());
                 adapter.setData(venues);
             }
         });

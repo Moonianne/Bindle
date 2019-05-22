@@ -1,4 +1,6 @@
-package com.android.group.model;
+package com.android.group.model.foursquare;
+
+import com.android.group.model.VenueResponse;
 
 public class FourSquareResponse {
     private VenueResponse response;

@@ -32,7 +32,7 @@ public class StartGroupFragment extends Fragment implements NetworkViewModel.OnV
         void inflateAddLocationFragment();
 
     }
-    public static StartGroupFragment getInstance(){
+    public static StartGroupFragment newInstance(){
         return new StartGroupFragment();
     }
 
