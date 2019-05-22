@@ -60,17 +60,17 @@ public final class HostActivity extends AppCompatActivity
 
     @Override
     public void inflateAddLocationFragment() {
-        inflateFragment(AddLocationFragment.newInstance());
+        inflateFragment(AddLocationFragment.newInstance(), true);
     }
 
     @Override
     public void inflateStartGroupFragment() {
-        inflateFragment(StartGroupFragment.newInstance());
+        inflateFragment(StartGroupFragment.newInstance(), true);
     }
 
     @Override
     public void inflateZoneChatFragment() {
-        inflateFragment(ZoneChatView.newInstance());
+        inflateFragment(ZoneChatView.newInstance(), true);
     }
 
     @Override
