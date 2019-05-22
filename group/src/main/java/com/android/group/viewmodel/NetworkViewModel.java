@@ -33,13 +33,11 @@ public class NetworkViewModel implements Repository.onDataReceivedListener {
         repository.getApiData(this, category);
     }
 
-    public void setUserSelectedVenue(Venue venue){
+    public void setUserSelectedVenue(Venue venue) {
         venueSelectedListener.venueSelected(venue);
     }
 
-
-
-    public void setVenueSelectedListener(OnVenueSelectedListener listener){
+    public void setVenueSelectedListener(OnVenueSelectedListener listener) {
         this.venueSelectedListener = listener;
     }
 
@@ -52,7 +50,7 @@ public class NetworkViewModel implements Repository.onDataReceivedListener {
         void dataLoaded(List<Venue> venues);
     }
 
-    public interface OnVenueSelectedListener{
+    public interface OnVenueSelectedListener {
         void venueSelected(Venue venue);
     }
 }

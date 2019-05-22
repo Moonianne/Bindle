@@ -3,14 +3,16 @@ package com.android.group.model.firebase;
 import java.util.List;
 
 public final class Group {
-    private final String groupName;
-    private final String category;
-    private final String iD;
-    private final List<Object> userList;
-    private final String description;
-    private final int users;
-    private final double lat;
-    private final double lng;
+    private String groupName;
+    private String category;
+    private String iD;
+    private List<Object> userList;
+    private String description;
+    private int users;
+    private double lat;
+    private double lng;
+
+    public Group() {}
 
     private Group(Builder builder) {
         this.groupName = builder.groupName;

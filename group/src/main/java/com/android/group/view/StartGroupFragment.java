@@ -1,6 +1,7 @@
 package com.android.group.view;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -50,7 +51,6 @@ public class StartGroupFragment extends Fragment implements NetworkViewModel.OnV
             throw new RuntimeException("Context does not implement OnFragmentInteractionListener");
         }
 
-        super.onAttach(context);
         if (context instanceof OnFragmentInteractionCompleteListener) {
             interactionCompleteListener = (OnFragmentInteractionCompleteListener) context;
         } else {
@@ -86,7 +86,7 @@ public class StartGroupFragment extends Fragment implements NetworkViewModel.OnV
 
     private void initViewModels() {
         networkViewModel = NetworkViewModel.getSingleInstance();
-        groupViewModel = GroupViewModel.getSingleInstance();
+        groupViewModel = ViewModelProviders.of(this).get(GroupViewModel.class);
     }
 
     private void setOnVenueSelectedListener() {
