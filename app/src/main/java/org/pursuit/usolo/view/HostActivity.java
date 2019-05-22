@@ -108,9 +108,10 @@ public final class HostActivity extends AppCompatActivity
 
     public void inflateFragment(Fragment fragment, boolean addToBack) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager()
-          .beginTransaction();
+          .beginTransaction()
+          .replace(R.id.main_container, fragment);
         if (addToBack) {
-            fragmentTransaction.replace(R.id.main_container, fragment);
+            fragmentTransaction.addToBackStack(null);
         }
         fragmentTransaction.commit();
     }
