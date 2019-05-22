@@ -2,20 +2,20 @@ package com.android.group.viewmodel;
 
 import com.android.group.model.Venue;
 import com.android.group.model.VenueResponse;
-import com.android.group.respository.Repository;
+import com.android.group.respository.FourSquareRepository;
 
 import java.util.List;
 
-public class NetworkViewModel implements Repository.onDataReceivedListener {
+public class NetworkViewModel implements FourSquareRepository.onDataReceivedListener {
 
     private static NetworkViewModel viewModel;
     private OnDataLoadedListener dataLoadedListener;
     private OnVenueSelectedListener venueSelectedListener;
-    private Repository repository;
+    private FourSquareRepository fourSquareRepository;
 
 
     private NetworkViewModel() {
-        repository = new Repository();
+        fourSquareRepository = new FourSquareRepository();
     }
 
     public static NetworkViewModel getSingleInstance() {
@@ -30,7 +30,7 @@ public class NetworkViewModel implements Repository.onDataReceivedListener {
     }
 
     public void makeNetworkCall(String category) {
-        repository.getApiData(this, category);
+        fourSquareRepository.getApiData(this, category);
     }
 
     public void setUserSelectedVenue(Venue venue) {
