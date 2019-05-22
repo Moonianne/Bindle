@@ -52,12 +52,9 @@ public class AddLocationFragment extends Fragment {
     }
 
     private void setViewModelListener() {
-        viewModel.setOnDataLoadedListener(new NetworkViewModel.OnDataLoadedListener() {
-            @Override
-            public void dataLoaded(List<Venue> venues) {
-                Log.d(TAG, "dataLoaded: " + venues.get(0).getName());
-                adapter.setData(venues);
-            }
+        viewModel.setOnDataLoadedListener(venues -> {
+            Log.d(TAG, "dataLoaded: " + venues.get(0).getName());
+            adapter.setData(venues);
         });
     }
 

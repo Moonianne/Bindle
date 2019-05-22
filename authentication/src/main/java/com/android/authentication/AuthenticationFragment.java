@@ -72,38 +72,32 @@ public final class AuthenticationFragment extends Fragment{
         progressBar = view.findViewById(R.id.progressBar);
         database = FirebaseDatabase.getInstance().getReference(); //todo throw in view model
         auth = FirebaseAuth.getInstance();
-        view.findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isValidField()) {
-                    final FirebaseUser user = auth.getCurrentUser();
-                    if (user != null) {
-                        user.reload();
-                        reAuthenticateUser(getEmail(), getPassword());
-                        if (user.isEmailVerified()) {
-                            signIn();
-                        } else {
-                            Toast.makeText(getContext(),
-                              "Please Verify Email to Proceed",
-                              Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.INVISIBLE);
-                        }
+        view.findViewById(R.id.button_login).setOnClickListener(v -> {
+            if (isValidField()) {
+                final FirebaseUser user = auth.getCurrentUser();
+                if (user != null) {
+                    user.reload();
+                    reAuthenticateUser(getEmail(), getPassword());
+                    if (user.isEmailVerified()) {
+                        signIn();
                     } else {
                         Toast.makeText(getContext(),
-                          "Wrong Email/Password, Try Again",
+                          "Please Verify Email to Proceed",
                           Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.INVISIBLE);
                     }
+                } else {
+                    Toast.makeText(getContext(),
+                      "Wrong Email/Password, Try Again",
+                      Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             }
         });
-        view.findViewById(R.id.button_signup).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: 2019-05-15 Bring user to Questions Fragment, then call registeruser() from there
-                if (isValidField()) {
-                    registerUser();
-                }
+        view.findViewById(R.id.button_signup).setOnClickListener(v -> {
+            // TODO: 2019-05-15 Bring user to Questions Fragment, then call registeruser() from there
+            if (isValidField()) {
+                registerUser();
             }
         });
     }
@@ -125,27 +119,24 @@ public final class AuthenticationFragment extends Fragment{
 
     private void signIn() {
         auth.signInWithEmailAndPassword(getEmail(), getPassword())
-          .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-              @Override
-              public void onComplete(@NonNull Task<AuthResult> task) {
-                  if (task.isSuccessful()) {
-                      //sign in successful update UI with user's information
-                      final FirebaseUser user = auth.getCurrentUser();
-                      String uid = null;
-                      if (user != null) {
-                          uid = user.getUid();
-                      }
-                      Log.d("sign in", "successful: " + uid);
-                      Toast.makeText(getContext(),
-                        "Welcome Back!",
-                        Toast.LENGTH_SHORT).show();
-                      progressBar.setVisibility(View.INVISIBLE);
-                      onButtonPressed();
-
-                  } else {
-                      Log.d("sign in ", "failure " + task.getException());
-                      progressBar.setVisibility(View.INVISIBLE);
+          .addOnCompleteListener(task -> {
+              if (task.isSuccessful()) {
+                  //sign in successful update UI with user's information
+                  final FirebaseUser user = auth.getCurrentUser();
+                  String uid = null;
+                  if (user != null) {
+                      uid = user.getUid();
                   }
+                  Log.d("sign in", "successful: " + uid);
+                  Toast.makeText(getContext(),
+                    "Welcome Back!",
+                    Toast.LENGTH_SHORT).show();
+                  progressBar.setVisibility(View.INVISIBLE);
+                  onButtonPressed();
+
+              } else {
+                  Log.d("sign in ", "failure " + task.getException());
+                  progressBar.setVisibility(View.INVISIBLE);
               }
           });
     }

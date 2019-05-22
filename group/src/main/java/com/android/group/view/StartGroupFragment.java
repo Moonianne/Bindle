@@ -94,34 +94,26 @@ public class StartGroupFragment extends Fragment implements NetworkViewModel.OnV
     }
 
     private void setAddLocationGroupListener() {
-        addLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                interactionListener.inflateAddLocationFragment();
-            }
-        });
+        addLocation.setOnClickListener(v -> interactionListener.inflateAddLocationFragment());
     }
 
     private void setStartButtonOnClickListener() {
-        startGroupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String groupName = groupNameEditText.getText().toString();
-                String groupDescription = groupDescriptionEditText.getText().toString();
-                if (!groupName.equals("")) {
-                    if (!groupDescription.equals("")) {
-                        if(userSelectedVenue != null){
-                            groupViewModel.createGroup(groupName,userSelectedVenue,groupDescription);
-                            interactionCompleteListener.closeFragment();
-                        }else{
-                            makeToast("Select a Location");
-                        }
-                    } else {
-                        makeToast("Provide a Group Description");
+        startGroupButton.setOnClickListener(v -> {
+            String groupName = groupNameEditText.getText().toString();
+            String groupDescription = groupDescriptionEditText.getText().toString();
+            if (!groupName.equals("")) {
+                if (!groupDescription.equals("")) {
+                    if(userSelectedVenue != null){
+                        groupViewModel.createGroup(groupName,userSelectedVenue,groupDescription);
+                        interactionCompleteListener.closeFragment();
+                    }else{
+                        makeToast("Select a Location");
                     }
                 } else {
-                    makeToast("Provide a Group Name");
+                    makeToast("Provide a Group Description");
                 }
+            } else {
+                makeToast("Provide a Group Name");
             }
         });
     }
