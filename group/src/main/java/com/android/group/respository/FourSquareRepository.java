@@ -5,16 +5,16 @@ import android.util.Log;
 import com.android.group.model.foursquare.FourSquareResponse;
 import com.android.group.model.VenueResponse;
 import com.android.group.network.BusinessService;
-import com.android.group.network.RetrofitSingleton;
+import com.android.group.network.FourSquareRetrofit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Repository {
+public final class FourSquareRepository {
 
     public void getApiData(final onDataReceivedListener listener, String category) {
-        RetrofitSingleton.getInstance()
+        FourSquareRetrofit.getInstance()
           .create(BusinessService.class)
           .getBusinesses(category)
           .enqueue(new Callback<FourSquareResponse>() {

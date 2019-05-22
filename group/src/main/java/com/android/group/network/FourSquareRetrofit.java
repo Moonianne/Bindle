@@ -3,13 +3,13 @@ package com.android.group.network;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RetrofitSingleton {
+public final class FourSquareRetrofit {
     private static Retrofit instance;
 
-    private RetrofitSingleton() {
+    private FourSquareRetrofit() {
     }
 
-    public static Retrofit getInstance() {
+    public synchronized static Retrofit getInstance() {
         if (instance == null) {
             instance = new Retrofit.Builder()
               .baseUrl("https://api.foursquare.com/")

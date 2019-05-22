@@ -22,7 +22,7 @@ import com.android.group.viewmodel.NetworkViewModel;
 
 import java.util.List;
 
-public class AddLocationFragment extends Fragment {
+public final class AddLocationFragment extends Fragment {
 
     private static final String TAG = "AddLocationFragment";
     private View rootView;
