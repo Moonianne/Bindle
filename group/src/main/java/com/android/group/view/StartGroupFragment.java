@@ -8,11 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.group.R;
 import com.android.group.model.Venue;
+import com.android.group.viewmodel.GroupViewModel;
 import com.android.group.viewmodel.NetworkViewModel;
 
 
@@ -20,29 +23,38 @@ public class StartGroupFragment extends Fragment implements NetworkViewModel.OnV
 
     private static final String TAG = "StartGroupFragment";
     private View rootView;
-    private NetworkViewModel viewModel;
-    private OnFragmentInteractionListener listener;
+    private NetworkViewModel networkViewModel;
+    private GroupViewModel groupViewModel;
+    private OnFragmentInteractionListener interactionListener;
+    private OnFragmentInteractionCompleteListener interactionCompleteListener;
+    private EditText groupNameEditText;
     private ViewGroup addLocation;
     private TextView addLocationTextView;
+    private EditText groupDescriptionEditText;
+    private Button startGroupButton;
+    private Venue userSelectedVenue;
 
     public StartGroupFragment() {
     }
 
-    public interface OnFragmentInteractionListener{
-        void inflateAddLocationFragment();
-
-    }
-    public static StartGroupFragment newInstance(){
+    public static StartGroupFragment newInstance() {
         return new StartGroupFragment();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof OnFragmentInteractionListener){
-            listener = (OnFragmentInteractionListener) context;
-        }else{
-            throw new RuntimeException("Context does not implement interface");
+        if (context instanceof OnFragmentInteractionListener) {
+            interactionListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException("Context does not implement OnFragmentInteractionListener");
+        }
+
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionCompleteListener) {
+            interactionCompleteListener = (OnFragmentInteractionCompleteListener) context;
+        } else {
+            throw new RuntimeException("Context does not implement OnFragmentInteractionCompleteListener");
         }
     }
 
@@ -51,36 +63,75 @@ public class StartGroupFragment extends Fragment implements NetworkViewModel.OnV
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_start_group, container, false);
         findViews();
-        initViewModel();
+        initViewModels();
         setOnVenueSelectedListener();
         setAddLocationGroupListener();
+        setStartButtonOnClickListener();
         return rootView;
     }
 
-    private void findViews() {
-        addLocation = rootView.findViewById(R.id.add_location_container);
-        addLocationTextView = rootView.findViewById(R.id.add_location_text_view);
+    @Override
+    public void venueSelected(Venue venue) {
+        userSelectedVenue = venue;
+        addLocationTextView.setText(userSelectedVenue.getLocation().getAddress());
     }
 
-    private void initViewModel() {
-        viewModel = NetworkViewModel.getSingleInstance();
+    private void findViews() {
+        groupNameEditText = rootView.findViewById(R.id.group_name_edit_text);
+        addLocation = rootView.findViewById(R.id.add_location_container);
+        addLocationTextView = rootView.findViewById(R.id.add_location_text_view);
+        groupDescriptionEditText = rootView.findViewById(R.id.group_description_edit_text);
+        startGroupButton = rootView.findViewById(R.id.start_group_button);
+    }
+
+    private void initViewModels() {
+        networkViewModel = NetworkViewModel.getSingleInstance();
+        groupViewModel = GroupViewModel.getSingleInstance();
     }
 
     private void setOnVenueSelectedListener() {
-        viewModel.setVenueSelectedListener(this);
+        networkViewModel.setVenueSelectedListener(this);
     }
 
     private void setAddLocationGroupListener() {
         addLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.inflateAddLocationFragment();
+                interactionListener.inflateAddLocationFragment();
             }
         });
     }
 
-    @Override
-    public void venueSelected(Venue venue) {
-        addLocationTextView.setText(venue.getLocation().getAddress());
+    private void setStartButtonOnClickListener() {
+        startGroupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String groupName = groupNameEditText.getText().toString();
+                String groupDescription = groupDescriptionEditText.getText().toString();
+                if (!groupName.equals("")) {
+                    if (!groupDescription.equals("")) {
+                        if(userSelectedVenue != null){
+                            groupViewModel.createGroup(groupName,userSelectedVenue,groupDescription);
+                            interactionCompleteListener.closeFragment();
+                        }else{
+                            makeToast("Select a Location");
+                        }
+                    } else {
+                        makeToast("Provide a Group Description");
+                    }
+                } else {
+                    makeToast("Provide a Group Name");
+                }
+            }
+        });
+    }
+
+    private void makeToast(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    public interface OnFragmentInteractionListener {
+        void inflateAddLocationFragment();
+
     }
 }

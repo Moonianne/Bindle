@@ -51,8 +51,8 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
         selectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.setUserSelectedVenue(venue);
                 listener.closeFragment();
+                viewModel.setUserSelectedVenue(venue);
             }
         });
     }
