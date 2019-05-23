@@ -44,4 +44,5 @@ dependencies {
     implementation project(path: ':zonechat')
     implementation project(path: ':group')
     implementation project(path: ':authentication')
+    implementation project(path: ':interactionlistener')
 }
