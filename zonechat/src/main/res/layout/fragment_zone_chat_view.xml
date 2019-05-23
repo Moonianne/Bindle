@@ -50,7 +50,7 @@
             android:id="@+id/chat_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorTrans"/>
+            android:background="@android:color/transparent"/>
 
     </android.support.v7.widget.CardView>
 
@@ -58,29 +58,32 @@
         android:id="@+id/messageEditText"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
         android:hint="message"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chat_card"
-        app:layout_constraintVertical_bias="0.733" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/sendButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:enabled="false"
+        android:layout_marginTop="8dp"
         android:background="@drawable/rectangle_round_outline_purple"
-        android:text="send"
+        android:enabled="false"
         android:fontFamily="@font/maven_pro_medium"
+        android:text="send"
         android:textColor="@color/colorDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.962"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chat_card"
-        app:layout_constraintVertical_bias="0.666" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.976" />
 
 </android.support.constraint.ConstraintLayout>
