@@ -14,7 +14,7 @@ import org.pursuit.usolo.map.model.Zone;
 
 
 public final class ZoneRepository {
-    private static final String PATH = "zones/";
+    private static final String PATH = "zones2/";
     private static final String TAG = "ZoneRepository";
 
     public void loginToFirebase(@NonNull final String email,

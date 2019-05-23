@@ -1,4 +1,4 @@
-package org.pursuit.usolo.view;
+package com.android.interactionlistener;
 
 
 public interface OnFragmentInteractionListener {

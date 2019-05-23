@@ -40,7 +40,7 @@ import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.data.ZoneRepository;
 import org.pursuit.usolo.map.model.Zone;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
-import org.pursuit.usolo.view.OnFragmentInteractionListener;
+import com.android.interactionlistener.OnFragmentInteractionListener;
 
 public final class MapFragment extends Fragment
   implements ZoneRepository.OnUpdatesEmittedListener, View.OnTouchListener {
