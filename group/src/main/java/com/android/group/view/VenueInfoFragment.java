@@ -2,14 +2,12 @@ package com.android.group.view;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.group.R;
-import com.android.group.model.Venue;
 
 public class VenueInfoFragment extends Fragment {
 
@@ -17,18 +15,8 @@ public class VenueInfoFragment extends Fragment {
     public VenueInfoFragment() {
     }
 
-    public static VenueInfoFragment newInstance(Venue venue){
-        VenueInfoFragment venueInfoFragment = new VenueInfoFragment();
-        Bundle args = new Bundle();
-//        args.putString();
-//        args.putString();
-        venueInfoFragment.setArguments(args);
-        return venueInfoFragment;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public static VenueInfoFragment newInstance(){
+        return new VenueInfoFragment();
     }
 
     @Override
