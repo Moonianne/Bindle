@@ -7,6 +7,6 @@ public interface OnFragmentInteractionListener {
 
     void inflateStartGroupFragment();
     void inflateZoneChatFragment();
-    void inflateVenueInfoFragment(String name, List formattedAddress);
+    void inflateVenueInfoFragment(String name, List<String> formattedAddress);
 
 }
