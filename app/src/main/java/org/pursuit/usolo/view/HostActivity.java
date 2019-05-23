@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.android.group.view.AddLocationFragment;
 import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.view.StartGroupFragment;
+import com.android.group.view.VenueInfoFragment;
 import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -72,6 +73,11 @@ public final class HostActivity extends AppCompatActivity
     @Override
     public void inflateZoneChatFragment() {
         inflateFragment(ZoneChatView.newInstance(), true);
+    }
+
+    @Override
+    public void inflateVenueInfoFragment() {
+        inflateFragment(VenueInfoFragment.newInstance(), true);
     }
 
     @Override
