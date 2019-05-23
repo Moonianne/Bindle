@@ -42,9 +42,6 @@ public final class HostActivity extends AppCompatActivity
         viewModel = ViewModelProviders.of(this).get(ZoneViewModel.class);
         viewModel.loginToFireBase();
         requestUserLocationPermission();
-        viewModel.setZone(new Zone("Pursuit", new HashMap<>(),
-          new LatLng(40.7430877d, -73.9419287d),
-          0));
     }
 
     @Override
