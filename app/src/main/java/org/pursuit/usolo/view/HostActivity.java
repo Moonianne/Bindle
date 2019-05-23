@@ -25,6 +25,7 @@ import org.pursuit.usolo.map.model.Zone;
 import org.pursuit.zonechat.view.ZoneChatView;
 
 import java.util.HashMap;
+import java.util.List;
 
 
 public final class HostActivity extends AppCompatActivity
@@ -73,8 +74,8 @@ public final class HostActivity extends AppCompatActivity
     }
 
     @Override
-    public void inflateVenueInfoFragment() {
-        inflateFragment(VenueInfoFragment.newInstance(), true);
+    public void inflateVenueInfoFragment(String name, List formattedAddress) {
+        inflateFragment(VenueInfoFragment.newInstance(name, formattedAddress), true);
     }
 
     @Override

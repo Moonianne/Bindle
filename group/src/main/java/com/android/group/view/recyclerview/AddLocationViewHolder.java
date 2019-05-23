@@ -63,7 +63,10 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
         moreInfoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onFragmentInteractionListener.inflateVenueInfoFragment();
+                onFragmentInteractionListener
+                  .inflateVenueInfoFragment(
+                    venue.getName(),
+                    venue.getLocation().getFormattedAddress());
             }
         });
     }
