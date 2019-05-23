@@ -20,6 +20,7 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
     private TextView selectButton;
     private NetworkViewModel viewModel;
     private OnFragmentInteractionCompleteListener listener;
+    private TextView moreInfoButton;
 
     public AddLocationViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -42,6 +43,7 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
         venueNameTextView = itemView.findViewById(R.id.venue_name);
         venueAddressTextView = itemView.findViewById(R.id.venue_address);
         selectButton = itemView.findViewById(R.id.select_text_view);
+        moreInfoButton = itemView.findViewById(R.id.more_info_text_view);
     }
 
     void onBind(final Venue venue) {
@@ -56,6 +58,4 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
             }
         });
     }
-
-
 }
