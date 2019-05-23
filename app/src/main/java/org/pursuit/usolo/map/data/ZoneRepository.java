@@ -12,32 +12,29 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.pursuit.usolo.map.model.Zone;
 
-
 public final class ZoneRepository {
-    private static final String PATH = "zones2/";
-    private static final String TAG = "ZoneRepository";
 
-    public void loginToFirebase(@NonNull final String email,
-                                @NonNull final String password) {
-        // Authenticate with Firebase, and request location updates
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(
-          email, password).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Log.d(TAG, "firebase auth success");
-            } else {
-                Log.d(TAG, "firebase auth failed");
-            }
-        });
+    private static final String PATH = "zone/";
+    private static final String ZONE = "pursuit/";
+    private static final String ZONECHAT = "ZONECHAT/";
+    private static final String TAG = "ZoneChatRepo";
+
+    private DatabaseReference zoneDataBaseReference;
+
+    public ZoneRepository() {
+        zoneDataBaseReference = FirebaseDatabase.getInstance()
+          .getReference(PATH);
     }
 
-    public void subscribeToUpdates(OnUpdatesEmittedListener listener) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(PATH);
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+    public void addZone(Zone zone) {
+
+    }
+
+    public void getZone(OnUpdatesEmittedListener listener) {
+        zoneDataBaseReference.child("pursuit").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Zone value = dataSnapshot.getValue(Zone.class);
-                listener.emitUpdate(value);
-                Log.d(TAG, "onDataChange: " + value.name);
+                listener.emitUpdate(dataSnapshot.getValue(Zone.class));
             }
 
             @Override
@@ -47,7 +44,27 @@ public final class ZoneRepository {
         });
     }
 
-    public interface OnUpdatesEmittedListener{
+    public DatabaseReference getZoneChatReference(){
+        return zoneDataBaseReference.child(ZONE).child(ZONECHAT);
+    }
+
+    public DatabaseReference getZoneLocationReference(){
+        return zoneDataBaseReference.child(ZONE);
+    }
+
+    public interface OnUpdatesEmittedListener {
         void emitUpdate(Zone zone);
+    }
+
+    public void loginToFirebase(@NonNull final String email,
+                                @NonNull final String password) {
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(
+          email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d(TAG, "firebase auth success");
+            } else {
+                Log.d(TAG, "firebase auth failed");
+            }
+        });
     }
 }

@@ -43,7 +43,7 @@ import org.pursuit.usolo.map.utils.GeoFenceCreator;
 import com.android.interactionlistener.OnFragmentInteractionListener;
 
 public final class MapFragment extends Fragment
-  implements ZoneRepository.OnUpdatesEmittedListener, View.OnTouchListener {
+  implements View.OnTouchListener {
 
     private static final String TAG = "MapFragment";
     private static final String MAPBOX_ACCESS_TOKEN =
@@ -90,7 +90,7 @@ public final class MapFragment extends Fragment
         zoneRepository.loginToFirebase(
           getString(R.string.firebase_email),
           getString(R.string.firebase_password));
-        zoneRepository.subscribeToUpdates(this);
+        zoneRepository.getZone(zone -> makeGeoFence(zone.location));
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
@@ -278,7 +278,4 @@ public final class MapFragment extends Fragment
         fab2.setClickable(true);
     }
 
-    public void emitUpdate(Zone zone) {
-        makeGeoFence(zone.location);
-    }
 }

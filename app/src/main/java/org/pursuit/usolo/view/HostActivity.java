@@ -1,5 +1,6 @@
 package org.pursuit.usolo.view;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -7,23 +8,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.android.group.view.AddLocationFragment;
 import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.view.StartGroupFragment;
 import com.android.interactionlistener.OnFragmentInteractionListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.MapFragment;
+import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
 import org.pursuit.usolo.map.model.Zone;
 import org.pursuit.zonechat.view.ZoneChatView;
+
+import java.util.HashMap;
 
 
 public final class HostActivity extends AppCompatActivity
@@ -31,6 +31,7 @@ public final class HostActivity extends AppCompatActivity
   OnFragmentInteractionCompleteListener {
 
     private static final String TAG = "HostActivity";
+    private ZoneViewModel viewModel;
     public static boolean granted;
 
     @Override
@@ -38,11 +39,10 @@ public final class HostActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host);
 
-        loginToFirebase();
+        viewModel = ViewModelProviders.of(this).get(ZoneViewModel.class);
+        viewModel.loginToFireBase();
         requestUserLocationPermission();
-        final String path = getString(R.string.firebase_path) + "2/";
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
-        ref.setValue(new Zone("Pursuit",
+        viewModel.setZone(new Zone("Pursuit", new HashMap<>(),
           new LatLng(40.7430877d, -73.9419287d),
           0));
     }
@@ -77,20 +77,6 @@ public final class HostActivity extends AppCompatActivity
     @Override
     public void closeFragment() {
         getSupportFragmentManager().popBackStackImmediate();
-    }
-
-    private void loginToFirebase() {
-        // Authenticate with Firebase, and request location updates
-        String email = getString(R.string.firebase_email);
-        String password = getString(R.string.firebase_password);
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(
-          email, password).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Log.d(TAG, "firebase auth success");
-            } else {
-                Log.d(TAG, "firebase auth failed");
-            }
-        });
     }
 
     public void requestUserLocationPermission() {

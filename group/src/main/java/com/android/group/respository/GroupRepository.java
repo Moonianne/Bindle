@@ -1,6 +1,5 @@
 package com.android.group.respository;
 
-import android.util.Log;
 
 import com.android.group.model.firebase.Group;
 import com.google.firebase.database.DatabaseReference;
