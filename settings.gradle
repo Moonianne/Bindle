@@ -1,1 +1,1 @@
-include ':app', ':zonechat', ':group', ':authentication'
+include ':app', ':zonechat', ':group', ':authentication', ':interactionlistener'
