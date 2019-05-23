@@ -15,6 +15,9 @@ import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.view.StartGroupFragment;
 import com.android.group.view.VenueInfoFragment;
 import com.android.interactionlistener.OnFragmentInteractionListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 
