@@ -36,7 +36,7 @@ public class GeoFenceCreator {
 
     private void buildGeoFence() {
         geofence = new Geofence.Builder()
-          .setRequestId("TestFence")
+          .setRequestId("Pursuit")
           .setCircularRegion(latLng.getLatitude(), latLng.getLongitude(), 25f)
           .setExpirationDuration(Geofence.NEVER_EXPIRE)
           .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)

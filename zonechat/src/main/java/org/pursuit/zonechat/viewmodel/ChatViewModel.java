@@ -2,24 +2,22 @@ package org.pursuit.zonechat.viewmodel;
 
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.firebase.ui.database.SnapshotParser;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
-import org.pursuit.zonechat.data.repository.ZoneRepository;
+import org.pursuit.zonechat.data.repository.ZoneChatRepo;
 import org.pursuit.zonechat.model.Message;
 
 import java.text.DateFormat;
 import java.util.Date;
 
 public final class ChatViewModel extends ViewModel {
-    private static final String ZONE_CHAT = "zoneChat";
-    private static final String ZONE_MESSAGES_CHILD = "zoneMessages";
+    private static final String ZONE_CHAT = "zone";
+    private static final String ZONE_MESSAGES_CHILD = "pursuit";
 
-    private final ZoneRepository zoneRepository =
-      new ZoneRepository(ZONE_CHAT, ZONE_MESSAGES_CHILD);
+    private final ZoneChatRepo zoneChatRepo =
+      new ZoneChatRepo(ZONE_CHAT, ZONE_MESSAGES_CHILD);
 
     private SnapshotParser<Message> parser;
     private String username = "anonymous";
@@ -29,11 +27,11 @@ public final class ChatViewModel extends ViewModel {
     }
 
     public DatabaseReference getMessageDatabaseReference() {
-        return zoneRepository.getMessageDatabaseReference();
+        return zoneChatRepo.getMessageDatabaseReference();
     }
 
     public void pushMessage(String message) {
-        zoneRepository.pushMessage()
+        zoneChatRepo.pushMessage()
           .setValue(new Message(
             username, message, null, System.currentTimeMillis()));
     }

@@ -3,13 +3,13 @@ package org.pursuit.zonechat.data.repository;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public final class ZoneRepository {
+public final class ZoneChatRepo {
     private DatabaseReference messageDatabaseReference;
 
 
-    public ZoneRepository(String zoneChat, String zoneMessagesChild) {
+    public ZoneChatRepo(String zone, String zoneName) {
         messageDatabaseReference = FirebaseDatabase.getInstance()
-          .getReference().child(zoneChat).child(zoneMessagesChild);
+          .getReference().child(zone).child(zoneName).child("zoneChat");
     }
 
     public DatabaseReference getMessageDatabaseReference() {
