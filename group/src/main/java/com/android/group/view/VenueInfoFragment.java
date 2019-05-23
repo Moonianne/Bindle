@@ -11,13 +11,15 @@ import android.view.ViewGroup;
 import com.android.group.R;
 import com.android.group.model.Venue;
 
+import java.util.List;
+
 public class VenueInfoFragment extends Fragment {
 
 
     public VenueInfoFragment() {
     }
 
-    public static VenueInfoFragment newInstance(Venue venue){
+    public static VenueInfoFragment newInstance(String name, List formattedAddress){
         VenueInfoFragment venueInfoFragment = new VenueInfoFragment();
         Bundle args = new Bundle();
 //        args.putString();
