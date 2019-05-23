@@ -74,7 +74,7 @@ public final class HostActivity extends AppCompatActivity
     }
 
     @Override
-    public void inflateVenueInfoFragment(String name, List formattedAddress) {
+    public void inflateVenueInfoFragment(String name, List<String> formattedAddress) {
         inflateFragment(VenueInfoFragment.newInstance(name, formattedAddress), true);
     }
 
