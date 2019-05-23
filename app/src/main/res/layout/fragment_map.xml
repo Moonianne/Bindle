@@ -44,14 +44,16 @@
                     android:layout_marginStart="32dp"
                     android:layout_marginBottom="8dp"
                     android:text="@string/your_current_activity"
+                    android:fontFamily="@font/maven_pro_bold"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <android.support.v7.widget.CardView
                     android:layout_width="350dp"
-                    android:layout_height="100dp"
+                    android:layout_height="200dp"
                     android:layout_gravity="center"
-                    mapbox:cardCornerRadius="4dp"
+                    mapbox:cardCornerRadius="8dp"
                     mapbox:cardElevation="4dp"
                     mapbox:cardUseCompatPadding="true">
 
@@ -63,12 +65,16 @@
                             android:id="@+id/textView_activity_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
+                            android:layout_marginLeft="8dp"
                             android:layout_marginTop="16dp"
-                            android:layout_marginBottom="16dp"
+                            android:layout_marginBottom="8dp"
+                            android:fontFamily="@font/maven_pro_bold"
                             android:text="Meeting at the MET"
+                            android:textColor="@color/colorDark"
                             android:textSize="18sp"
                             android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintVertical_bias="0.0"
                             mapbox:layout_constraintLeft_toLeftOf="parent"
                             mapbox:layout_constraintTop_toTopOf="parent" />
 
@@ -76,12 +82,39 @@
                             android:id="@+id/textView_activity_address"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
                             android:layout_marginTop="16dp"
-                            android:layout_marginBottom="16dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:fontFamily="@font/maven_pro_medium"
                             android:text="1000 5th Ave \n New York, NY 10028"
+                            android:textColor="@color/colorDark"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintVertical_bias="0.0"
                             mapbox:layout_constraintLeft_toRightOf="@+id/textView_activity_name"
                             mapbox:layout_constraintTop_toTopOf="parent" />
+
+                        <Button
+                            android:id="@+id/view_your_group_button"
+                            android:layout_width="150dp"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/rectangle_round_outline_purple"
+                            android:fontFamily="@font/maven_pro_bold"
+                            android:text="View forum"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="12sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.035"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.88" />
                     </android.support.constraint.ConstraintLayout>
                 </android.support.v7.widget.CardView>
 
@@ -92,6 +125,8 @@
                     android:layout_marginTop="32dp"
                     android:layout_marginBottom="8dp"
                     android:text="@string/happening_now_nearby"
+                    android:fontFamily="@font/maven_pro_bold"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -110,6 +145,8 @@
                     android:layout_marginTop="32dp"
                     android:layout_marginBottom="8dp"
                     android:text="@string/search_for_groups_by_category"
+                    android:fontFamily="@font/maven_pro_bold"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -121,6 +158,8 @@
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
                     android:text="@string/nightlife"
+                    android:fontFamily="@font/maven_pro_bold"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -130,7 +169,12 @@
                     android:layout_gravity="center"
                     mapbox:cardCornerRadius="4dp"
                     mapbox:cardElevation="4dp"
-                    mapbox:cardUseCompatPadding="true" />
+                    mapbox:cardUseCompatPadding="true" >
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icon_nighltlife_purple_grad"/>
+            </android.support.v7.widget.CardView>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -140,6 +184,8 @@
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
                     android:text="@string/sightseeing"
+                    android:fontFamily="@font/maven_pro_bold"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -149,7 +195,12 @@
                     android:layout_gravity="center"
                     mapbox:cardCornerRadius="4dp"
                     mapbox:cardElevation="4dp"
-                    mapbox:cardUseCompatPadding="true" />
+                    mapbox:cardUseCompatPadding="true" >
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/icon_sightseeing_purple_grad"/>
+            </android.support.v7.widget.CardView>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -159,6 +210,8 @@
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
                     android:text="@string/eat_and_drink"
+                    android:fontFamily="@font/maven_pro_bold"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -168,7 +221,12 @@
                     android:layout_gravity="center"
                     mapbox:cardCornerRadius="4dp"
                     mapbox:cardElevation="4dp"
-                    mapbox:cardUseCompatPadding="true" />
+                    mapbox:cardUseCompatPadding="true">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/icon_eatdrink_purple_grad"/>
+                </android.support.v7.widget.CardView>
 
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

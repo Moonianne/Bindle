@@ -46,5 +46,6 @@ dependencies {
     implementation project(path: ':zonechat')
     implementation project(path: ':group')
     implementation project(path: ':authentication')
+    implementation project(path: ':baseresources')
     implementation project(path: ':interactionlistener')
 }

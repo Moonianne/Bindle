@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.ZoneChatView">
+    tools:context=".view.ZoneChatView"
+    android:background="@drawable/background_yellow_white_grad">
 
     <TextView
         android:id="@+id/zone_title"
@@ -12,6 +13,8 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="The Metropolitan Museum of Art"
+        android:fontFamily="@font/maven_pro_medium"
+        android:textColor="@color/colorDark"
         android:textSize="20sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -23,6 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="Loaction: The MET"
+        android:fontFamily="@font/maven_pro_medium"
+        android:textColor="@color/colorDark"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/zone_title" />
@@ -44,19 +49,22 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/chat_rv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@color/colorTrans"/>
 
     </android.support.v7.widget.CardView>
 
     <EditText
         android:id="@+id/messageEditText"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:hint="message"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chat_card" />
+        app:layout_constraintTop_toBottomOf="@id/chat_card"
+        app:layout_constraintVertical_bias="0.733" />
 
     <Button
         android:id="@+id/sendButton"
@@ -64,7 +72,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:enabled="false"
+        android:background="@drawable/rectangle_round_outline_purple"
         android:text="send"
+        android:fontFamily="@font/maven_pro_medium"
+        android:textColor="@color/colorDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.962"
         app:layout_constraintLeft_toLeftOf="parent"
