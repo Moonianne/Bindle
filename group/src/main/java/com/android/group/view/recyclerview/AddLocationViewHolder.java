@@ -10,7 +10,6 @@ import com.android.group.R;
 import com.android.group.model.Venue;
 import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.viewmodel.NetworkViewModel;
-import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.squareup.picasso.Picasso;
 
 public class AddLocationViewHolder extends RecyclerView.ViewHolder {
@@ -21,7 +20,6 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
     private TextView selectButton;
     private NetworkViewModel viewModel;
     private OnFragmentInteractionCompleteListener listener;
-    private OnFragmentInteractionListener onFragmentInteractionListener;
     private TextView moreInfoButton;
 
     public AddLocationViewHolder(@NonNull View itemView) {
@@ -37,7 +35,6 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
 
     private void initListener(@NonNull View itemView) {
         listener = (OnFragmentInteractionCompleteListener) itemView.getContext();
-        onFragmentInteractionListener = (OnFragmentInteractionListener) itemView.getContext();
     }
 
 
