@@ -13,7 +13,6 @@ import android.widget.Toast;
 import com.android.group.view.AddLocationFragment;
 import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.view.StartGroupFragment;
-import com.android.group.view.VenueInfoFragment;
 import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
@@ -21,10 +20,8 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
-import org.pursuit.usolo.map.model.Zone;
 import org.pursuit.zonechat.view.ZoneChatView;
 
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -71,11 +68,6 @@ public final class HostActivity extends AppCompatActivity
     @Override
     public void inflateZoneChatFragment() {
         inflateFragment(ZoneChatView.newInstance(), true);
-    }
-
-    @Override
-    public void inflateVenueInfoFragment(String name, List<String> formattedAddress) {
-        inflateFragment(VenueInfoFragment.newInstance(name, formattedAddress), true);
     }
 
     @Override
