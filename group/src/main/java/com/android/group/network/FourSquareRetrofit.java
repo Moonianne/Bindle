@@ -5,6 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public final class FourSquareRetrofit {
     private static Retrofit instance;
+    // TODO: 2019-05-23 Change name of this class to something more general
 
     private FourSquareRetrofit() {
     }
