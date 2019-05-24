@@ -18,6 +18,7 @@ import com.android.group.view.AddLocationFragment;
 import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.view.StartGroupFragment;
 import com.android.interactionlistener.OnFragmentInteractionListener;
+import com.example.exploregroup.view.ExploreGroupsFragment;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.pursuit.firebasetools.Repository.FireRepo;
@@ -99,6 +100,11 @@ public final class HostActivity extends AppCompatActivity
     @Override
     public void inflateZoneChatFragment() {
         inflateFragment(ZoneChatView.newInstance(), true);
+    }
+
+    @Override
+    public void inflateExploreGroupsFragment() {
+        inflateFragment(ExploreGroupsFragment.newInstance(),true);
     }
 
     @Override

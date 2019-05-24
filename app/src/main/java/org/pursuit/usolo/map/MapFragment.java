@@ -107,8 +107,7 @@ public final class MapFragment extends Fragment
         bottomSheetBehavior.setPeekHeight(130);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         mapView = view.findViewById(R.id.mapView);
-        mapView.getMapAsync(mapboxMap ->
-          this.mapboxMap = mapboxMap);
+        mapView.getMapAsync(mapboxMap -> this.mapboxMap = mapboxMap);
     }
 
     private void setOnClick(View view) {
@@ -117,6 +116,9 @@ public final class MapFragment extends Fragment
             Log.d(TAG, "setOnClick: " + v.getId() + " " + R.id.fab1);
             if (v.getId() == R.id.fab1) {
                 listener.inflateStartGroupFragment();
+            }
+            if (v.getId() == R.id.fab2) {
+                listener.inflateExploreGroupsFragment();
             }
         });
     }
