@@ -13,7 +13,6 @@ import com.android.group.R;
 import com.android.group.model.Venue;
 import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.viewmodel.NetworkViewModel;
-import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.squareup.picasso.Picasso;
 
 public class AddLocationViewHolder extends RecyclerView.ViewHolder {
@@ -24,7 +23,6 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
     private TextView selectButton;
     private NetworkViewModel viewModel;
     private OnFragmentInteractionCompleteListener listener;
-    private OnFragmentInteractionListener onFragmentInteractionListener;
     private TextView moreInfoButton;
     private Venue venue;
 
@@ -41,9 +39,7 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
 
     private void initListener(@NonNull View itemView) {
         listener = (OnFragmentInteractionCompleteListener) itemView.getContext();
-        onFragmentInteractionListener = (OnFragmentInteractionListener) itemView.getContext();
     }
-
 
     private void findViews(@NonNull View itemView) {
         venueImageView = itemView.findViewById(R.id.venue_image);
@@ -75,7 +71,7 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
 
     public void InflateDialogImageBox() {
         LayoutInflater layoutInflater = LayoutInflater.from(itemView.getContext());
-        View view = layoutInflater.inflate(R.layout.fragment_venue_info, null);
+        View view = layoutInflater.inflate(R.layout.venue_info_dialog, null);
         ImageView imageViewVenue = view.findViewById(R.id.imageView_venue_picture);
         TextView textViewVenueName = view.findViewById(R.id.textView_venue_name);
         TextView textViewVenueAddress = view.findViewById(R.id.textView_venue_address);
