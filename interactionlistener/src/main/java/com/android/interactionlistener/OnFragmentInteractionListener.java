@@ -9,4 +9,6 @@ public interface OnFragmentInteractionListener {
     void onLoginSuccess();
 
     void openDirections(String VenueAddress);
+
+    void inflateExploreGroupsFragment();
 }
