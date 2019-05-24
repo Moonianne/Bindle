@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    android:orientation="vertical"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="@color/colorTrans"
+    android:orientation="vertical">
+
 
     <TextView
         android:id="@+id/nameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="0"
+        android:fontFamily="@font/maven_pro_bold"
         android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/cDark"
         tools:text="Name" />
 
     <TextView
@@ -18,7 +22,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="0"
+        android:fontFamily="@font/maven_pro_medium"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/cDark"
         tools:text="Message" />
 
     <TextView
@@ -27,7 +33,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0"
+        android:fontFamily="@font/maven_pro"
         android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/cDark"
         tools:text="time" />
 
 </LinearLayout>

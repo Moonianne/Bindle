@@ -15,83 +15,115 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/maven_pro_bold"
+        android:foregroundGravity="center"
+        android:gravity="center"
         android:text="Form Your Group"
+        android:textColor="@color/cPrimaryDark"
         android:textSize="28sp"
-        app:layout_constraintBottom_toTopOf="@id/group_name_edit_text"
-        android:textColor="#0C1F86"
-        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.411"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.024" />
 
     <EditText
         android:id="@+id/group_name_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="327dp"
+        android:layout_height="47dp"
         android:layout_marginStart="@dimen/start_group_margin"
         android:layout_marginTop="@dimen/start_group_margin"
         android:layout_marginEnd="@dimen/start_group_margin"
-        android:background="@android:color/transparent"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rectangle_round_light_gray"
         android:hint="Group Name"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@id/add_location_container"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/form_group_header_text_view" />
+        app:layout_constraintTop_toBottomOf="@id/form_group_header_text_view"
+        app:layout_constraintVertical_bias="0.012" />
 
     <LinearLayout
         android:id="@+id/add_location_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/start_group_margin"
+        android:layout_width="380dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="@dimen/start_group_margin"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
         android:clickable="true"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/group_description_edit_text"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/group_description_edit_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/group_name_edit_text">
 
-        <ImageView
-            android:id="@+id/add_location_icon_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/ic_pin_drop_black_24dp" />
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="100dp"
+            android:background="@drawable/rectangle_round_purp_grad"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
 
-        <TextView
-            android:id="@+id/add_location_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="Add Location"
-            android:textSize="18sp" />
+            <ImageView
+                android:id="@+id/add_location_icon_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="60dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_pin_drop_white_24dp" />
+
+            <TextView
+                android:id="@+id/add_location_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:text="Add Location"
+                android:textSize="18sp"
+                android:fontFamily="@font/maven_pro_bold"
+                android:textColor="@color/colorWhite"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <EditText
         android:id="@+id/group_description_edit_text"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="16dp"
-        android:background="@android:color/transparent"
+        android:layout_width="327dp"
+        android:layout_height="272dp"
+
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rectangle_round_light_gray"
         android:gravity="top|start"
         android:hint="@string/provide_a_description_for_this_group"
         android:inputType="textLongMessage|textMultiLine|textCapSentences"
         android:padding="8sp"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@id/start_group_button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/add_location_container" />
+        app:layout_constraintTop_toBottomOf="@+id/group_name_edit_text"
+        app:layout_constraintVertical_bias="0.416" />
 
     <Button
         android:id="@+id/start_group_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:background="#0C1F86"
+        android:layout_width="280dp"
+        android:layout_height="80dp"
+        android:background="@drawable/rectangle_round_purp_grad"
         android:elevation="4dp"
         android:padding="4dp"
         android:text="Start Group"
-        android:textColor="#FFF"
-        android:textSize="18sp"
+        android:textColor="@color/colorWhite"
+        android:textSize="16sp"
+        android:fontFamily="@font/maven_pro_bold"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
