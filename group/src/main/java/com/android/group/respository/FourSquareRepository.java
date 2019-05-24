@@ -12,6 +12,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public final class FourSquareRepository {
+    // TODO: 2019-05-23 Change name of this repository to something more general for yelp addition
 
     public void getApiData(final onDataReceivedListener listener, String category) {
         FourSquareRetrofit.getInstance()

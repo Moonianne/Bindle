@@ -14,16 +14,14 @@ import com.android.group.view.AddLocationFragment;
 import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.view.StartGroupFragment;
 import com.android.interactionlistener.OnFragmentInteractionListener;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 
 
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
-import org.pursuit.usolo.map.model.Zone;
 import org.pursuit.zonechat.view.ZoneChatView;
 
-import java.util.HashMap;
+import java.util.List;
 
 
 public final class HostActivity extends AppCompatActivity
