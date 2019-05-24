@@ -37,7 +37,7 @@
                     android:fontFamily="@font/maven_pro_medium"
                     android:text="Zone name"
                     android:textAlignment="center"
-                    android:textColor="@color/colorDark"
+                    android:textColor="@color/cDark"
                     android:textSize="25sp"
                     android:textStyle="bold" />
 
@@ -51,7 +51,7 @@
                     android:fontFamily="@font/maven_pro_bold"
                     android:text="View forum"
                     android:textAlignment="center"
-                    android:textColor="@color/colorDark" />
+                    android:textColor="@color/cDark" />
             </LinearLayout>
 
         </LinearLayout>

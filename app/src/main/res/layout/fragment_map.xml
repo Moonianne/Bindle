@@ -45,7 +45,7 @@
                     android:layout_marginBottom="8dp"
                     android:text="@string/your_current_activity"
                     android:fontFamily="@font/maven_pro_bold"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/cPrimaryDark"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -70,7 +70,7 @@
                             android:layout_marginBottom="8dp"
                             android:fontFamily="@font/maven_pro_bold"
                             android:text="Meeting at the MET"
-                            android:textColor="@color/colorDark"
+                            android:textColor="@color/cDark"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -87,7 +87,7 @@
                             android:layout_marginBottom="8dp"
                             android:fontFamily="@font/maven_pro_medium"
                             android:text="1000 5th Ave \n New York, NY 10028"
-                            android:textColor="@color/colorDark"
+                            android:textColor="@color/cDark"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintVertical_bias="0.0"
@@ -107,7 +107,7 @@
                             android:fontFamily="@font/maven_pro_bold"
                             android:text="View forum"
                             android:textAlignment="center"
-                            android:textColor="@color/colorPrimaryDark"
+                            android:textColor="@color/cPrimaryDark"
                             android:textSize="12sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -126,7 +126,7 @@
                     android:layout_marginBottom="8dp"
                     android:text="@string/happening_now_nearby"
                     android:fontFamily="@font/maven_pro_bold"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/cPrimaryDark"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -146,7 +146,7 @@
                     android:layout_marginBottom="8dp"
                     android:text="@string/search_for_groups_by_category"
                     android:fontFamily="@font/maven_pro_bold"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/cPrimaryDark"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -159,7 +159,7 @@
                     android:gravity="center"
                     android:text="@string/nightlife"
                     android:fontFamily="@font/maven_pro_bold"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/cPrimaryDark"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -185,7 +185,7 @@
                     android:gravity="center"
                     android:text="@string/sightseeing"
                     android:fontFamily="@font/maven_pro_bold"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/cPrimaryDark"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -211,7 +211,7 @@
                     android:gravity="center"
                     android:text="@string/eat_and_drink"
                     android:fontFamily="@font/maven_pro_bold"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/cPrimaryDark"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -241,7 +241,7 @@
         android:layout_marginBottom="220dp"
         android:src="@drawable/ic_search_black_24dp"
         android:visibility="invisible"
-        app:backgroundTint="@color/colorFAB2"
+        app:backgroundTint="@color/cPrimary"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp" />
 
@@ -253,7 +253,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="154dp"
         android:visibility="invisible"
-        app:backgroundTint="@color/colorFAB1"
+        app:backgroundTint="@color/cPrimaryDark"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp" />
 
@@ -264,7 +264,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="64dp"
-        app:backgroundTint="@color/colorAccent"
+        app:backgroundTint="@color/cPrimaryLight"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp" />
 
