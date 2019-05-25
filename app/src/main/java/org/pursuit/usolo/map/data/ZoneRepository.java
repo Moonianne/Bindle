@@ -8,11 +8,15 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.annotations.Nullable;
 
 import org.pursuit.usolo.map.model.Zone;
 
 public final class ZoneRepository {
+    private static ZoneRepository instance;
 
     private static final String PATH = "zone/";
     private static final String ZONE = "pursuit/";
@@ -21,13 +25,61 @@ public final class ZoneRepository {
 
     private DatabaseReference zoneDataBaseReference;
 
+    public static ZoneRepository getInstance() {
+        if (instance == null) {
+            instance = new ZoneRepository();
+        }
+        return instance;
+    }
+
     public ZoneRepository() {
         zoneDataBaseReference = FirebaseDatabase.getInstance()
           .getReference(PATH);
     }
 
     public void addZone(Zone zone) {
+    }
 
+    public void addUserToCount(String zoneName) {
+        zoneDataBaseReference.child("pursuit").runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                Zone zone = mutableData.getValue(Zone.class);
+                if (zone == null) {
+                    return Transaction.success(mutableData);
+                }
+                zone.users = zone.users + 1;
+                mutableData.setValue(zone);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onComplete: " + databaseError);
+            }
+        });
+    }
+
+    public void removeUserFromCount(String zoneName) {
+        zoneDataBaseReference.child("pursuit").runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                Zone zone = mutableData.getValue(Zone.class);
+                if (zone == null) {
+                    return Transaction.success(mutableData);
+                }
+                zone.users = zone.users - 1;
+                mutableData.setValue(zone);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onComplete: " + databaseError);
+            }
+        });
     }
 
     public void getZone(OnUpdatesEmittedListener listener) {
@@ -44,11 +96,11 @@ public final class ZoneRepository {
         });
     }
 
-    public DatabaseReference getZoneChatReference(){
+    public DatabaseReference getZoneChatReference() {
         return zoneDataBaseReference.child(ZONE).child(ZONECHAT);
     }
 
-    public DatabaseReference getZoneLocationReference(){
+    public DatabaseReference getZoneLocationReference() {
         return zoneDataBaseReference.child(ZONE);
     }
 

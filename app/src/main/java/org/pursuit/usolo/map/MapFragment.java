@@ -3,6 +3,7 @@ package org.pursuit.usolo.map;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -37,9 +38,11 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 
 import org.pursuit.usolo.R;
+import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
 import org.pursuit.usolo.map.data.ZoneRepository;
 import org.pursuit.usolo.map.model.Zone;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
+
 import com.android.interactionlistener.OnFragmentInteractionListener;
 
 public final class MapFragment extends Fragment
@@ -53,7 +56,8 @@ public final class MapFragment extends Fragment
     private static final String ID_ICON_DEFAULT = "icon-default";
     private static final String MARKER_IMAGE = "custom-marker";
 
-    OnFragmentInteractionListener listener;
+    private ZoneViewModel zoneViewModel;
+    private OnFragmentInteractionListener listener;
     private MapView mapView;
     private boolean isFabOpen;
     private FloatingActionButton fab, fab1, fab2;
@@ -80,17 +84,14 @@ public final class MapFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        zoneViewModel = ViewModelProviders.of(this).get(ZoneViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         zoneDialog = new Dialog(getContext());
-        ZoneRepository zoneRepository = new ZoneRepository();
-        zoneRepository.loginToFirebase(
-          getString(R.string.firebase_email),
-          getString(R.string.firebase_password));
-        zoneRepository.getZone(zone -> makeGeoFence(zone.location));
+        zoneViewModel.getZone(zone -> makeGeoFence(zone.location));
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
