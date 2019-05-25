@@ -2,6 +2,7 @@ package org.pursuit.firebasetools.model;
 
 public final class Message {
     private long timeStamp;
+    private String iD;
     private String userName;
     private String messageText;
 
@@ -20,6 +21,14 @@ public final class Message {
 
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public String getiD() {
+        return iD;
+    }
+
+    public void setiD(String iD) {
+        this.iD = iD;
     }
 
     public String getUserName() {

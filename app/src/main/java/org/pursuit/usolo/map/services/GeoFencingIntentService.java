@@ -7,7 +7,7 @@ import android.util.Log;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
-import org.pursuit.usolo.map.data.ZoneRepository;
+import org.pursuit.firebasetools.Repository.FireRepo;
 import org.pursuit.usolo.map.utils.Notification;
 
 
@@ -28,11 +28,11 @@ public final class GeoFencingIntentService extends IntentService {
         switch (TransitionType) {
             case Geofence.GEOFENCE_TRANSITION_ENTER:
                 sendNotification("Just Entered Fence");
-                ZoneRepository.getInstance().addUserToCount("pursuit");
+                FireRepo.getInstance().addUserToCount("pursuit");
                 break;
             case Geofence.GEOFENCE_TRANSITION_EXIT:
                 sendNotification("Just Exited Fence");
-                ZoneRepository.getInstance().removeUserFromCount("pursuit");
+                FireRepo.getInstance().removeUserFromCount("pursuit");
                 break;
             case Geofence.GEOFENCE_TRANSITION_DWELL:
                 sendNotification("Just Dwelling Fence");

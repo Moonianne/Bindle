@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.Nullable;
@@ -32,14 +33,14 @@ public final class FireRepo {
     private final DatabaseReference groupDataBaseReference;
     private final DatabaseReference groupChatDataBaseReference;
 
-    public FireRepo() {
+    private FireRepo() {
         zoneDataBaseReference = FirebaseDatabase.getInstance().getReference(ZONES_PATH);
         zoneChatDataBaseReference = FirebaseDatabase.getInstance().getReference(ZONECHATS_PATH);
         groupDataBaseReference = FirebaseDatabase.getInstance().getReference(GROUPS_PATH);
         groupChatDataBaseReference = FirebaseDatabase.getInstance().getReference(GROUPCHATS_PATH);
     }
 
-    public void addZone(@NonNull Zone zone) {
+    public void addZone(@NonNull final Zone zone) {
         zoneDataBaseReference.child(zone.getName()).setValue(zone);
     }
 
@@ -57,8 +58,8 @@ public final class FireRepo {
         });
     }
 
-    public void addUserToCount(@NonNull String zoneName) {
-        zoneDataBaseReference.child("pursuit").runTransaction(new Transaction.Handler() {
+    public void addUserToCount(@NonNull final String zoneName) {
+        zoneDataBaseReference.child(zoneName).runTransaction(new Transaction.Handler() {
             @NonNull
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
@@ -73,13 +74,13 @@ public final class FireRepo {
 
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
-                Log.d("jimenez", "onComplete: " + databaseError);
+                Log.d("TAG", "onComplete: " + databaseError);
             }
         });
     }
 
-    public void removeUserFromCount(@NonNull String zoneName) {
-        zoneDataBaseReference.child("pursuit").runTransaction(new Transaction.Handler() {
+    public void removeUserFromCount(@NonNull final String zoneName) {
+        zoneDataBaseReference.child(zoneName).runTransaction(new Transaction.Handler() {
             @NonNull
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
@@ -94,7 +95,7 @@ public final class FireRepo {
 
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
-                Log.d("jimenez", "onComplete: " + databaseError);
+                Log.d("TAG", "onComplete: " + databaseError);
             }
         });
     }
@@ -112,7 +113,7 @@ public final class FireRepo {
         ));
     }
 
-    public void addGroup(@NonNull Group group) {
+    public void addGroup(@NonNull final Group group) {
         groupDataBaseReference.child(group.getTitle()).setValue(group);
     }
 
@@ -192,6 +193,18 @@ public final class FireRepo {
         ));
     }
 
+    public final FirebaseUser getUser() {
+        return FirebaseAuth.getInstance().getCurrentUser();
+    }
+
+    public final Query getZoneMessageDatabaseReference(@NonNull final String chatName) {
+        return zoneChatDataBaseReference.child(chatName);
+    }
+
+    public final Query getGroupMessageDatabaseReference(@NonNull final String chatName) {
+        return groupChatDataBaseReference.child(chatName);
+    }
+
     public interface OnZoneUpdateEmittedListener {
         void onZoneUpdateEmitted(Zone zone);
     }
@@ -200,7 +213,7 @@ public final class FireRepo {
         void onGroupUpdateEmitted(Group group);
     }
 
-    public void loginToFirebase(@NonNull final String email,
+    public void loginToFireBase(@NonNull final String email,
                                 @NonNull final String password) {
         FirebaseAuth.getInstance().signInWithEmailAndPassword(
           email, password).addOnCompleteListener(task -> {

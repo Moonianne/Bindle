@@ -5,8 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import org.pursuit.firebasetools.model.Message;
 import org.pursuit.zonechat.R;
-import org.pursuit.zonechat.model.Message;
 import org.pursuit.zonechat.viewmodel.ChatViewModel;
 
 final class MessageViewHolder extends RecyclerView.ViewHolder {
@@ -17,8 +17,8 @@ final class MessageViewHolder extends RecyclerView.ViewHolder {
 
     final void onBind(@NonNull final Message message,
                       @NonNull final ChatViewModel viewModel) {
-        itemView.<TextView>findViewById(R.id.nameTextView).setText(message.getName());
-        itemView.<TextView>findViewById(R.id.messageTextView).setText(message.getMessage());
+        itemView.<TextView>findViewById(R.id.nameTextView).setText(message.getUserName());
+        itemView.<TextView>findViewById(R.id.messageTextView).setText(message.getMessageText());
         itemView.<TextView>findViewById(R.id.timeTV).setText(viewModel.convertToReadableTime(message));
     }
 }

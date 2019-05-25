@@ -22,8 +22,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.Query;
 
+import org.pursuit.firebasetools.model.Message;
 import org.pursuit.zonechat.R;
-import org.pursuit.zonechat.model.Message;
 import org.pursuit.zonechat.viewmodel.ChatViewModel;
 
 public final class ZoneChatView extends Fragment {
