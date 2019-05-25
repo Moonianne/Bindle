@@ -102,6 +102,8 @@ public final class FireRepo {
 
     public void pushZoneChat(@NonNull final String chatName,
                              @NonNull final Message message) {
+        //TODO: During authentication user should set a display name so we can pass that for usename.
+        message.setUserName(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         zoneChatDataBaseReference.child(chatName).push().setValue(message);
     }
 

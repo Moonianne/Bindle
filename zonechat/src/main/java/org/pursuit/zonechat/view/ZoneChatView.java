@@ -18,8 +18,6 @@ import android.widget.EditText;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.Query;
 
 import org.pursuit.firebasetools.model.Message;
@@ -35,7 +33,6 @@ public final class ZoneChatView extends Fragment {
     private Button sendButton;
     private RecyclerView chatRecycler;
     private LinearLayoutManager layoutManager;
-    private FirebaseUser fireBaseUser; //TODO: pass user
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> fireBaseAdapter;
 
     public static ZoneChatView newInstance() {
@@ -47,13 +44,6 @@ public final class ZoneChatView extends Fragment {
         super.onCreate(savedInstanceState);
 
         viewModel = ViewModelProviders.of(this).get(ChatViewModel.class);
-
-        //add code for database messages reference (read and write)
-
-        // Initialize Firebase Auth
-        // Firebase instance variables
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        fireBaseUser = firebaseAuth.getCurrentUser();
     }
 
     @Override
