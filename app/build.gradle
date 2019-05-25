@@ -48,4 +48,5 @@ dependencies {
     implementation project(path: ':authentication')
     implementation project(path: ':baseresources')
     implementation project(path: ':interactionlistener')
+    implementation project(path: ':firebasetools')
 }

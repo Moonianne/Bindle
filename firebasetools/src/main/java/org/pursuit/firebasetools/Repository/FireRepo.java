@@ -131,8 +131,7 @@ public final class FireRepo {
         });
     }
 
-    public void addUserToGroup(@NonNull final String groupKey,
-                               @NonNull final FirebaseUser firebaseUser) {
+    public void addUserToGroup(@NonNull final String groupKey) {
         zoneDataBaseReference.child(groupKey).runTransaction(new Transaction.Handler() {
             @NonNull
             @Override
@@ -143,7 +142,7 @@ public final class FireRepo {
                 }
                 group.setUserCount(group.getUserCount() + 1);
                 List<FirebaseUser> firebaseUsers = group.getUserList();
-                firebaseUsers.add(firebaseUser);
+                firebaseUsers.add(FirebaseAuth.getInstance().getCurrentUser());
                 group.setUserList(firebaseUsers);
                 mutableData.setValue(group);
                 return Transaction.success(mutableData);
@@ -156,8 +155,7 @@ public final class FireRepo {
         });
     }
 
-    public void removeUserFromGroup(@NonNull final String groupKey,
-                                    @NonNull final FirebaseUser firebaseUser) {
+    public void removeUserFromGroup(@NonNull final String groupKey) {
         zoneDataBaseReference.child(groupKey).runTransaction(new Transaction.Handler() {
             @NonNull
             @Override
@@ -168,7 +166,7 @@ public final class FireRepo {
                 }
                 group.setUserCount(group.getUserCount() + 1);
                 List<FirebaseUser> firebaseUsers = group.getUserList();
-                firebaseUsers.remove(firebaseUser);
+                firebaseUsers.remove(FirebaseAuth.getInstance().getCurrentUser());
                 group.setUserList(firebaseUsers);
                 mutableData.setValue(group);
                 return Transaction.success(mutableData);
