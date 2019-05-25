@@ -14,23 +14,11 @@ import com.android.group.view.AddLocationFragment;
 import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.view.StartGroupFragment;
 import com.android.interactionlistener.OnFragmentInteractionListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 
-
-import org.pursuit.firebasetools.Repository.FireRepo;
-import org.pursuit.firebasetools.model.Group;
-import org.pursuit.firebasetools.model.Zone;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
 import org.pursuit.zonechat.view.ZoneChatView;
-
-import java.util.LinkedList;
-import java.util.List;
-
 
 public final class HostActivity extends AppCompatActivity
   implements OnFragmentInteractionListener, StartGroupFragment.OnFragmentInteractionListener,
@@ -45,17 +33,8 @@ public final class HostActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host);
 
-        FireRepo fireRepo = FireRepo.getInstance();
-        fireRepo.addZone(new Zone(new LatLng(40.7430877d, -73.9419287d), "pursuitChat", "pursuit", 0));
-        fireRepo.addZoneChat("pursuitChat");
-        List<FirebaseUser> userList = new LinkedList<>();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        userList.add(user);
-        fireRepo.addGroup(new Group(userList, "Access Code", "Night Life", new LatLng(40.7430877d, -73.9419287d), "pursuitChat", "Let's Learn to Code", 1));
-        fireRepo.addGroupChat("pursuitChat");
         viewModel = ViewModelProviders.of(this).get(ZoneViewModel.class);
         viewModel.loginToFireBase();
-//        viewModel.addUserToZoneCount("pursuit");
         requestUserLocationPermission();
     }
 
