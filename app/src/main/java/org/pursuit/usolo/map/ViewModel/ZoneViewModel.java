@@ -6,8 +6,11 @@ import org.pursuit.usolo.map.data.ZoneRepository;
 import org.pursuit.usolo.map.model.Zone;
 
 public final class ZoneViewModel extends ViewModel {
-    ZoneRepository zoneRepository = new ZoneRepository();
+    ZoneRepository zoneRepository = ZoneRepository.getInstance();
 
+    public void getZone (ZoneRepository.OnUpdatesEmittedListener listener) {
+        zoneRepository.getZone(listener);
+    }
     public void setZone(Zone zone) {
         zoneRepository.getZoneLocationReference().setValue(zone);
     }
@@ -15,4 +18,9 @@ public final class ZoneViewModel extends ViewModel {
     public void loginToFireBase() {
         zoneRepository.loginToFirebase("metalraidernt@gmail.com", "password123");
     }
+
+    public void addUserToZoneCount(String zoneName) {
+        zoneRepository.addUserToCount(zoneName);
+    }
+
 }

@@ -39,6 +39,7 @@ public final class HostActivity extends AppCompatActivity
 
         viewModel = ViewModelProviders.of(this).get(ZoneViewModel.class);
         viewModel.loginToFireBase();
+//        viewModel.addUserToZoneCount("pursuit");
         requestUserLocationPermission();
     }
 
