@@ -25,11 +25,7 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
     private ImageView venueImageView;
     private TextView venueNameTextView;
     private TextView venueAddressTextView;
-    private TextView venueRating;
-    private TextView venuePhoneNumber;
-    private TextView venuePrice;
     private ArrayList<Business> yelpBusinesses;
-    private ImageView imageViewVenue;
     private TextView selectButton;
     private NetworkViewModel viewModel;
     private OnFragmentInteractionCompleteListener listener;
@@ -58,10 +54,6 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
         venueAddressTextView = itemView.findViewById(R.id.venue_address);
         selectButton = itemView.findViewById(R.id.select_text_view);
         moreInfoButton = itemView.findViewById(R.id.more_info_text_view);
-        imageViewVenue = itemView.findViewById(R.id.imageView_venue_picture);
-        venuePhoneNumber = itemView.findViewById(R.id.textView_venue_phone);
-        venueRating = itemView.findViewById(R.id.textView_venue_rating);
-        venuePrice = itemView.findViewById(R.id.textView_venue_price);
     }
 
     void onBind(final Venue venue) {
@@ -69,39 +61,36 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
         Picasso.get().load(R.drawable.ic_pin_drop_black_24dp).into(venueImageView);
         venueNameTextView.setText(venue.getName());
         venueAddressTextView.setText(venue.getLocation().getAddress());
-        selectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.closeFragment();
-                viewModel.setUserSelectedVenue(venue);
-            }
+        selectButton.setOnClickListener(v -> {
+            listener.closeFragment();
+            viewModel.setUserSelectedVenue(venue);
         });
         moreInfoButton.setOnClickListener(v -> {
             viewModel.makeYelpNetworkCall(venue.getName());
-            viewModel.setInfoSelectedListener(new NetworkViewModel.OnInfoSelectedListener() {
-                @Override
-                public void yelpDataLoaded(List<Business> businesses) {
-                    yelpBusinesses = new ArrayList<>(businesses);
-                    Log.d("joe'slist", "yelpDataLoaded: " + businesses.get(0).getImage_url());
-                    InflateDialogImageBox(yelpBusinesses);
-//                    Picasso.get().load(yelpBusinesses.get(0).getImage_url()).into(imageViewVenue);
-                }
+            viewModel.setInfoSelectedListener(businesses -> {
+                yelpBusinesses = new ArrayList<>(businesses);
+                Log.d("joe'slist", "yelpDataLoaded: " + businesses.get(0).getImage_url());
+                InflateDialogImageBox(yelpBusinesses);
             });
         });
     }
 
 
-    public void InflateDialogImageBox(List<Business> businesses) {
-        LayoutInflater layoutInflater = LayoutInflater.from(itemView.getContext());
-        View view = layoutInflater.inflate(R.layout.venue_info_dialog, null);
-//        Picasso.get().load(businesses.get(0).getImage_url()).into(imageViewVenue);
-//        venuePhoneNumber.setText(businesses.get(0).getPhone());
-//        venueRating.setText(String.valueOf(businesses.get(0).getRating()));
-//        venuePrice.setText(businesses.get(0).getPrice());
-        TextView textViewVenueName = view.findViewById(R.id.textView_venue_name);
-        TextView textViewVenueAddress = view.findViewById(R.id.textView_venue_address);
-        textViewVenueName.setText(venue.getName());
-        textViewVenueAddress.setText(venue.getLocation().getFormattedAddress().get(0).toString());
+    private void InflateDialogImageBox(List<Business> businesses) {
+        View view = LayoutInflater.from(itemView.getContext())
+          .inflate(R.layout.venue_info_dialog, null);
+        Picasso.get().load(yelpBusinesses.get(0).getImage_url())
+          .into(view.<ImageView>findViewById(R.id.imageView_venue_picture));
+        view.<TextView>findViewById(R.id.textView_venue_phone)
+          .setText(businesses.get(0).getPhone());
+        view.<TextView>findViewById(R.id.textView_venue_rating)
+          .setText(String.valueOf(businesses.get(0).getRating()));
+        view.<TextView>findViewById(R.id.textView_venue_price)
+          .setText(businesses.get(0).getPrice());
+        view.<TextView>findViewById(R.id.textView_venue_name)
+          .setText(venue.getName());
+        view.<TextView>findViewById(R.id.textView_venue_address)
+          .setText(venue.getLocation().getFormattedAddress().get(0).toString());
         setAlertDialog(view);
     }
 

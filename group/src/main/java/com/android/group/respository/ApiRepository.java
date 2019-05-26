@@ -42,11 +42,6 @@ public final class ApiRepository {
           });
     }
 
-    public interface onDataReceivedListener {
-        void dataReceived(VenueResponse venueResponse);
-        void yelpDataReceived(YelpResponse yelpResponse);
-    }
-
     public void getYelpApiData(final onDataReceivedListener listener, String businessName) {
         YelpSingleton.getInstance()
           .create(YelpService.class)
@@ -65,5 +60,11 @@ public final class ApiRepository {
                   Log.d("joe's response", "onResponse: " + t.getMessage());
               }
           });
+    }
+
+    public interface onDataReceivedListener {
+        void dataReceived(VenueResponse venueResponse);
+
+        void yelpDataReceived(YelpResponse yelpResponse);
     }
 }
