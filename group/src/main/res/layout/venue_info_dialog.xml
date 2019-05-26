@@ -25,12 +25,29 @@
         android:id="@+id/textView_venue_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Empire State Building"/>
+        tools:text="Empire State Building" />
 
     <TextView
         android:id="@+id/textView_venue_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="20 W 34th St, New York, NY 10001"/>
+        tools:text="20 W 34th St, New York, NY 10001" />
 
+    <TextView
+        android:id="@+id/textView_venue_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="718-222-2222" />
+
+    <TextView
+        android:id="@+id/textView_venue_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="$$" />
+
+    <TextView
+        android:id="@+id/textView_venue_rating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="3.5" />
 </LinearLayout>
