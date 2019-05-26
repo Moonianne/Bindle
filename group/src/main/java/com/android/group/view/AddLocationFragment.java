@@ -23,6 +23,8 @@ import com.android.group.viewmodel.NetworkViewModel;
 
 import java.util.List;
 
+import static java.security.AccessController.getContext;
+
 public final class AddLocationFragment extends Fragment {
 
     private static final String TAG = "AddLocationFragment";

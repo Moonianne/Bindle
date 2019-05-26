@@ -152,7 +152,7 @@ public final class MapFragment extends Fragment
     private void addZoneMarker(Style style, LatLng zone) {
 
         style.addImage(MARKER_IMAGE, BitmapFactory.decodeResource(
-          MapFragment.this.getResources(), R.drawable.asset_icon));
+          MapFragment.this.getResources(), R.drawable.zone_marker));
 
         SymbolManager symbolManager = new SymbolManager(mapView, mapboxMap, style, null,
           new GeoJsonOptions().withTolerance(0.4f));
