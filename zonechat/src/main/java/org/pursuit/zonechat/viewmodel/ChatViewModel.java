@@ -4,36 +4,32 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
 import com.firebase.ui.database.SnapshotParser;
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 
-import org.pursuit.zonechat.data.repository.ZoneChatRepo;
-import org.pursuit.zonechat.model.Message;
+import org.pursuit.firebasetools.Repository.FireRepo;
+import org.pursuit.firebasetools.model.Message;
 
 import java.text.DateFormat;
 import java.util.Date;
 
 public final class ChatViewModel extends ViewModel {
-    private static final String ZONE_CHAT = "zone";
-    private static final String ZONE_MESSAGES_CHILD = "pursuit";
-
-    private final ZoneChatRepo zoneChatRepo =
-      new ZoneChatRepo(ZONE_CHAT, ZONE_MESSAGES_CHILD);
+    private final FireRepo fireRepo = FireRepo.getInstance();
 
     private SnapshotParser<Message> parser;
+    //TODO: Use FireBaseAuth to give viewmodel UserName.
     private String username = "anonymous";
 
     public boolean hasText(CharSequence charSequence) {
         return charSequence.toString().trim().length() > 0;
     }
 
-    public DatabaseReference getMessageDatabaseReference() {
-        return zoneChatRepo.getMessageDatabaseReference();
+    public Query getMessageDatabaseReference() {
+        //TODO: Setup Passing Reference to the chat room
+        return fireRepo.getZoneMessageDatabaseReference("pursuitChat");
     }
 
     public void pushMessage(String message) {
-        zoneChatRepo.pushMessage()
-          .setValue(new Message(
-            username, message, null, System.currentTimeMillis()));
+        fireRepo.pushZoneChat("pursuitChat", new Message(System.currentTimeMillis(), username, message));
     }
 
     public SnapshotParser<Message> getParser() {
@@ -44,7 +40,7 @@ public final class ChatViewModel extends ViewModel {
         parser = dataSnapshot -> {
             Message message = dataSnapshot.getValue(Message.class);
             if (message != null) {
-                message.setId(dataSnapshot.getKey());
+                message.setiD(dataSnapshot.getKey());
             }
             return message;
         };

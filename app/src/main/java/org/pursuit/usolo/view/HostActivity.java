@@ -15,14 +15,10 @@ import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.view.StartGroupFragment;
 import com.android.interactionlistener.OnFragmentInteractionListener;
 
-
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
 import org.pursuit.zonechat.view.ZoneChatView;
-
-import java.util.List;
-
 
 public final class HostActivity extends AppCompatActivity
   implements OnFragmentInteractionListener, StartGroupFragment.OnFragmentInteractionListener,
@@ -39,7 +35,6 @@ public final class HostActivity extends AppCompatActivity
 
         viewModel = ViewModelProviders.of(this).get(ZoneViewModel.class);
         viewModel.loginToFireBase();
-//        viewModel.addUserToZoneCount("pursuit");
         requestUserLocationPermission();
     }
 

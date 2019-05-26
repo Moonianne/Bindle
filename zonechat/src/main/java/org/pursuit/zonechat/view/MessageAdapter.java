@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
+import org.pursuit.firebasetools.model.Message;
 import org.pursuit.zonechat.R;
-import org.pursuit.zonechat.model.Message;
 import org.pursuit.zonechat.viewmodel.ChatViewModel;
 
 public final class MessageAdapter extends FirebaseRecyclerAdapter<Message, MessageViewHolder> {
