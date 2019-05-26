@@ -2,6 +2,7 @@ package com.android.authentication;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -28,7 +30,11 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
 
-public final class AuthenticationFragment extends Fragment{
+public final class AuthenticationFragment extends Fragment {
+    private static final String LOGIN_PREFS = "USER_LOGIN";
+    private static final String EMAIL_PREFS = "EMAIL_PREFS";
+
+    private SharedPreferences preferences;
     private EditText editTextEmail;
     private EditText editTextPassword;
     private FirebaseAuth auth;
@@ -56,6 +62,9 @@ public final class AuthenticationFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        auth = FirebaseAuth.getInstance();
+        preferences =
+          Objects.requireNonNull(getActivity()).getSharedPreferences(LOGIN_PREFS, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -71,8 +80,8 @@ public final class AuthenticationFragment extends Fragment{
         editTextPassword = view.findViewById(R.id.editText_password);
         progressBar = view.findViewById(R.id.progressBar);
         database = FirebaseDatabase.getInstance().getReference(); //todo throw in view model
-        auth = FirebaseAuth.getInstance();
-        view.findViewById(R.id.button_login).setOnClickListener(v -> {
+
+        view.<Button>findViewById(R.id.button_login).setOnClickListener(v -> {
             if (isValidField()) {
                 final FirebaseUser user = auth.getCurrentUser();
                 if (user != null) {
@@ -121,6 +130,7 @@ public final class AuthenticationFragment extends Fragment{
         auth.signInWithEmailAndPassword(getEmail(), getPassword())
           .addOnCompleteListener(task -> {
               if (task.isSuccessful()) {
+                  preferences.edit().putString(EMAIL_PREFS, getEmail()).apply();
                   //sign in successful update UI with user's information
                   final FirebaseUser user = auth.getCurrentUser();
                   String uid = null;
@@ -145,16 +155,13 @@ public final class AuthenticationFragment extends Fragment{
         final FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
             user.sendEmailVerification()
-              .addOnCompleteListener(new OnCompleteListener<Void>() {
-                  @Override
-                  public void onComplete(@NonNull Task<Void> task) {
-                      if (task.isSuccessful()) {
-                          Toast.makeText(getContext(),
-                            "Verification Email Sent",
-                            Toast.LENGTH_SHORT).show();
-                      } else {
-                          Log.d("verification", "not sent: " + task.getException());
-                      }
+              .addOnCompleteListener(task -> {
+                  if (task.isSuccessful()) {
+                      Toast.makeText(getContext(),
+                        "Verification Email Sent",
+                        Toast.LENGTH_SHORT).show();
+                  } else {
+                      Log.d("verification", "not sent: " + task.getException());
                   }
               });
         }
@@ -179,25 +186,23 @@ public final class AuthenticationFragment extends Fragment{
     }
 
     private void registerUser() {
-        auth.createUserWithEmailAndPassword(getEmail(), getPassword()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    progressBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(
-                      getContext(),
-                      "Registration Successful",
-                      Toast.LENGTH_SHORT).show();
-                    sendVerificationEmail();
-                    sendUserData();
-                } else {
-                    Toast.makeText(
-                      getContext(),
-                      "Error, please try again",
-                      Toast.LENGTH_SHORT).show();
-                    Log.d("createuser", "error: " + task.getException());
-                    progressBar.setVisibility(View.INVISIBLE);
-                }
+        auth.createUserWithEmailAndPassword(getEmail(), getPassword()).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                progressBar.setVisibility(View.INVISIBLE);
+                preferences.edit().putString(EMAIL_PREFS, getEmail()).apply();
+                Toast.makeText(
+                  getContext(),
+                  "Registration Successful",
+                  Toast.LENGTH_SHORT).show();
+                sendVerificationEmail();
+                sendUserData();
+            } else {
+                Toast.makeText(
+                  getContext(),
+                  "Error, please try again",
+                  Toast.LENGTH_SHORT).show();
+                Log.d("createuser", "error: " + task.getException());
+                progressBar.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -211,6 +216,7 @@ public final class AuthenticationFragment extends Fragment{
 
     public void reAuthenticateUser(String email, String password) {
         final AuthCredential authCredential = EmailAuthProvider.getCredential(email, password);
+        preferences.edit().putString(EMAIL_PREFS, email).apply();
         Objects.requireNonNull(auth.getCurrentUser()).reauthenticate(authCredential);
     }
 

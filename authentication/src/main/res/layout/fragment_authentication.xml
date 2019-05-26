@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="cursive"
         android:gravity="center"
-        android:text="USOLO"
+        android:text="BINDLE"
         android:textSize="50sp"
         android:textStyle="bold" />
 
