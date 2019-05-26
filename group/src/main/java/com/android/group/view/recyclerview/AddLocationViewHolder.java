@@ -85,8 +85,6 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
           .setText(businesses.get(0).getPhone());
         view.<TextView>findViewById(R.id.textView_venue_rating)
           .setText(String.valueOf(businesses.get(0).getRating()));
-        view.<TextView>findViewById(R.id.textView_venue_price)
-          .setText(businesses.get(0).getPrice());
         view.<TextView>findViewById(R.id.textView_venue_name)
           .setText(venue.getName());
         view.<TextView>findViewById(R.id.textView_venue_address)
