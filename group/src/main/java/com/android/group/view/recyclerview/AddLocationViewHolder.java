@@ -28,7 +28,7 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
     private TextView venueRating;
     private TextView venuePhoneNumber;
     private TextView venuePrice;
-    private ArrayList yelpBusinesses;
+    private ArrayList<Business> yelpBusinesses;
     private ImageView imageViewVenue;
     private TextView selectButton;
     private NetworkViewModel viewModel;
@@ -78,11 +78,15 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
         });
         moreInfoButton.setOnClickListener(v -> {
             viewModel.makeYelpNetworkCall(venue.getName());
-            viewModel.setInfoSelectedListener(businesses -> {
-                yelpBusinesses = new ArrayList<>(businesses);
-                Log.d("joe'slist", "yelpDataLoaded: " + businesses.get(0).getImage_url());
+            viewModel.setInfoSelectedListener(new NetworkViewModel.OnInfoSelectedListener() {
+                @Override
+                public void yelpDataLoaded(List<Business> businesses) {
+                    yelpBusinesses = new ArrayList<>(businesses);
+                    Log.d("joe'slist", "yelpDataLoaded: " + businesses.get(0).getImage_url());
+                    InflateDialogImageBox(yelpBusinesses);
+//                    Picasso.get().load(yelpBusinesses.get(0).getImage_url()).into(imageViewVenue);
+                }
             });
-            InflateDialogImageBox(yelpBusinesses);
         });
     }
 
