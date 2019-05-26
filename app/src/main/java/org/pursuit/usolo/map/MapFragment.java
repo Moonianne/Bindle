@@ -39,8 +39,6 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
-import org.pursuit.usolo.map.data.ZoneRepository;
-import org.pursuit.usolo.map.model.Zone;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
 
 import com.android.interactionlistener.OnFragmentInteractionListener;
@@ -91,7 +89,7 @@ public final class MapFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         zoneDialog = new Dialog(getContext());
-        zoneViewModel.getZone(zone -> makeGeoFence(zone.location));
+        zoneViewModel.getZone(zone -> makeGeoFence(zone.getLocation()));
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 

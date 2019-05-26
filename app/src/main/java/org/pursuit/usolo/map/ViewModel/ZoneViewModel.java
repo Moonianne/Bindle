@@ -2,25 +2,21 @@ package org.pursuit.usolo.map.ViewModel;
 
 import android.arch.lifecycle.ViewModel;
 
-import org.pursuit.usolo.map.data.ZoneRepository;
-import org.pursuit.usolo.map.model.Zone;
+import org.pursuit.firebasetools.Repository.FireRepo;
 
 public final class ZoneViewModel extends ViewModel {
-    ZoneRepository zoneRepository = ZoneRepository.getInstance();
+    private FireRepo fireRepo = FireRepo.getInstance();
 
-    public void getZone (ZoneRepository.OnUpdatesEmittedListener listener) {
-        zoneRepository.getZone(listener);
-    }
-    public void setZone(Zone zone) {
-        zoneRepository.getZoneLocationReference().setValue(zone);
+    public void getZone(FireRepo.OnZoneUpdateEmittedListener listener) {
+        fireRepo.getZone(listener);
     }
 
     public void loginToFireBase() {
-        zoneRepository.loginToFirebase("metalraidernt@gmail.com", "password123");
+        fireRepo.loginToFireBase("metalraidernt@gmail.com", "password123");
     }
 
     public void addUserToZoneCount(String zoneName) {
-        zoneRepository.addUserToCount(zoneName);
+        fireRepo.addUserToCount(zoneName);
     }
 
 }

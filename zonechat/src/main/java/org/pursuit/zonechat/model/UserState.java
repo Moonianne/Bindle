@@ -1,6 +1,8 @@
 package org.pursuit.zonechat.model;
 
 public final class UserState {
+
+    //TODO: I made this but i don't remember what we needed it for
     private String group;
     private String zone;
 
