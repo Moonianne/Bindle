@@ -7,7 +7,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-final class YelpSingleton {
+public final class YelpSingleton {
     private static final String BASE_URL = "https://api.yelp.com/";
     private static final String AUTH_TOKEN = "tPcRo3VZ6AO0qIxKNkWI2Fok77jRImOIJrl0rX15Or9k39vuC4QCLtT2BdD4cWjUgUw3flvp42af_UirQ00EYe69v7_S_yz_WNHGJLO5rlPnWIbt8QPM82j6EhrXXHYx";
 
