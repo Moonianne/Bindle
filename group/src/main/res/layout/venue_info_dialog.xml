@@ -35,6 +35,8 @@
 
     <TextView
         android:id="@+id/textView_venue_phone"
+        android:autoLink="phone"
+        android:linksClickable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="718-222-2222" />

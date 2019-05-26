@@ -79,7 +79,7 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
     private void InflateDialogImageBox(List<Business> businesses) {
         View view = LayoutInflater.from(itemView.getContext())
           .inflate(R.layout.venue_info_dialog, null);
-        Picasso.get().load(yelpBusinesses.get(0).getImage_url())
+        Picasso.get().load(yelpBusinesses.get(0).getImage_url()).resize(800, 350)
           .into(view.<ImageView>findViewById(R.id.imageView_venue_picture));
         view.<TextView>findViewById(R.id.textView_venue_phone)
           .setText(businesses.get(0).getPhone());
