@@ -13,7 +13,7 @@ public final class YelpSingleton {
 
     private static Retrofit instance;
 
-    public static Retrofit getInstance() {
+    public static synchronized Retrofit getInstance() {
         if (instance == null) {
             instance = new Retrofit.Builder()
               .client(createClient(AUTH_TOKEN))
