@@ -1,4 +1,4 @@
-package com.android.authentication;
+package com.android.authentication.Repository;
 
 
 import android.support.annotation.Nullable;
@@ -24,11 +24,14 @@ public final class FireAuthRepo {
         database = FirebaseDatabase.getInstance().getReference(); //todo throw in view model
     }
 
+    private void reAuthenticateUser(String email,
+                                    String password) {
+        final AuthCredential authCredential = EmailAuthProvider.getCredential(email, password);
+        Objects.requireNonNull(auth.getCurrentUser()).reauthenticate(authCredential);
+    }
+
     public FirebaseUser getUser() {
-        if (user == null) {
-            setUser();
-        }
-        return user;
+        return auth.getCurrentUser();
     }
 
     public void setUser() {
@@ -43,12 +46,18 @@ public final class FireAuthRepo {
     public void login(String email,
                       String password,
                       OnLoginResultListener listener) {
+        if (getUser() != null) {
+            getUser().reload();
+            reAuthenticateUser(email, password);
+        }
         auth.signInWithEmailAndPassword(email, password)
           .addOnCompleteListener(task -> {
               Log.d("jimenez", "login: " + task.getException());
               final FirebaseUser user = auth.getCurrentUser();
-              listener.onLoginListener(task.isSuccessful(), user != null ? user.getUid() : null);
+              listener.onLoginListener(task.isSuccessful() && isEmailVerified(),
+                user != null ? user.getUid() : null);
           });
+
     }
 
     public void registerUser(String email,
@@ -58,12 +67,6 @@ public final class FireAuthRepo {
             Log.d("jimenez", "registerUser: " + task.getException());
             listener.onRegistrationResult(task.isSuccessful());
         });
-    }
-
-    public void reAuthenticateUser(String email,
-                                   String password) {
-        final AuthCredential authCredential = EmailAuthProvider.getCredential(email, password);
-        Objects.requireNonNull(auth.getCurrentUser()).reauthenticate(authCredential);
     }
 
     public void sendUserData() {

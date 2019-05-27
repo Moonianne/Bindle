@@ -13,7 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.android.authentication.AuthenticationFragment;
+import com.android.authentication.view.AuthenticationFragment;
 import com.android.group.view.AddLocationFragment;
 import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.view.StartGroupFragment;

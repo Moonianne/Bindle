@@ -1,4 +1,4 @@
-package com.android.authentication;
+package com.android.authentication.view;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.authentication.R;
+import com.android.authentication.Repository.FireAuthRepo;
 import com.android.interactionlistener.OnFragmentInteractionListener;
 
 import java.util.Objects;
@@ -53,7 +55,8 @@ public final class AuthenticationFragment extends Fragment {
         super.onCreate(savedInstanceState);
         fireAuthRepo = FireAuthRepo.getInstance();
         preferences =
-          Objects.requireNonNull(getActivity()).getSharedPreferences(LOGIN_PREFS, Context.MODE_PRIVATE);
+          Objects.requireNonNull(getActivity())
+            .getSharedPreferences(LOGIN_PREFS, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -69,44 +72,35 @@ public final class AuthenticationFragment extends Fragment {
         editTextPassword = view.findViewById(R.id.editText_password);
         progressBar = view.findViewById(R.id.progressBar);
         view.<Button>findViewById(R.id.button_login).setOnClickListener(v -> {
+            String email = getEmail();
+            String password = getPassword();
             if (isValidField()) {
-                if (fireAuthRepo.getUser() != null) {
-                    fireAuthRepo.getUser().reload();
-                    fireAuthRepo.reAuthenticateUser(getEmail(), getPassword());
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString(EMAIL_PREFS, getEmail()).apply();
-                    editor.putString(PASS_PREFS, getPassword()).apply();
-                    if (fireAuthRepo.isEmailVerified()) {
-                        fireAuthRepo.login(getEmail(),
-                          getPassword(),
-                          (isSuccess, userID) -> {
-                              if (isSuccess) {
-                                  Log.d("sign in", "successful: " + userID);
-                                  Toast.makeText(getContext(),
-                                    "Welcome Back!",
-                                    Toast.LENGTH_SHORT).show();
-                                  progressBar.setVisibility(View.INVISIBLE);
-                                  onButtonPressed();
-                              } else {
-                                  Log.d("sign in ", "failure ");
-                                  progressBar.setVisibility(View.INVISIBLE);
-                              }
-                              return false;
-                          });
-                        editor.putString(EMAIL_PREFS, getEmail()).apply();
-                        editor.putString(PASS_PREFS, getPassword()).apply();
-                    } else {
-                        Toast.makeText(getContext(),
-                          "Please Verify Email to Proceed",
-                          Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.INVISIBLE);
-                    }
-                } else {
-                    Toast.makeText(getContext(),
-                      "Wrong Email/Password, Try Again",
-                      Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.INVISIBLE);
-                }
+                fireAuthRepo.login(email, password,
+                  (isSuccess, userID) -> {
+                      if (isSuccess) {
+                          Log.d("sign in", "successful: " + userID);
+                          Toast.makeText(AuthenticationFragment.this.getContext(),
+                            "Welcome Back!",
+                            Toast.LENGTH_SHORT).show();
+                          progressBar.setVisibility(View.INVISIBLE);
+                          SharedPreferences.Editor editor = preferences.edit();
+                          editor.putString(EMAIL_PREFS, email).apply();
+                          editor.putString(PASS_PREFS, password).apply();
+                          AuthenticationFragment.this.onButtonPressed();
+                          return true;
+                      } else if (fireAuthRepo.getUser() != null &&
+                        fireAuthRepo.isEmailVerified()) {
+                          Toast.makeText(AuthenticationFragment.this.getContext(),
+                            "Please Verify Email to Proceed",
+                            Toast.LENGTH_SHORT).show();
+                          progressBar.setVisibility(View.INVISIBLE);
+                          Log.d("sign in ", "failure ");
+                          progressBar.setVisibility(View.INVISIBLE);
+                          return false;
+                      }
+                      wrongInfoPrompt();
+                      return false;
+                  });
             }
         });
         view.findViewById(R.id.button_signup).setOnClickListener(v -> {
@@ -115,6 +109,13 @@ public final class AuthenticationFragment extends Fragment {
                 registerUser();
             }
         });
+    }
+
+    public void wrongInfoPrompt() {
+        Toast.makeText(getContext(),
+          "Wrong Email/Password, Try Again",
+          Toast.LENGTH_SHORT).show();
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     public void onButtonPressed() {
@@ -133,11 +134,12 @@ public final class AuthenticationFragment extends Fragment {
 
 
     private boolean isValidField() {
-        if (TextUtils.isEmpty(getEmail())) {
+        String email = getEmail();
+        if (TextUtils.isEmpty(email)) {
             editTextEmail.setError("Email Required");
             editTextEmail.requestFocus();
             return false;
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(getEmail()).matches()) {
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             editTextEmail.setError("Please Enter Valid Email Address");
             editTextEmail.requestFocus();
             return false;
@@ -151,14 +153,15 @@ public final class AuthenticationFragment extends Fragment {
     }
 
     private void registerUser() {
-        fireAuthRepo.registerUser(editTextEmail.getText().toString(),
-          editTextPassword.getText().toString(),
+        String email = getEmail();
+        String password = getPassword();
+        fireAuthRepo.registerUser(email, password,
           isSuccess -> {
               if (isSuccess) {
                   progressBar.setVisibility(View.INVISIBLE);
                   SharedPreferences.Editor editor = preferences.edit();
-                  editor.putString(EMAIL_PREFS, getEmail()).apply();
-                  editor.putString(PASS_PREFS, getPassword()).apply();
+                  editor.putString(EMAIL_PREFS, email).apply();
+                  editor.putString(PASS_PREFS, password).apply();
                   Toast.makeText(
                     getContext(),
                     "Registration Successful",
