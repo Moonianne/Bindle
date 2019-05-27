@@ -1,12 +1,11 @@
 package com.android.group.view.recyclerview;
 
-import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +14,7 @@ import com.android.group.model.Venue;
 import com.android.group.model.yelp.Business;
 import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.viewmodel.NetworkViewModel;
+import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -25,13 +25,14 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
     private ImageView venueImageView;
     private TextView venueNameTextView;
     private TextView venueAddressTextView;
-    private ArrayList<Business> yelpBusinesses;
+    private ArrayList<Business> yelpBusinesses = new ArrayList<>();
     private TextView selectButton;
     private NetworkViewModel viewModel;
     private OnFragmentInteractionCompleteListener listener;
-    private NetworkViewModel.OnInfoSelectedListener onInfoSelectedListener;
+    private OnFragmentInteractionListener onFragmentInteractionListener;
     private TextView moreInfoButton;
     private Venue venue;
+    private String fullAddress;
 
     public AddLocationViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -46,6 +47,7 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
 
     private void initListener(@NonNull View itemView) {
         listener = (OnFragmentInteractionCompleteListener) itemView.getContext();
+        onFragmentInteractionListener = (OnFragmentInteractionListener) itemView.getContext();
     }
 
     private void findViews(@NonNull View itemView) {
@@ -58,6 +60,7 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
 
     void onBind(final Venue venue) {
         this.venue = venue;
+        getVenueAddress(venue);
         Picasso.get().load(R.drawable.ic_pin_drop_black_24dp).into(venueImageView);
         venueNameTextView.setText(venue.getName());
         venueAddressTextView.setText(venue.getLocation().getAddress());
@@ -68,13 +71,11 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
         moreInfoButton.setOnClickListener(v -> {
             viewModel.makeYelpNetworkCall(venue.getName());
             viewModel.setInfoSelectedListener(businesses -> {
-                yelpBusinesses = new ArrayList<>(businesses);
-                Log.d("joe'slist", "yelpDataLoaded: " + businesses.get(0).getImage_url());
+                yelpBusinesses.addAll(businesses);
                 InflateDialogImageBox(yelpBusinesses);
             });
         });
     }
-
 
     private void InflateDialogImageBox(List<Business> businesses) {
         View view = LayoutInflater.from(itemView.getContext())
@@ -89,18 +90,23 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
           .setText(venue.getName());
         view.<TextView>findViewById(R.id.textView_venue_address)
           .setText(venue.getLocation().getFormattedAddress().get(0).toString());
+        view.<Button>findViewById(R.id.button_directions)
+          .setOnClickListener(v -> onFragmentInteractionListener.openDirections(fullAddress));
         setAlertDialog(view);
     }
 
     private void setAlertDialog(View view) {
         AlertDialog.Builder alertMessage = new AlertDialog.Builder(itemView.getContext())
           .setView(view)
-          .setNeutralButton("CLOSE", new DialogInterface.OnClickListener() {
-              @Override
-              public void onClick(DialogInterface dialog, int which) {
-
-              }
+          .setNeutralButton("CLOSE", (dialog, which) -> {
           });
         alertMessage.show();
+    }
+
+    private void getVenueAddress(Venue venue) {
+        fullAddress = venue.getLocation().getAddress() + " "
+          + venue.getLocation().getCity() + ","
+          + venue.getLocation().getState() + " "
+          + venue.getLocation().getPostalCode();
     }
 }
