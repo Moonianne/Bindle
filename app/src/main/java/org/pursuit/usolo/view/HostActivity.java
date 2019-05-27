@@ -1,6 +1,7 @@
 package org.pursuit.usolo.view;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.SharedPreferences;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.android.authentication.AuthenticationFragment;
 import com.android.group.view.AddLocationFragment;
 import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.view.StartGroupFragment;
@@ -26,6 +28,10 @@ public final class HostActivity extends AppCompatActivity
   implements OnFragmentInteractionListener, StartGroupFragment.OnFragmentInteractionListener,
   OnFragmentInteractionCompleteListener {
 
+    private static final String LOGIN_PREFS = "USER_LOGIN";
+    private static final String EMAIL_PREFS = "EMAIL_PREFS";
+    private static final String PASS_PREFS = "PW_PREFS";
+
     private static final String TAG = "HostActivity";
     private ZoneViewModel viewModel;
     public static boolean granted;
@@ -36,8 +42,14 @@ public final class HostActivity extends AppCompatActivity
         setContentView(R.layout.activity_host);
 
         viewModel = ViewModelProviders.of(this).get(ZoneViewModel.class);
-        viewModel.loginToFireBase();
-        requestUserLocationPermission();
+        SharedPreferences preferences = getSharedPreferences(LOGIN_PREFS, MODE_PRIVATE);
+        if (preferences.contains(EMAIL_PREFS) && preferences.contains(PASS_PREFS)) {
+            viewModel.loginToFireBase(preferences.getString(EMAIL_PREFS, "metalraidernt@gmail.com"),
+              preferences.getString(PASS_PREFS, "password123"));
+            requestUserLocationPermission();
+        } else {
+            inflateFragment(AuthenticationFragment.getInstance());
+        }
     }
 
     @Override
@@ -73,6 +85,11 @@ public final class HostActivity extends AppCompatActivity
         Intent navIntent = new Intent(android.content.Intent.ACTION_VIEW, parseAddress);
         navIntent.setPackage("com.google.android.apps.maps");
         startActivity(navIntent);
+    }
+
+    @Override
+    public void onLoginSuccess() {
+        requestUserLocationPermission();
     }
 
     @Override

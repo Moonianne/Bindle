@@ -1,6 +1,5 @@
 package com.android.authentication;
 
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,30 +17,21 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.EmailAuthProvider;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.android.interactionlistener.OnFragmentInteractionListener;
 
 import java.util.Objects;
 
 public final class AuthenticationFragment extends Fragment {
     private static final String LOGIN_PREFS = "USER_LOGIN";
     private static final String EMAIL_PREFS = "EMAIL_PREFS";
+    private static final String PASS_PREFS = "PW_PREFS";
 
+    private FireAuthRepo fireAuthRepo;
     private SharedPreferences preferences;
     private EditText editTextEmail;
     private EditText editTextPassword;
-    private FirebaseAuth auth;
     private ProgressBar progressBar;
-    private DatabaseReference database;
-//    private OnInteractionListener onInteractionListener;
-    // TODO: 2019-05-19 implement interaction listener
+    private OnFragmentInteractionListener listener;
 
     public static AuthenticationFragment getInstance() {
         return new AuthenticationFragment();
@@ -50,19 +40,18 @@ public final class AuthenticationFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnInteractionListener) {
-//            onInteractionListener = (OnInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//              + " must implement OnInteractionListener");
-//        }
-        // TODO: 2019-05-19 implement interaction listener
+        if (context instanceof OnFragmentInteractionListener) {
+            listener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+              + " must implement OnInteractionListener");
+        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        auth = FirebaseAuth.getInstance();
+        fireAuthRepo = FireAuthRepo.getInstance();
         preferences =
           Objects.requireNonNull(getActivity()).getSharedPreferences(LOGIN_PREFS, Context.MODE_PRIVATE);
     }
@@ -79,16 +68,33 @@ public final class AuthenticationFragment extends Fragment {
         editTextEmail = view.findViewById(R.id.editText_email);
         editTextPassword = view.findViewById(R.id.editText_password);
         progressBar = view.findViewById(R.id.progressBar);
-        database = FirebaseDatabase.getInstance().getReference(); //todo throw in view model
-
         view.<Button>findViewById(R.id.button_login).setOnClickListener(v -> {
             if (isValidField()) {
-                final FirebaseUser user = auth.getCurrentUser();
-                if (user != null) {
-                    user.reload();
-                    reAuthenticateUser(getEmail(), getPassword());
-                    if (user.isEmailVerified()) {
-                        signIn();
+                if (fireAuthRepo.getUser() != null) {
+                    fireAuthRepo.getUser().reload();
+                    fireAuthRepo.reAuthenticateUser(getEmail(), getPassword());
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString(EMAIL_PREFS, getEmail()).apply();
+                    editor.putString(PASS_PREFS, getPassword()).apply();
+                    if (fireAuthRepo.isEmailVerified()) {
+                        fireAuthRepo.login(getEmail(),
+                          getPassword(),
+                          (isSuccess, userID) -> {
+                              if (isSuccess) {
+                                  Log.d("sign in", "successful: " + userID);
+                                  Toast.makeText(getContext(),
+                                    "Welcome Back!",
+                                    Toast.LENGTH_SHORT).show();
+                                  progressBar.setVisibility(View.INVISIBLE);
+                                  onButtonPressed();
+                              } else {
+                                  Log.d("sign in ", "failure ");
+                                  progressBar.setVisibility(View.INVISIBLE);
+                              }
+                              return false;
+                          });
+                        editor.putString(EMAIL_PREFS, getEmail()).apply();
+                        editor.putString(PASS_PREFS, getPassword()).apply();
                     } else {
                         Toast.makeText(getContext(),
                           "Please Verify Email to Proceed",
@@ -112,10 +118,9 @@ public final class AuthenticationFragment extends Fragment {
     }
 
     public void onButtonPressed() {
-//        if (onInteractionListener != null) {
-//            onInteractionListener.onLoginSelected();
-//        }
-        // TODO: 2019-05-19 implement interaction listener
+        if (listener != null) {
+            listener.onLoginSuccess();
+        }
     }
 
     private String getPassword() {
@@ -126,46 +131,6 @@ public final class AuthenticationFragment extends Fragment {
         return editTextEmail.getText().toString().trim();
     }
 
-    private void signIn() {
-        auth.signInWithEmailAndPassword(getEmail(), getPassword())
-          .addOnCompleteListener(task -> {
-              if (task.isSuccessful()) {
-                  preferences.edit().putString(EMAIL_PREFS, getEmail()).apply();
-                  //sign in successful update UI with user's information
-                  final FirebaseUser user = auth.getCurrentUser();
-                  String uid = null;
-                  if (user != null) {
-                      uid = user.getUid();
-                  }
-                  Log.d("sign in", "successful: " + uid);
-                  Toast.makeText(getContext(),
-                    "Welcome Back!",
-                    Toast.LENGTH_SHORT).show();
-                  progressBar.setVisibility(View.INVISIBLE);
-                  onButtonPressed();
-
-              } else {
-                  Log.d("sign in ", "failure " + task.getException());
-                  progressBar.setVisibility(View.INVISIBLE);
-              }
-          });
-    }
-
-    private void sendVerificationEmail() {
-        final FirebaseUser user = auth.getCurrentUser();
-        if (user != null) {
-            user.sendEmailVerification()
-              .addOnCompleteListener(task -> {
-                  if (task.isSuccessful()) {
-                      Toast.makeText(getContext(),
-                        "Verification Email Sent",
-                        Toast.LENGTH_SHORT).show();
-                  } else {
-                      Log.d("verification", "not sent: " + task.getException());
-                  }
-              });
-        }
-    }
 
     private boolean isValidField() {
         if (TextUtils.isEmpty(getEmail())) {
@@ -186,45 +151,47 @@ public final class AuthenticationFragment extends Fragment {
     }
 
     private void registerUser() {
-        auth.createUserWithEmailAndPassword(getEmail(), getPassword()).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                progressBar.setVisibility(View.INVISIBLE);
-                preferences.edit().putString(EMAIL_PREFS, getEmail()).apply();
-                Toast.makeText(
-                  getContext(),
-                  "Registration Successful",
-                  Toast.LENGTH_SHORT).show();
-                sendVerificationEmail();
-                sendUserData();
-            } else {
-                Toast.makeText(
-                  getContext(),
-                  "Error, please try again",
-                  Toast.LENGTH_SHORT).show();
-                Log.d("createuser", "error: " + task.getException());
-                progressBar.setVisibility(View.INVISIBLE);
-            }
-        });
-    }
-
-    private void sendUserData() {
-        database.getRoot()
-          .child("users")
-          .child(Objects.requireNonNull(auth.getUid()))
-          .child("email").setValue(getEmail());
-    }
-
-    public void reAuthenticateUser(String email, String password) {
-        final AuthCredential authCredential = EmailAuthProvider.getCredential(email, password);
-        preferences.edit().putString(EMAIL_PREFS, email).apply();
-        Objects.requireNonNull(auth.getCurrentUser()).reauthenticate(authCredential);
+        fireAuthRepo.registerUser(editTextEmail.getText().toString(),
+          editTextPassword.getText().toString(),
+          isSuccess -> {
+              if (isSuccess) {
+                  progressBar.setVisibility(View.INVISIBLE);
+                  SharedPreferences.Editor editor = preferences.edit();
+                  editor.putString(EMAIL_PREFS, getEmail()).apply();
+                  editor.putString(PASS_PREFS, getPassword()).apply();
+                  Toast.makeText(
+                    getContext(),
+                    "Registration Successful",
+                    Toast.LENGTH_SHORT).show();
+                  fireAuthRepo.sendVerificationEmail(isSuccess1 -> {
+                      if (isSuccess1) {
+                          Toast.makeText(getContext(),
+                            "Verification Email Sent",
+                            Toast.LENGTH_SHORT).show();
+                          return true;
+                      } else {
+                          Log.d("verification", "not sent: ");
+                          return false;
+                      }
+                  });
+                  fireAuthRepo.setUser();
+                  fireAuthRepo.sendUserData();
+                  return true;
+              } else {
+                  Toast.makeText(
+                    getContext(),
+                    "Error, please try again",
+                    Toast.LENGTH_SHORT).show();
+                  Log.d("createuser", "error: ");
+                  progressBar.setVisibility(View.INVISIBLE);
+                  return false;
+              }
+          });
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-//        onInteractionListener = null;
-        // TODO: 2019-05-19 implement on interaction listener
+        listener = null;
     }
 }
-
