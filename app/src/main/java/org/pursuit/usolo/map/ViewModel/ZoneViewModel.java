@@ -11,8 +11,8 @@ public final class ZoneViewModel extends ViewModel {
         fireRepo.getZone(listener);
     }
 
-    public void loginToFireBase() {
-        fireRepo.loginToFireBase("metalraidernt@gmail.com", "password123");
+    public void loginToFireBase(String email, String password) {
+        fireRepo.loginToFireBase(email, password);
     }
 
     public void addUserToZoneCount(String zoneName) {
