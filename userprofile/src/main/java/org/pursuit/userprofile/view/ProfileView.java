@@ -6,14 +6,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import org.pursuit.userprofile.R;
+import org.pursuit.userprofile.viewmodel.ProfileViewModel;
 
 
 public class ProfileView extends Fragment {
 
+    private ProfileViewModel profileViewModel;
+    private EditText messageEditText;
+    private Button sendButton;
+
     public ProfileView() {
-        // Required empty public constructor
     }
 
     // TODO: Rename and change types and number of parameters

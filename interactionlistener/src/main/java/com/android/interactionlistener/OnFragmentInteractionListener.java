@@ -6,6 +6,8 @@ public interface OnFragmentInteractionListener {
 
     void inflateZoneChatFragment();
 
+    void inflateProfileFragment();
+
     void onLoginSuccess();
 
     void openDirections(String VenueAddress);
