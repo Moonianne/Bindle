@@ -25,12 +25,48 @@
         android:id="@+id/textView_venue_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Empire State Building"/>
+        android:layout_marginStart="8dp"
+        tools:text="Empire State Building" />
 
     <TextView
         android:id="@+id/textView_venue_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="20 W 34th St, New York, NY 10001"/>
+        android:layout_marginStart="8dp"
+        tools:text="20 W 34th St, New York, NY 10001" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/rating" />
+
+        <TextView
+            android:id="@+id/textView_venue_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            tools:text="3.5" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView_venue_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:autoLink="phone"
+        android:linksClickable="true"
+        tools:text="718-222-2222" />
+
+    <Button
+        android:id="@+id/button_directions"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/ic_directions_yellow_24dp" />
 </LinearLayout>

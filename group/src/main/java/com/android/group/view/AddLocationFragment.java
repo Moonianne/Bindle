@@ -16,6 +16,7 @@ import android.widget.Spinner;
 
 import com.android.group.R;
 import com.android.group.model.Venue;
+import com.android.group.model.yelp.Business;
 import com.android.group.network.constants.CategoryConstants;
 import com.android.group.view.recyclerview.AddLocationAdapter;
 import com.android.group.viewmodel.NetworkViewModel;
@@ -52,9 +53,12 @@ public final class AddLocationFragment extends Fragment {
     }
 
     private void setViewModelListener() {
-        viewModel.setOnDataLoadedListener(venues -> {
-            Log.d(TAG, "dataLoaded: " + venues.get(0).getName());
-            adapter.setData(venues);
+        viewModel.setOnDataLoadedListener(new NetworkViewModel.OnDataLoadedListener() {
+            @Override
+            public void dataLoaded(List<Venue> venues) {
+                Log.d(TAG, "dataLoaded: " + venues.get(0).getName());
+                adapter.setData(venues);
+            }
         });
     }
 
@@ -80,7 +84,7 @@ public final class AddLocationFragment extends Fragment {
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                viewModel.makeNetworkCall(CategoryConstants.CATEGORIES[position]);
+                viewModel.makeFourSquareNetworkCall(CategoryConstants.CATEGORIES[position]);
                 Log.d(TAG, "onItemClick: " + CategoryConstants.CATEGORIES[position]);
             }
 

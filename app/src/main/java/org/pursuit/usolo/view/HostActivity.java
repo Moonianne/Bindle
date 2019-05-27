@@ -1,7 +1,9 @@
 package org.pursuit.usolo.view;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -63,6 +65,14 @@ public final class HostActivity extends AppCompatActivity
     @Override
     public void inflateZoneChatFragment() {
         inflateFragment(ZoneChatView.newInstance(), true);
+    }
+
+    @Override
+    public void openDirections(String venueAddress) {
+        Uri parseAddress = Uri.parse("google.navigation:q=" + venueAddress + "&mode=transit");
+        Intent navIntent = new Intent(android.content.Intent.ACTION_VIEW, parseAddress);
+        navIntent.setPackage("com.google.android.apps.maps");
+        startActivity(navIntent);
     }
 
     @Override
