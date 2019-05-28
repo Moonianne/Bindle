@@ -47,4 +47,5 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-database:4.3.2'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
     implementation project(path: ':group')
+    implementation project(path: ':firebasetools')
 }

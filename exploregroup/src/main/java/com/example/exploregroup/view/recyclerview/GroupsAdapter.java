@@ -3,11 +3,11 @@ package com.example.exploregroup.view.recyclerview;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.group.model.firebase.Group;
 import com.example.exploregroup.R;
+
+import org.pursuit.firebasetools.model.Group;
 
 import java.util.ArrayList;
 import java.util.List;

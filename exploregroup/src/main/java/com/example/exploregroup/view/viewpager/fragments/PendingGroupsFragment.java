@@ -9,9 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.group.model.firebase.Group;
 import com.example.exploregroup.R;
 import com.example.exploregroup.view.recyclerview.GroupsAdapter;
+
+import org.pursuit.firebasetools.model.Group;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +21,10 @@ public final class PendingGroupsFragment extends Fragment {
 
     private View rootView;
 
-    public PendingGroupsFragment() { }
+    public PendingGroupsFragment() {
+    }
 
-    public static PendingGroupsFragment newInstance(){
+    public static PendingGroupsFragment newInstance() {
         return new PendingGroupsFragment();
     }
 
@@ -34,11 +36,6 @@ public final class PendingGroupsFragment extends Fragment {
         GroupsAdapter adapter = new GroupsAdapter();
         pendingRecyclerView.setAdapter(adapter);
         pendingRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        List<Group> groupList = new ArrayList<>();
-        groupList.add(new Group.Builder("Test1","Arcade",getString(R.string.description_lorem)).build());
-        groupList.add(new Group.Builder("Test2","Night Life",getString(R.string.description_lorem)).build());
-        groupList.add(new Group.Builder("Test3","Site seeing",getString(R.string.description_lorem)).build());
-        adapter.setData(groupList);
         return rootView;
     }
 

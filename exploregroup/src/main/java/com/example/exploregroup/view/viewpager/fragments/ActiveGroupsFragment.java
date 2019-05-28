@@ -1,6 +1,7 @@
 package com.example.exploregroup.view.viewpager.fragments;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,9 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.group.model.firebase.Group;
 import com.example.exploregroup.R;
 import com.example.exploregroup.view.recyclerview.GroupsAdapter;
+import com.example.exploregroup.viewmodel.GroupsViewModel;
+
+import org.pursuit.firebasetools.Repository.FireRepo;
+import org.pursuit.firebasetools.model.Group;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +23,10 @@ import java.util.List;
 public final class ActiveGroupsFragment extends Fragment {
 
     private View rootView;
+    private GroupsViewModel groupsViewModel;
 
-    public ActiveGroupsFragment(){}
+    public ActiveGroupsFragment() {
+    }
 
     public static ActiveGroupsFragment newInstance() {
         return new ActiveGroupsFragment();
@@ -30,6 +36,7 @@ public final class ActiveGroupsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_active_groups, container, false);
+        groupsViewModel = ViewModelProviders.of(this).get(GroupsViewModel.class);
         initActiveGroupsRecylerView();
         return rootView;
     }
@@ -40,12 +47,13 @@ public final class ActiveGroupsFragment extends Fragment {
         activeRecyclerView.setAdapter(adapter);
         activeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<Group> groupList = new ArrayList<>();
-        groupList.add(new Group.Builder("Test1","Arcade",getString(R.string.description_lorem)).build());
-        groupList.add(new Group.Builder("Test2","Night Life",getString(R.string.description_lorem)).build());
-        groupList.add(new Group.Builder("Test3","Site seeing",getString(R.string.description_lorem)).build());
-        groupList.add(new Group.Builder("Test4","Dancing",getString(R.string.description_lorem)).build());
-        groupList.add(new Group.Builder("Test5","Drugs",getString(R.string.description_lorem)).build());
-        adapter.setData(groupList);
+        groupsViewModel.getGroups(new FireRepo.OnGroupUpdateEmittedListener() {
+            @Override
+            public void onGroupUpdateEmitted(Group group) {
+                groupList.add(group);
+                adapter.setData(groupList);
+            }
+        });
     }
 
 }
