@@ -3,6 +3,8 @@ package com.example.exploregroup.view.viewpager.fragments;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +15,9 @@ import android.view.ViewGroup;
 import com.example.exploregroup.R;
 import com.example.exploregroup.view.recyclerview.GroupsAdapter;
 import com.example.exploregroup.viewmodel.GroupsViewModel;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 
 import org.pursuit.firebasetools.Repository.FireRepo;
 import org.pursuit.firebasetools.model.Group;
@@ -47,11 +52,31 @@ public final class ActiveGroupsFragment extends Fragment {
         activeRecyclerView.setAdapter(adapter);
         activeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         List<Group> groupList = new ArrayList<>();
-        groupsViewModel.getGroups(new FireRepo.OnGroupUpdateEmittedListener() {
+        groupsViewModel.getGroups(new ChildEventListener() {
             @Override
-            public void onGroupUpdateEmitted(Group group) {
-                groupList.add(group);
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                groupList.add(dataSnapshot.getValue(Group.class));
                 adapter.setData(groupList);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
