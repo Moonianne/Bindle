@@ -4,11 +4,11 @@ import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
 import com.android.group.model.Venue;
-import com.google.firebase.auth.FirebaseUser;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.pursuit.firebasetools.Repository.FireRepo;
 import org.pursuit.firebasetools.model.Group;
+import org.pursuit.firebasetools.model.User;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -26,8 +26,9 @@ public final class GroupViewModel extends ViewModel {
     public void createGroup(String groupName,
                             Venue userSelectedVenue,
                             String groupDescription) {
-        List<FirebaseUser> userList = new LinkedList<>();
-        userList.add(fireRepo.getUser());
+        List<User> userList = new LinkedList<>();
+        User user = new User("Eric", "ericdiazjr21@gmail.com", "I like to code and dance bachata.", "Nightlife", "pursuit", null);
+        userList.add(user);
         currentGroup = new Group(userList, groupDescription,
           userSelectedVenue.getCategories()[0].getPluralName(),
           new LatLng(userSelectedVenue.getLocation().getLat(),
