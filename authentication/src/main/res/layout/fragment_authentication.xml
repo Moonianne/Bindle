@@ -6,37 +6,41 @@
     android:orientation="vertical"
     tools:context=".view.AuthenticationFragment">
 
-    <TextView
-        android:id="@+id/textView"
+    <ImageView
+        android:id="@+id/bindleLogo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="cursive"
         android:gravity="center"
-        android:text="BINDLE"
-        android:textSize="50sp"
-        android:textStyle="bold" />
+        android:layout_marginTop="10dp"
+        android:src="@drawable/bindle_logo"
+        />
 
-    <TextView
-        android:id="@+id/motto"
+    <ImageView
+        android:id="@+id/bindleName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="You. Us."
-        android:textSize="14sp"
-        android:textStyle="bold" />
+        android:src="@drawable/bindle_logo_name"
+        />
 
     <EditText
         android:id="@+id/editText_email"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:padding="10dp"
         android:ems="10"
         android:hint="email..."
-        android:inputType="textEmailAddress" />
+        android:layout_marginBottom="10dp"
+        android:inputType="textEmailAddress"
+        android:background="@drawable/rectangle_round_outline_purple"/>
 
     <EditText
         android:id="@+id/editText_password"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:padding="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/rectangle_round_outline_purple"
         android:ems="10"
         android:hint="password..."
         android:inputType="textPassword" />
@@ -45,7 +49,11 @@
         android:id="@+id/button_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login" />
+        android:layout_marginTop="20dp"
+        android:text="Login"
+        android:textColor="@color/colorWhite"
+        android:fontFamily="@font/maven_pro_bold"
+        android:background="@drawable/purple_gradient_rectangle_round"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -56,15 +64,22 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="Not a Member ?"
+            android:textColor="@color/cPrimaryDark"
+            android:fontFamily="@font/maven_pro_medium"
             android:textSize="16sp" />
 
         <Button
             android:id="@+id/button_signup"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rectangle_round_outline_purple"
             android:text="Join Now"
+            android:fontFamily="@font/maven_pro_bold"
+            android:textColor="@color/cPrimaryDark"
             android:textSize="12sp" />
     </LinearLayout>
 
