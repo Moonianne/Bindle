@@ -27,7 +27,7 @@ public final class GroupViewModel extends ViewModel {
                             Venue userSelectedVenue,
                             String groupDescription) {
         List<User> userList = new LinkedList<>();
-        User user = new User("Eric", "ericdiazjr21@gmail.com", "I like to code and dance bachata.", "Nightlife", "pursuit", null);
+        User user = new User("Eric", "ericdiazjr21@gmail.com", "I like to code and dance bachata.", "Nightlife", "pursuit", null, null, null);
         userList.add(user);
         currentGroup = new Group(userList, groupDescription,
           userSelectedVenue.getCategories()[0].getPluralName(),
