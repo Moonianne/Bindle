@@ -123,7 +123,7 @@ public final class MapFragment extends Fragment
                 listener.inflateExploreGroupsFragment();
             }
             if (v.getId() == R.id.fab_profile) {
-                listener.inflateProfileFragment();
+                listener.inflateProfileFragment(true);
             }
         });
     }

@@ -34,4 +34,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:17.0.0'
     implementation project(path: ':firebasetools')
     implementation project(path: ':baseresources')
+    implementation project(path: ':authentication')
 }

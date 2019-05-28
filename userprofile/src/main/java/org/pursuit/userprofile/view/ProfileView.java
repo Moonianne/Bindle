@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.pursuit.userprofile.R;
 import org.pursuit.userprofile.viewmodel.ProfileViewModel;
@@ -23,13 +24,12 @@ public class ProfileView extends Fragment {
     private ProfileViewModel profileViewModel;
     private EditText aboutMeEditText, interestsEditText;
     private ImageView editAboutMeButton, editInterestsButton, finishInterestsButton, finishAboutMeButton;
-    private TextView displaynameView, aboutMeView, interestsView;
+    private TextView displayNameView, aboutMeView, interestsView, locationView;
     private Button logOutButton, uploadPhotoButton;
+    private static boolean isCurrentUserProfile = true;
 
-    public ProfileView() {
-    }
-
-    public static ProfileView newInstance() {
+    public static ProfileView newInstance(boolean bool) {
+        isCurrentUserProfile = bool;
         return new ProfileView();
     }
 
@@ -48,52 +48,74 @@ public class ProfileView extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        findViews(view);
 
-        editAboutMeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setAboutMeVisibility(true);
+        if (isCurrentUserProfile){
+            findViews(view);
 
-                finishAboutMeButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //TODO send data to firebase
-                        setAboutMeVisibility(false);
-                    }
-                });
-            }
-        });
+            displayNameView.setText(profileViewModel.getUsername());
+            locationView.setText(profileViewModel.getLocation(getContext()));
 
-        editInterestsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setInterestsVisibility(true);
+            editAboutMeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setAboutMeVisibility(true);
 
-                finishInterestsButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setInterestsVisibility(false);
-                    }
-                });
-            }
-        });
+                    finishAboutMeButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //TODO send data to firebase
+                            setAboutMeVisibility(false);
+                        }
+                    });
+                }
+            });
 
-        uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO intent for photo and store profile photo in firebase
-            }
-        });
+            editInterestsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setInterestsVisibility(true);
 
-        logOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO firebase needed for the user log out
-            }
-        });
+                    finishInterestsButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            setInterestsVisibility(false);
+                        }
+                    });
+                }
+            });
 
-        displaynameView.setText(profileViewModel.getUsername());
+            uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO intent for photo and store profile photo in firebase
+                }
+            });
+
+            logOutButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO firebase needed for the user log out
+                }
+            });
+        }else {
+            findViews(view);
+            setExtraViewsVisibility();
+
+            displayNameView.setText(profileViewModel.getUsername());
+            locationView.setText(profileViewModel.getLocation(getContext()));
+        }
+
+    }
+
+    private void setExtraViewsVisibility() {
+        aboutMeEditText.setVisibility(View.INVISIBLE);
+        finishAboutMeButton.setVisibility(View.INVISIBLE);
+        editAboutMeButton.setVisibility(View.INVISIBLE);
+        interestsEditText.setVisibility(View.INVISIBLE);
+        finishInterestsButton.setVisibility(View.INVISIBLE);
+        editInterestsButton.setVisibility(View.INVISIBLE);
+        logOutButton.setVisibility(View.INVISIBLE);
+        uploadPhotoButton.setVisibility(View.INVISIBLE);
     }
 
     private void setAboutMeVisibility(boolean visibility) {
@@ -129,7 +151,8 @@ public class ProfileView extends Fragment {
     }
 
     private void findViews(@NonNull View view) {
-        displaynameView = view.findViewById(R.id.profile_display_name);
+        locationView = view.findViewById(R.id.locationView);
+        displayNameView = view.findViewById(R.id.profile_display_name);
         aboutMeView = view.findViewById(R.id.aboutme_textview);
         interestsView = view.findViewById(R.id.interests_textview);
         aboutMeEditText = view.findViewById(R.id.aboutMe_editText);

@@ -19,7 +19,6 @@ import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.view.StartGroupFragment;
 import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.example.exploregroup.view.ExploreGroupsFragment;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.MapFragment;
@@ -83,8 +82,8 @@ public final class HostActivity extends AppCompatActivity
     }
 
     @Override
-    public void inflateProfileFragment() {
-        inflateFragment(ProfileView.newInstance(), true);
+    public void inflateProfileFragment(boolean bool) {
+        inflateFragment(ProfileView.newInstance(true), true);
     }
 
     @Override
