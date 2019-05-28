@@ -7,17 +7,37 @@ public final class User {
     private String interests;
     private String currentZone;
     private String currentGroup;
+    private String currentLocation;
+    private String userProfilePhotoURL;
 
     public User() {
     }
 
-    public User(String displayName, String email, String aboutMe, String interests, String currentZone, String currentGroup) {
+    public User(String displayName, String email, String aboutMe, String interests, String currentZone, String currentGroup, String userProfilePhotoURL,  String currentlocation) {
         this.displayName = displayName;
         this.email = email;
         this.aboutMe = aboutMe;
         this.interests = interests;
         this.currentZone = currentZone;
         this.currentGroup = currentGroup;
+        this.currentLocation = currentlocation;
+        this.userProfilePhotoURL = userProfilePhotoURL;
+    }
+
+    public String getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public void setCurrentLocation(String currentLocation) {
+        this.currentLocation = currentLocation;
+    }
+
+    public String getUserProfilePhotoURL() {
+        return userProfilePhotoURL;
+    }
+
+    public void setUserProfilePhotoURL(String userProfilePhotoURL) {
+        this.userProfilePhotoURL = userProfilePhotoURL;
     }
 
     public String getDisplayName() {

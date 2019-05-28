@@ -45,4 +45,5 @@ dependencies {
     implementation project(path: ':interactionlistener')
     implementation project(path: ':firebasetools')
     implementation project(path: ':exploregroup')
+    implementation project(path: ':userprofile')
 }

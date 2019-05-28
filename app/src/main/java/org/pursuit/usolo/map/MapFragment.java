@@ -58,7 +58,7 @@ public final class MapFragment extends Fragment
     private OnFragmentInteractionListener listener;
     private MapView mapView;
     private boolean isFabOpen;
-    private FloatingActionButton fab, fab1, fab2;
+    private FloatingActionButton fab, fab1, fab2, fabProfile;
     private BottomSheetBehavior bottomSheetBehavior;
     private Animation fabOpen, fabClose, rotateForward, rotateBackward;
     private MapboxMap mapboxMap;
@@ -101,13 +101,15 @@ public final class MapFragment extends Fragment
         setOnClick(fab);
         setOnClick(fab1);
         setOnClick(fab2);
+        setOnClick(fabProfile);
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheet.setOnTouchListener(this);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setPeekHeight(130);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         mapView = view.findViewById(R.id.mapView);
-        mapView.getMapAsync(mapboxMap -> this.mapboxMap = mapboxMap);
+        mapView.getMapAsync(mapboxMap ->
+          this.mapboxMap = mapboxMap);
     }
 
     private void setOnClick(View view) {
@@ -119,6 +121,9 @@ public final class MapFragment extends Fragment
             }
             if (v.getId() == R.id.fab2) {
                 listener.inflateExploreGroupsFragment();
+            }
+            if (v.getId() == R.id.fab_profile) {
+                listener.inflateProfileFragment(true);
             }
         });
     }
@@ -134,6 +139,7 @@ public final class MapFragment extends Fragment
         fab = view.findViewById(R.id.fab);
         fab1 = view.findViewById(R.id.fab1);
         fab2 = view.findViewById(R.id.fab2);
+        fabProfile = view.findViewById(R.id.fab_profile);
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setPeekHeight(130);
@@ -152,7 +158,7 @@ public final class MapFragment extends Fragment
     private void addZoneMarker(Style style, LatLng zone) {
 
         style.addImage(MARKER_IMAGE, BitmapFactory.decodeResource(
-          MapFragment.this.getResources(), R.drawable.asset_icon));
+          MapFragment.this.getResources(), R.drawable.zone_marker));
 
         SymbolManager symbolManager = new SymbolManager(mapView, mapboxMap, style, null,
           new GeoJsonOptions().withTolerance(0.4f));
@@ -251,15 +257,19 @@ public final class MapFragment extends Fragment
             fab.startAnimation(rotateBackward);
             fab1.startAnimation(fabClose);
             fab2.startAnimation(fabClose);
+            fabProfile.startAnimation(fabClose);
             fab1.setClickable(false);
             fab2.setClickable(false);
+            fabProfile.setClickable(false);
             isFabOpen = false;
         } else {
             fab.startAnimation(rotateForward);
             fab1.startAnimation(fabOpen);
             fab2.startAnimation(fabOpen);
+            fabProfile.startAnimation(fabOpen);
             fab1.setClickable(true);
             fab2.setClickable(true);
+            fabProfile.setClickable(true);
             isFabOpen = true;
         }
     }
@@ -267,8 +277,10 @@ public final class MapFragment extends Fragment
     private void disableFabs() {
         fab1.startAnimation(fabClose);
         fab2.startAnimation(fabClose);
+        fabProfile.startAnimation(fabClose);
         fab1.setClickable(false);
         fab2.setClickable(false);
+        fabProfile.setClickable(false);
         fab.setClickable(false);
     }
 
@@ -277,6 +289,7 @@ public final class MapFragment extends Fragment
         fab.setClickable(true);
         fab1.setClickable(true);
         fab2.setClickable(true);
+        fabProfile.setClickable(true);
     }
 
 }
