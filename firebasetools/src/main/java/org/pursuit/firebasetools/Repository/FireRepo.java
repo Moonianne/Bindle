@@ -17,6 +17,7 @@ import com.google.firebase.database.annotations.Nullable;
 
 import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Message;
+import org.pursuit.firebasetools.model.User;
 import org.pursuit.firebasetools.model.Zone;
 
 import java.util.List;
@@ -144,9 +145,9 @@ public final class FireRepo {
                     return Transaction.success(mutableData);
                 }
                 group.setUserCount(group.getUserCount() + 1);
-                List<FirebaseUser> firebaseUsers = group.getUserList();
-                firebaseUsers.add(FirebaseAuth.getInstance().getCurrentUser());
-                group.setUserList(firebaseUsers);
+                List<User> users = group.getUserList();
+                users.add(new User()); //TODO: Add logic for adding self to a group.
+                group.setUserList(users);
                 mutableData.setValue(group);
                 return Transaction.success(mutableData);
             }
@@ -168,9 +169,9 @@ public final class FireRepo {
                     return Transaction.success(mutableData);
                 }
                 group.setUserCount(group.getUserCount() + 1);
-                List<FirebaseUser> firebaseUsers = group.getUserList();
-                firebaseUsers.remove(FirebaseAuth.getInstance().getCurrentUser());
-                group.setUserList(firebaseUsers);
+                List<User> users = group.getUserList();
+                users.remove(new User()); //TODO: Add logic for removing oneself from a group.
+                group.setUserList(users);
                 mutableData.setValue(group);
                 return Transaction.success(mutableData);
             }

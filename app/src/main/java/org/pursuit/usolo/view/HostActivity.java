@@ -18,11 +18,18 @@ import com.android.group.view.AddLocationFragment;
 import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.view.StartGroupFragment;
 import com.android.interactionlistener.OnFragmentInteractionListener;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
+import org.pursuit.firebasetools.Repository.FireRepo;
+import org.pursuit.firebasetools.model.Group;
+import org.pursuit.firebasetools.model.User;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
 import org.pursuit.zonechat.view.ZoneChatView;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public final class HostActivity extends AppCompatActivity
   implements OnFragmentInteractionListener, StartGroupFragment.OnFragmentInteractionListener,
@@ -40,6 +47,21 @@ public final class HostActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host);
+
+        FireRepo fireRepo = FireRepo.getInstance();
+        User user = new User("Eric", "ericdiazjr21@gmail.com", "I like to code and dance bachata.", "Nightlife", "pursuit", null);
+        List<User> users = new LinkedList<User>() {
+            {
+                add(user);
+            }
+        };
+        Group group = new Group(users, "Testing our new group model",
+          "NightLife",
+          new LatLng(40.7430877, -73.9419287),
+          "ericChat",
+          "Eric's New Test Group",
+          1);
+        fireRepo.addGroup(group);
 
         viewModel = ViewModelProviders.of(this).get(ZoneViewModel.class);
         SharedPreferences preferences = getSharedPreferences(LOGIN_PREFS, MODE_PRIVATE);

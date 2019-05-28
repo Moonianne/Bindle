@@ -1,12 +1,11 @@
 package org.pursuit.firebasetools.model;
 
-import com.google.firebase.auth.FirebaseUser;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import java.util.List;
 
 public final class Group {
-    private List<FirebaseUser> userList;
+    private List<User> userList;
     private String description;
     private String category;
     private LatLng location;
@@ -17,7 +16,7 @@ public final class Group {
     public Group() {
     }
 
-    public Group(List<FirebaseUser> userList, String description, String category, LatLng location, String chatName, String title, int userCount) {
+    public Group(List<User> userList, String description, String category, LatLng location, String chatName, String title, int userCount) {
         this.userList = userList;
         this.description = description;
         this.category = category;
@@ -27,11 +26,11 @@ public final class Group {
         this.userCount = userCount;
     }
 
-    public List<FirebaseUser> getUserList() {
+    public List<User> getUserList() {
         return userList;
     }
 
-    public void setUserList(List<FirebaseUser> userList) {
+    public void setUserList(List<User> userList) {
         this.userList = userList;
     }
 
