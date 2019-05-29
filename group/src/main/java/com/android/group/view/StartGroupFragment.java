@@ -16,7 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.group.R;
-import com.android.group.model.Venue;
+import com.android.group.model.bindle.BindleBusiness;
+import com.android.group.model.foursquare.Venue;
 import com.android.group.viewmodel.GroupViewModel;
 import com.android.group.viewmodel.NetworkViewModel;
 
@@ -28,7 +29,7 @@ public final class StartGroupFragment extends Fragment
     private OnFragmentInteractionListener interactionListener;
     private OnFragmentInteractionCompleteListener interactionCompleteListener;
     private TextView locationTextView;
-    private Venue userSelectedVenue;
+    private Venue userSelectedBindleBusiness;
 
     public static StartGroupFragment newInstance() {
         return new StartGroupFragment();
@@ -74,9 +75,9 @@ public final class StartGroupFragment extends Fragment
     }
 
     @Override
-    public void venueSelected(Venue venue) {
-        userSelectedVenue = venue;
-        locationTextView.setText(userSelectedVenue.getLocation().getAddress());
+    public void bindleBusinessSelected(BindleBusiness bindleBusiness) {
+        userSelectedBindleBusiness = bindleBusiness.getVenue();
+        locationTextView.setText(userSelectedBindleBusiness.getLocation().getAddress());
     }
 
     private void setStartButtonOnClickListener(View view) {
@@ -89,8 +90,8 @@ public final class StartGroupFragment extends Fragment
                 .getText().toString();
             if (!groupName.equals("")) {
                 if (!groupDescription.equals("")) {
-                    if (userSelectedVenue != null) {
-                        groupViewModel.createGroup(groupName, userSelectedVenue, groupDescription);
+                    if (userSelectedBindleBusiness != null) {
+                        groupViewModel.createGroup(groupName, userSelectedBindleBusiness, groupDescription);
                         groupViewModel.pushGroup();
                         interactionCompleteListener.closeFragment();
                     } else {

@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public final class YelpSingleton {
@@ -16,10 +17,11 @@ public final class YelpSingleton {
     public static synchronized Retrofit getInstance() {
         if (instance == null) {
             instance = new Retrofit.Builder()
-              .client(createClient(AUTH_TOKEN))
-              .addConverterFactory(GsonConverterFactory.create())
-              .baseUrl(BASE_URL)
-              .build();
+                    .client(createClient(AUTH_TOKEN))
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .baseUrl(BASE_URL)
+                    .build();
         }
         return instance;
     }
@@ -28,10 +30,10 @@ public final class YelpSingleton {
         final OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
         if (!TextUtils.isEmpty(authToken)) {
             Interceptor interceptor =
-              chain -> chain.proceed(chain.request()
-                .newBuilder()
-                .header("Authorization", "Bearer " + authToken)
-                .build());
+                    chain -> chain.proceed(chain.request()
+                            .newBuilder()
+                            .header("Authorization", "Bearer " + authToken)
+                            .build());
             if (!httpClientBuilder.interceptors().contains(interceptor)) {
                 httpClientBuilder.addInterceptor(interceptor);
             }
