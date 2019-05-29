@@ -50,7 +50,10 @@ public final class FireRepo {
         zoneDataBaseReference.child("pursuit").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                listener.onZoneUpdateEmitted(dataSnapshot.getValue(Zone.class));
+                Zone zone = dataSnapshot.getValue(Zone.class);
+                /// also write to database
+                
+                listener.onZoneUpdateEmitted(zone);
             }
 
             @Override
