@@ -91,6 +91,7 @@ public final class StartGroupFragment extends Fragment
                 if (!groupDescription.equals("")) {
                     if (userSelectedVenue != null) {
                         groupViewModel.createGroup(groupName, userSelectedVenue, groupDescription);
+                        groupViewModel.pushGroup();
                         interactionCompleteListener.closeFragment();
                     } else {
                         makeToast("Select a Location");
