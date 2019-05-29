@@ -19,6 +19,7 @@ import com.android.group.model.Venue;
 import com.android.group.model.yelp.Business;
 import com.android.group.network.constants.CategoryConstants;
 import com.android.group.view.recyclerview.AddLocationAdapter;
+import com.android.group.view.utils.SearchViewListFilter;
 import com.android.group.viewmodel.NetworkViewModel;
 
 import java.util.List;
@@ -55,20 +56,15 @@ public final class AddLocationFragment extends Fragment {
     }
 
     private void setViewModelListener() {
-        viewModel.setOnDataLoadedListener(new NetworkViewModel.OnDataLoadedListener() {
-            @Override
-            public void dataLoaded(List<Venue> venues) {
-                Log.d(TAG, "dataLoaded: " + venues.get(0).getName());
-                adapter.setData(venues);
-            }
-        });
+        viewModel.setOnDataLoadedListener(venues -> adapter.setData(venues));
     }
 
     private void initSearchView() {
         SearchView searchView = rootView.findViewById(R.id.add_location_search_view);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String s) {
+            public boolean onQueryTextSubmit(String search) {
+                adapter.setData(SearchViewListFilter.getFilteredList(search,viewModel.getVenues()));
                 return true;
             }
 

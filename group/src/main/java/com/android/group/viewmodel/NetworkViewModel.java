@@ -16,8 +16,7 @@ public class NetworkViewModel extends ViewModel implements ApiRepository.onDataR
     private static NetworkViewModel viewModel;
     private OnDataLoadedListener dataLoadedListener;
     private OnInfoSelectedListener infoSelectedListener;
-    private List<Venue> venues = new ArrayList<>();
-    private List<Business> businesses = new ArrayList<>();
+    private List<Venue> venues;
     private OnVenueSelectedListener venueSelectedListener;
     private ApiRepository apiRepository;
 
@@ -55,8 +54,13 @@ public class NetworkViewModel extends ViewModel implements ApiRepository.onDataR
         this.venueSelectedListener = listener;
     }
 
+    public List<Venue> getVenues() {
+        return venues;
+    }
+
     @Override
     public void dataReceived(VenueResponse venueResponse) {
+        venues = venueResponse.getVenues();
         dataLoadedListener.dataLoaded(venueResponse.getVenues());
     }
 
