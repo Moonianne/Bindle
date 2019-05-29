@@ -21,7 +21,6 @@ import java.util.List;
 
 public final class PendingGroupsFragment extends Fragment {
 
-    private View rootView;
     private GroupsViewModel groupsViewModel;
 
     public PendingGroupsFragment() {
@@ -34,9 +33,9 @@ public final class PendingGroupsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_pending_groups, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_pending_groups, container, false);
         initViewModel();
-        initRecyclerView();
+        initRecyclerView(rootView);
         return rootView;
     }
 
@@ -44,7 +43,7 @@ public final class PendingGroupsFragment extends Fragment {
         groupsViewModel = ViewModelProviders.of(getParentFragment()).get(GroupsViewModel.class);
     }
 
-    private void initRecyclerView() {
+    private void initRecyclerView(View rootView) {
         RecyclerView pendingRecyclerView = rootView.findViewById(R.id.pending_groups_recycler_view);
         GroupsAdapter adapter = new GroupsAdapter();
         pendingRecyclerView.setAdapter(adapter);

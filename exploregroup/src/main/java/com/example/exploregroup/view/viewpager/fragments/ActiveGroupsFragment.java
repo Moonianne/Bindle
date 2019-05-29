@@ -16,7 +16,6 @@ import com.example.exploregroup.viewmodel.GroupsViewModel;
 
 public final class ActiveGroupsFragment extends Fragment {
 
-    private View rootView;
     private GroupsViewModel groupsViewModel;
 
     public ActiveGroupsFragment() {
@@ -29,9 +28,9 @@ public final class ActiveGroupsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_active_groups, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_active_groups, container, false);
         initViewModel();
-        initRecyclerView();
+        initRecyclerView(rootView);
         return rootView;
     }
 
@@ -39,7 +38,7 @@ public final class ActiveGroupsFragment extends Fragment {
         groupsViewModel = ViewModelProviders.of(getParentFragment()).get(GroupsViewModel.class);
     }
 
-    private void initRecyclerView() {
+    private void initRecyclerView(View rootView) {
         RecyclerView activeRecyclerView = rootView.findViewById(R.id.active_groups_recycler_view);
         GroupsAdapter adapter = new GroupsAdapter();
         activeRecyclerView.setAdapter(adapter);

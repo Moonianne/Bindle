@@ -38,6 +38,7 @@ public class GroupsViewModel extends ViewModel {
             @SuppressLint("CheckResult")
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                //TODO : Geo look at this
                 Observable.just(dataSnapshot.getValue(Group.class))
                         .subscribeOn(Schedulers.io())
                         .map(GroupsListMapGenerator::getMapOfGroupLists)
