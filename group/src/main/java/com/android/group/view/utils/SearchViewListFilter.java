@@ -13,9 +13,9 @@ public final class SearchViewListFilter {
     }
 
     public static List<Venue> getFilteredList(String query, List<Venue> venues) {
-        venues.clear();
+        venueList.clear();
         for (Venue venue : venues) {
-            if (venue.getName().contains(query)) {
+            if (venue.getName().toLowerCase().contains(query.toLowerCase())) {
                 venueList.add(venue);
             }
         }

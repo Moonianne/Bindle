@@ -64,12 +64,12 @@ public final class AddLocationFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String search) {
-                adapter.setData(SearchViewListFilter.getFilteredList(search,viewModel.getVenues()));
                 return true;
             }
 
             @Override
-            public boolean onQueryTextChange(String s) {
+            public boolean onQueryTextChange(String search) {
+                adapter.setData(SearchViewListFilter.getFilteredList(search,viewModel.getVenues()));
                 return false;
             }
         });
