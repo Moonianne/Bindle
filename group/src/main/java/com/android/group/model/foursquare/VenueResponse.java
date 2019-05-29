@@ -1,4 +1,6 @@
-package com.android.group.model;
+package com.android.group.model.foursquare;
+
+import com.android.group.model.foursquare.Venue;
 
 import java.util.List;
 

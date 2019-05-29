@@ -10,7 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.group.R;
-import com.android.group.model.Venue;
+import com.android.group.model.bindle.BindleBusiness;
+import com.android.group.model.foursquare.Venue;
 import com.android.group.model.yelp.Business;
 import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.viewmodel.NetworkViewModel;
@@ -22,11 +23,9 @@ import java.util.List;
 
 public class AddLocationViewHolder extends RecyclerView.ViewHolder {
 
-    private ArrayList<Business> yelpBusinesses = new ArrayList<>();
     private NetworkViewModel viewModel;
     private OnFragmentInteractionCompleteListener listener;
     private OnFragmentInteractionListener onFragmentInteractionListener;
-    private Venue venue;
     private String fullAddress;
 
     public AddLocationViewHolder(@NonNull View itemView) {
@@ -44,60 +43,56 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
         onFragmentInteractionListener = (OnFragmentInteractionListener) itemView.getContext();
     }
 
-    void onBind(final Venue venue) {
-        this.venue = venue;
-        getVenueAddress(venue);
-        ImageView venueImageView = itemView.findViewById(R.id.venue_image);
-        Picasso.get().load(R.drawable.ic_pin_drop_black_24dp).into(venueImageView);
-        itemView.<TextView>findViewById(R.id.venue_name).setText(venue.getName());
-        itemView.<TextView>findViewById(R.id.venue_address).setText(venue.getLocation().getAddress());
+    void onBind(final BindleBusiness bindleBusiness) {
+        getVenueAddress(bindleBusiness);
+        if (bindleBusiness.getBusiness() != null) {
+            Picasso.get().load(bindleBusiness.getBusiness().getImage_url()).into(itemView.<ImageView>findViewById(R.id.venue_image));
+        }
+        itemView.<TextView>findViewById(R.id.venue_name).setText(bindleBusiness.getVenue().getName());
+        itemView.<TextView>findViewById(R.id.venue_address).setText(bindleBusiness.getVenue().getLocation().getAddress());
         itemView.<TextView>findViewById(R.id.select_text_view).setOnClickListener(v -> {
             listener.closeFragment();
-            viewModel.setUserSelectedVenue(venue);
+            viewModel.setUserSelectedVenue(bindleBusiness);
         });
-        itemView.<TextView>findViewById(R.id.more_info_text_view).setOnClickListener(v -> {
-            viewModel.makeYelpNetworkCall(venue.getName());
-            viewModel.setInfoSelectedListener(businesses -> {
-                yelpBusinesses.addAll(businesses);
-                InflateDialogImageBox(yelpBusinesses);
-            });
-        });
+        itemView.<TextView>findViewById(R.id.more_info_text_view).setOnClickListener(v -> InflateDialogImageBox(bindleBusiness));
     }
 
-    private void InflateDialogImageBox(List<Business> businesses) {
-        View view = LayoutInflater.from(itemView.getContext())
-          .inflate(R.layout.venue_info_dialog, null);
-        setViews(businesses, view);
-        setAlertDialog(view);
+    private void InflateDialogImageBox(BindleBusiness bindleBusiness) {
+        if (bindleBusiness.getBusiness() != null) {
+            View view = LayoutInflater.from(itemView.getContext())
+                    .inflate(R.layout.venue_info_dialog, null);
+            setViews(bindleBusiness, view);
+            setAlertDialog(view);
+        }
     }
 
     private void setAlertDialog(View view) {
         AlertDialog.Builder alertMessage = new AlertDialog.Builder(itemView.getContext())
-          .setView(view)
-          .setNeutralButton("CLOSE", (dialog, which) -> {
-          });
+                .setView(view)
+                .setNeutralButton("CLOSE", (dialog, which) -> {
+                });
         alertMessage.show();
     }
 
-    private void setViews(List<Business> businesses, View view) {
-        Picasso.get().load(yelpBusinesses.get(0).getImage_url()).resize(800, 350)
-          .into(view.<ImageView>findViewById(R.id.imageView_venue_picture));
+    private void setViews(BindleBusiness bindleBusiness, View view) {
+        Picasso.get().load(bindleBusiness.getBusiness().getImage_url()).resize(800, 350)
+                .into(view.<ImageView>findViewById(R.id.imageView_venue_picture));
         view.<TextView>findViewById(R.id.textView_venue_phone)
-          .setText(businesses.get(0).getPhone());
+                .setText(bindleBusiness.getBusiness().getPhone());
         view.<TextView>findViewById(R.id.textView_venue_rating)
-          .setText(String.valueOf(businesses.get(0).getRating()));
+                .setText(String.valueOf(bindleBusiness.getBusiness().getRating()));
         view.<TextView>findViewById(R.id.textView_venue_name)
-          .setText(venue.getName());
+                .setText(bindleBusiness.getVenue().getName());
         view.<TextView>findViewById(R.id.textView_venue_address)
-          .setText(venue.getLocation().getFormattedAddress().get(0).toString());
+                .setText(bindleBusiness.getVenue().getLocation().getFormattedAddress().get(0).toString());
         view.<Button>findViewById(R.id.button_directions)
-          .setOnClickListener(v -> onFragmentInteractionListener.openDirections(fullAddress));
+                .setOnClickListener(v -> onFragmentInteractionListener.openDirections(fullAddress));
     }
 
-    private void getVenueAddress(Venue venue) {
-        fullAddress = venue.getLocation().getAddress() + " "
-          + venue.getLocation().getCity() + ","
-          + venue.getLocation().getState() + " "
-          + venue.getLocation().getPostalCode();
+    private void getVenueAddress(BindleBusiness bindleBusiness) {
+        fullAddress = bindleBusiness.getVenue().getLocation().getAddress() + " "
+                + bindleBusiness.getVenue().getLocation().getCity() + ","
+                + bindleBusiness.getVenue().getLocation().getState() + " "
+                + bindleBusiness.getVenue().getLocation().getPostalCode();
     }
 }
