@@ -1,24 +1,24 @@
 package com.android.group.view.utils;
 
-import com.android.group.model.Venue;
+import com.android.group.model.bindle.BindleBusiness;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class SearchViewListFilter {
 
-    private static List<Venue> venueList = new ArrayList<>();
+    private static List<BindleBusiness> bindleBusinessList = new ArrayList<>();
 
     private SearchViewListFilter() {
     }
 
-    public static List<Venue> getFilteredList(String query, List<Venue> venues) {
-        venueList.clear();
-        for (Venue venue : venues) {
-            if (venue.getName().toLowerCase().contains(query.toLowerCase())) {
-                venueList.add(venue);
+    public static List<BindleBusiness> getFilteredList(String query, List<BindleBusiness> bindleBusinesses) {
+        bindleBusinessList.clear();
+        for (BindleBusiness bindleBusiness : bindleBusinesses) {
+            if (bindleBusiness.getVenue().getName().toLowerCase().contains(query.toLowerCase())) {
+                bindleBusinessList.add(bindleBusiness);
             }
         }
-        return venueList;
+        return bindleBusinessList;
     }
 }

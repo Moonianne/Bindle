@@ -1,6 +1,4 @@
-package com.android.group.model;
-
-import com.android.group.model.foursquare.VenueCategory;
+package com.android.group.model.foursquare;
 
 public class Venue {
     private String id;

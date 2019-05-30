@@ -7,34 +7,47 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.group.R;
-import com.android.group.model.Venue;
+import com.android.group.model.bindle.BindleBusiness;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 public class AddLocationAdapter extends RecyclerView.Adapter<AddLocationViewHolder> {
 
-    private List<Venue> venues = new ArrayList<>();
+    private List<BindleBusiness> bindleBusinesses = new ArrayList<>();
 
     @NonNull
     @Override
     public AddLocationViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.add_location_item_view,viewGroup,false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.add_location_item_view, viewGroup, false);
         return new AddLocationViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull AddLocationViewHolder addLocationViewHolder, int i) {
-        addLocationViewHolder.onBind(venues.get(i));
+        addLocationViewHolder.onBind(bindleBusinesses.get(i));
     }
 
     @Override
     public int getItemCount() {
-        return venues.size();
+        return bindleBusinesses.size();
     }
 
-    public void setData(List<Venue> venues){
-        this.venues = venues;
+    public void setData(List<BindleBusiness> bindleBusinesses) {
+        this.bindleBusinesses = bindleBusinesses;
         notifyDataSetChanged();
+    }
+
+    public void addData(BindleBusiness business) {
+        bindleBusinesses.add(business);
+        notifyDataSetChanged();
+    }
+
+    public void clear() {
+        bindleBusinesses.clear();
     }
 }

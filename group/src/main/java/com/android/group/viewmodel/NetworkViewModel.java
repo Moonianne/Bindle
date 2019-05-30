@@ -2,21 +2,14 @@ package com.android.group.viewmodel;
 
 import android.arch.lifecycle.ViewModel;
 
-import com.android.group.model.Venue;
-import com.android.group.model.VenueResponse;
-import com.android.group.model.yelp.Business;
-import com.android.group.model.yelp.YelpResponse;
+import com.android.group.model.bindle.BindleBusiness;
 import com.android.group.respository.ApiRepository;
 
-import java.util.ArrayList;
-import java.util.List;
+import io.reactivex.Observable;
 
-public class NetworkViewModel extends ViewModel implements ApiRepository.onDataReceivedListener {
+public class NetworkViewModel extends ViewModel{
 
     private static NetworkViewModel viewModel;
-    private OnDataLoadedListener dataLoadedListener;
-    private OnInfoSelectedListener infoSelectedListener;
-    private List<Venue> venues;
     private OnVenueSelectedListener venueSelectedListener;
     private ApiRepository apiRepository;
 
@@ -31,53 +24,19 @@ public class NetworkViewModel extends ViewModel implements ApiRepository.onDataR
         return viewModel;
     }
 
-    public void setOnDataLoadedListener(OnDataLoadedListener listener) {
-        this.dataLoadedListener = listener;
-    }
-    public void setInfoSelectedListener(OnInfoSelectedListener listener) {
-        this.infoSelectedListener = listener;
+    public Observable<BindleBusiness> makeBindleBusinessNetworkCall(String category) {
+        return apiRepository.getBindleBusinesses(category);
     }
 
-    public void makeFourSquareNetworkCall(String category) {
-        apiRepository.getFourSquareApiData(this, category);
-    }
-
-    public void makeYelpNetworkCall(String businessName) {
-        apiRepository.getYelpApiData(this, businessName);
-    }
-
-    public void setUserSelectedVenue(Venue venue) {
-        venueSelectedListener.venueSelected(venue);
+    public void setUserSelectedVenue(BindleBusiness venue) {
+        venueSelectedListener.bindleBusinessSelected(venue);
     }
 
     public void setVenueSelectedListener(OnVenueSelectedListener listener) {
         this.venueSelectedListener = listener;
     }
 
-    public List<Venue> getVenues() {
-        return venues;
-    }
-
-    @Override
-    public void dataReceived(VenueResponse venueResponse) {
-        venues = venueResponse.getVenues();
-        dataLoadedListener.dataLoaded(venueResponse.getVenues());
-    }
-
-    @Override
-    public void yelpDataReceived(YelpResponse yelpResponse) {
-        infoSelectedListener.yelpDataLoaded(yelpResponse.getBusinesses());
-    }
-
-    public interface OnDataLoadedListener {
-        void dataLoaded(List<Venue> venues);
-    }
-
-    public interface OnInfoSelectedListener{
-        void yelpDataLoaded(List<Business> businesses);
-    }
-
     public interface OnVenueSelectedListener {
-        void venueSelected(Venue venue);
+        void bindleBusinessSelected(BindleBusiness bindleBusiness);
     }
 }
