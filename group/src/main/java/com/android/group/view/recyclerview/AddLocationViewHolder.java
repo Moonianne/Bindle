@@ -1,5 +1,8 @@
 package com.android.group.view.recyclerview;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -67,11 +70,15 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void setAlertDialog(View view) {
-        AlertDialog.Builder alertMessage = new AlertDialog.Builder(itemView.getContext())
-                .setView(view)
-                .setNeutralButton("CLOSE", (dialog, which) -> {
-                });
-        alertMessage.show();
+        Dialog venueDialog = new Dialog(itemView.getContext());
+        venueDialog.setContentView(R.layout.venue_info_dialog);
+        venueDialog.setContentView(view);
+        venueDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        venueDialog.show();
+//        AlertDialog.Builder alertMessage = new AlertDialog.Builder(itemView.getContext())
+//          .setView(view);
+////          .setNeutralButton("CLOSE", (dialog, which) -> {});
+//        alertMessage.show();
     }
 
     private void setViews(BindleBusiness bindleBusiness, View view) {
