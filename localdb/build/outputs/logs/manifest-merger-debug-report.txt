@@ -1,25 +1,25 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml:1:1-2:43
-INJECTED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml:1:1-2:43
-INJECTED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml:1:1-2:43
+ADDED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml:1:1-2:43
+INJECTED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml:1:1-2:43
+INJECTED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml:1:1-2:43
 	package
-		ADDED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml:2:5-40
-		INJECTED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml
-		INJECTED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml
+		ADDED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml:2:5-40
+		INJECTED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml
+		INJECTED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml
 	xmlns:android
-		ADDED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml:1:11-69
+		ADDED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml:1:11-69
 uses-sdk
-INJECTED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml
-INJECTED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml
-INJECTED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml
-INJECTED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml
+INJECTED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml
+INJECTED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml
+INJECTED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml
+INJECTED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml
-		ADDED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml
-		INJECTED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml
+		INJECTED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml
+		ADDED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml
+		INJECTED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml
-		ADDED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml
-		INJECTED from /Users/bloodredmooni/AndroidStudioProjects/RepoPatternExample/uSolo/localdb/src/main/AndroidManifest.xml
+		INJECTED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml
+		ADDED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml
+		INJECTED from /Users/naomyportillo/Desktop/Pursuit/Capstone/uSolo/localdb/src/main/AndroidManifest.xml
