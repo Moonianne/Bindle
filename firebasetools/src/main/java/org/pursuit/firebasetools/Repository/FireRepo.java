@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,10 +22,15 @@ import org.pursuit.firebasetools.model.Zone;
 
 import java.util.List;
 
+import durdinapps.rxfirebase2.RxFirebaseDatabase;
+import io.reactivex.Maybe;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 public final class FireRepo {
     private static final String TAG = "FireRepo.tst";
     private static final String ZONES_PATH = "zones/";
-    private static final String GROUPS_PATH = "groups/";
+    private static final String GROUPS_PATH = "groups";
     private static final String ZONECHATS_PATH = "zoneChats/";
     private static final String GROUPCHATS_PATH = "groupChats/";
 
@@ -52,7 +56,7 @@ public final class FireRepo {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Zone zone = dataSnapshot.getValue(Zone.class);
                 /// also write to database
-                
+
                 listener.onZoneUpdateEmitted(zone);
             }
 
@@ -126,21 +130,29 @@ public final class FireRepo {
 
     public void getGroup(@NonNull final String key,
                          @NonNull final OnGroupUpdateEmittedListener listener) {
-        groupDataBaseReference.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                listener.onGroupUpdateEmitted(dataSnapshot.getValue(Group.class));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                //No-op
-            }
-        });
+        Disposable disposable =
+          RxFirebaseDatabase
+            .observeSingleValueEvent(groupDataBaseReference.child(key), Group.class)
+            .subscribeOn(Schedulers.io())
+            .subscribe(group -> listener.onGroupUpdateEmitted(group));
+//        groupDataBaseReference.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                listener.onGroupUpdateEmitted(dataSnapshot.getValue(Group.class));
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                //No-op
+//            }
+//        });
     }
 
-    public void getGroups(ChildEventListener listener){
-        groupDataBaseReference.addChildEventListener(listener);
+    public Maybe<Group> getGroups() {
+        return RxFirebaseDatabase
+          .observeSingleValueEvent(groupDataBaseReference, Group.class)
+          .subscribeOn(Schedulers.io())
+          .doOnSuccess(group -> Log.d(TAG, "getGroups: " + group.getTitle()));
     }
 
     public void addUserToGroup(@NonNull final String groupKey) {

@@ -36,7 +36,6 @@ public final class ExploreGroupsFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_explore_groups, container, false);
         initViewPager();
         initTabLayout();
-        ViewModelProviders.of(this).get(GroupsViewModel.class).getGroups();
         return rootView;
     }
 
