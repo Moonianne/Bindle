@@ -1,0 +1,14 @@
+import com.mapbox.mapboxsdk.geometry.LatLng;
+
+CREATE TABLE ZoneModel (
+    location TEXT as LatLng,
+    chatName TEXT NOT NULL,
+    name TEXT NOT NULL,
+    userCount INTEGER NOT NULL
+);
+
+insertItem:
+INSERT OR FAIL INTO ZoneModel(location, chatName, name, userCount) VALUES (?, ?, ?, ?);
+
+selectAll:
+SELECT * FROM ZoneModel;
