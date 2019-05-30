@@ -1,25 +1,22 @@
 package com.android.group.view.recyclerview;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.android.group.R;
 import com.android.group.model.bindle.BindleBusiness;
-import com.android.group.model.foursquare.Venue;
-import com.android.group.model.yelp.Business;
 import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.viewmodel.NetworkViewModel;
 import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class AddLocationViewHolder extends RecyclerView.ViewHolder {
 
@@ -67,15 +64,15 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void setAlertDialog(View view) {
-        AlertDialog.Builder alertMessage = new AlertDialog.Builder(itemView.getContext())
-                .setView(view)
-                .setNeutralButton("CLOSE", (dialog, which) -> {
-                });
-        alertMessage.show();
+        Dialog venueDialog = new Dialog(itemView.getContext());
+        venueDialog.setContentView(R.layout.venue_info_dialog);
+        venueDialog.setContentView(view);
+        venueDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        venueDialog.show();
     }
 
     private void setViews(BindleBusiness bindleBusiness, View view) {
-        Picasso.get().load(bindleBusiness.getBusiness().getImage_url()).resize(800, 350)
+        Picasso.get().load(bindleBusiness.getBusiness().getImage_url())
                 .into(view.<ImageView>findViewById(R.id.imageView_venue_picture));
         view.<TextView>findViewById(R.id.textView_venue_phone)
                 .setText(bindleBusiness.getBusiness().getPhone());

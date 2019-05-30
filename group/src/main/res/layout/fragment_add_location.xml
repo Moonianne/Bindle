@@ -11,10 +11,13 @@
         android:id="@+id/add_location_search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorTransPrimaryLight"
         app:layout_constraintBottom_toTopOf="@id/add_location_recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
     </android.support.v7.widget.SearchView>
 
@@ -22,19 +25,19 @@
         android:id="@+id/add_location_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/category_spinner"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/add_location_search_view" />
+        app:layout_constraintTop_toBottomOf="@id/category_spinner" />
 
     <Spinner
         android:id="@+id/category_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/add_location_recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/add_location_recycler_view"
+        app:layout_constraintTop_toBottomOf="@id/add_location_search_view"
         android:overlapAnchor = "false"
         android:spinnerMode="dialog" />
 
