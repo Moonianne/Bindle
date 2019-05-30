@@ -5,15 +5,13 @@ import android.arch.lifecycle.ViewModel;
 import com.android.group.model.bindle.BindleBusiness;
 import com.android.group.respository.ApiRepository;
 
-import java.util.List;
+import io.reactivex.Observable;
 
-public class NetworkViewModel extends ViewModel implements ApiRepository.OnDataReceivedListener {
+public class NetworkViewModel extends ViewModel{
 
     private static NetworkViewModel viewModel;
-    private OnDataLoadedListener dataLoadedListener;
     private OnVenueSelectedListener venueSelectedListener;
     private ApiRepository apiRepository;
-    private List<BindleBusiness> bindleBusinesses;
 
     private NetworkViewModel() {
         apiRepository = new ApiRepository();
@@ -26,22 +24,8 @@ public class NetworkViewModel extends ViewModel implements ApiRepository.OnDataR
         return viewModel;
     }
 
-    @Override
-    public void dataReceived(List<BindleBusiness> bindleBusinesses) {
-        this.bindleBusinesses = bindleBusinesses;
-        dataLoadedListener.dataLoaded(bindleBusinesses);
-    }
-
-    public List<BindleBusiness> getBindleBusinesses() {
-        return bindleBusinesses;
-    }
-
-    public void setOnDataLoadedListener(OnDataLoadedListener listener) {
-        this.dataLoadedListener = listener;
-    }
-
-    public void makeBindleBusinessNetworkCall(String category) {
-        apiRepository.getBindleBusinesses(category, this);
+    public Observable<BindleBusiness> makeBindleBusinessNetworkCall(String category) {
+        return apiRepository.getBindleBusinesses(category);
     }
 
     public void setUserSelectedVenue(BindleBusiness venue) {
@@ -50,10 +34,6 @@ public class NetworkViewModel extends ViewModel implements ApiRepository.OnDataR
 
     public void setVenueSelectedListener(OnVenueSelectedListener listener) {
         this.venueSelectedListener = listener;
-    }
-
-    public interface OnDataLoadedListener {
-        void dataLoaded(List<BindleBusiness> bindleBusinesses);
     }
 
     public interface OnVenueSelectedListener {

@@ -7,18 +7,18 @@ import java.util.List;
 
 public final class SearchViewListFilter {
 
-    private static List<BindleBusiness> venueList = new ArrayList<>();
+    private static List<BindleBusiness> bindleBusinessList = new ArrayList<>();
 
     private SearchViewListFilter() {
     }
 
     public static List<BindleBusiness> getFilteredList(String query, List<BindleBusiness> bindleBusinesses) {
-        venueList.clear();
+        bindleBusinessList.clear();
         for (BindleBusiness bindleBusiness : bindleBusinesses) {
             if (bindleBusiness.getVenue().getName().toLowerCase().contains(query.toLowerCase())) {
-                venueList.add(bindleBusiness);
+                bindleBusinessList.add(bindleBusiness);
             }
         }
-        return venueList;
+        return bindleBusinessList;
     }
 }
