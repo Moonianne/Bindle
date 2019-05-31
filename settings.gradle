@@ -1,1 +1,1 @@
-include ':app', ':zonechat', ':group', ':authentication', ':interactionlistener', ':baseresources', ':firebasetools', ':exploregroup', ':userprofile', ':localDB', ':localdb'
+include ':app', ':zonechat', ':group', ':authentication', ':interactionlistener', ':baseresources', ':firebasetools', ':exploregroup', ':userprofile', ':localDB', ':localdb', ':useronboarding'
