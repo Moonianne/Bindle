@@ -1,0 +1,14 @@
+import java.lang.Long;
+
+CREATE TABLE MessageModel (
+    timeStamp INTEGER as Long,
+    iD TEXT NOT NULL,
+    userName TEXT NOT NULL,
+    messageText TEXT NOT NULL
+);
+
+insertItem:
+INSERT OR FAIL INTO MessageModel(timeStamp, iD, userName, messageText) VALUES (?, ?, ?, ?);
+
+selectAll:
+SELECT * FROM MessageModel;

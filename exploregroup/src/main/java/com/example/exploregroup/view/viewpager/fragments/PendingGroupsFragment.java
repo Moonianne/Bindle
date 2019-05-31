@@ -14,17 +14,15 @@ import com.example.exploregroup.R;
 import com.example.exploregroup.view.recyclerview.GroupsAdapter;
 import com.example.exploregroup.viewmodel.GroupsViewModel;
 
-import org.pursuit.firebasetools.model.Group;
+import java.util.Collections;
 
-import java.util.ArrayList;
-import java.util.List;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public final class PendingGroupsFragment extends Fragment {
 
     private GroupsViewModel groupsViewModel;
-
-    public PendingGroupsFragment() {
-    }
+    private Disposable disposable;
 
     public static PendingGroupsFragment newInstance() {
         return new PendingGroupsFragment();
@@ -39,16 +37,24 @@ public final class PendingGroupsFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onDestroy() {
+        disposable.dispose();
+        super.onDestroy();
+    }
+
     private void initViewModel() {
-        groupsViewModel = ViewModelProviders.of(getParentFragment()).get(GroupsViewModel.class);
+        groupsViewModel = ViewModelProviders.of(this).get(GroupsViewModel.class);
     }
 
     private void initRecyclerView(View rootView) {
         RecyclerView pendingRecyclerView = rootView.findViewById(R.id.pending_groups_recycler_view);
-        GroupsAdapter adapter = new GroupsAdapter();
+        GroupsAdapter adapter = new GroupsAdapter(Collections.emptyList());
         pendingRecyclerView.setAdapter(adapter);
         pendingRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        groupsViewModel.setPendingListener(pendingGroupsList -> adapter.setData(pendingGroupsList));
+        disposable = groupsViewModel.getPendingGroups()
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(adapter::addData);
     }
 
 }

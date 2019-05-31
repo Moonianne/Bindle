@@ -29,7 +29,7 @@ public final class ChatViewModel extends ViewModel {
     }
 
     public void pushMessage(String message) {
-        fireRepo.pushZoneChat("pursuitChat", new Message(System.currentTimeMillis(), username, message));
+        fireRepo.pushZoneChatMessage("pursuitChat", new Message(System.currentTimeMillis(), username, message));
     }
 
     public SnapshotParser<Message> getParser() {

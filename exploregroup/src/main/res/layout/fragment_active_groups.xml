@@ -6,6 +6,7 @@
     tools:context=".view.viewpager.fragments.ActiveGroupsFragment">
 
    <android.support.v7.widget.RecyclerView
+       android:background="@android:color/holo_blue_light"
        android:id="@+id/active_groups_recycler_view"
        android:layout_width="match_parent"
        android:layout_height="match_parent">
