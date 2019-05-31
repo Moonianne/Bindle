@@ -1,7 +1,6 @@
 package com.example.exploregroup.view;
 
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -13,8 +12,6 @@ import android.view.ViewGroup;
 import com.example.exploregroup.R;
 import com.example.exploregroup.view.viewpager.adapter.GroupsViewPagerAdapter;
 import com.example.exploregroup.view.viewpager.utils.FragmentListGenerator;
-import com.example.exploregroup.viewmodel.GroupsViewModel;
-import com.example.exploregroup.viewmodel.utils.GroupsListMapGenerator;
 
 
 public final class ExploreGroupsFragment extends Fragment {
@@ -84,6 +81,5 @@ public final class ExploreGroupsFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        GroupsListMapGenerator.clear();
     }
 }

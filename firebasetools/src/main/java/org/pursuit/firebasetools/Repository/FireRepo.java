@@ -1,5 +1,6 @@
 package org.pursuit.firebasetools.Repository;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -12,27 +13,29 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.Nullable;
 
 import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Message;
 import org.pursuit.firebasetools.model.User;
 import org.pursuit.firebasetools.model.Zone;
+import org.pursuit.sqldelight.db.model.BindleDatabase;
+import org.pursuit.usolo.ZoneModelQueries;
 
 import java.util.List;
 
+import durdinapps.rxfirebase2.RxFirebaseChildEvent;
 import durdinapps.rxfirebase2.RxFirebaseDatabase;
+import io.reactivex.Flowable;
 import io.reactivex.Maybe;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public final class FireRepo {
     private static final String TAG = "FireRepo.tst";
-    private static final String ZONES_PATH = "zones/";
+    private static final String ZONES_PATH = "zones";
     private static final String GROUPS_PATH = "groups";
-    private static final String ZONECHATS_PATH = "zoneChats/";
-    private static final String GROUPCHATS_PATH = "groupChats/";
+    private static final String ZONECHATS_PATH = "zoneChats";
+    private static final String GROUPCHATS_PATH = "groupChats";
 
     private final DatabaseReference zoneDataBaseReference;
     private final DatabaseReference zoneChatDataBaseReference;
@@ -40,9 +43,11 @@ public final class FireRepo {
     private final DatabaseReference groupChatDataBaseReference;
 
     private FireRepo() {
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         zoneDataBaseReference = FirebaseDatabase.getInstance().getReference(ZONES_PATH);
         zoneChatDataBaseReference = FirebaseDatabase.getInstance().getReference(ZONECHATS_PATH);
         groupDataBaseReference = FirebaseDatabase.getInstance().getReference(GROUPS_PATH);
+        groupDataBaseReference.keepSynced(true);
         groupChatDataBaseReference = FirebaseDatabase.getInstance().getReference(GROUPCHATS_PATH);
     }
 
@@ -50,21 +55,21 @@ public final class FireRepo {
         zoneDataBaseReference.child(zone.getName()).setValue(zone);
     }
 
-    public void getZone(@NonNull final OnZoneUpdateEmittedListener listener) {
-        zoneDataBaseReference.child("pursuit").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Zone zone = dataSnapshot.getValue(Zone.class);
-                /// also write to database
+    public Maybe<Zone> getZone() {
+        return RxFirebaseDatabase
+          .observeSingleValueEvent(zoneDataBaseReference.child("pursuit"), Zone.class)
+          .subscribeOn(Schedulers.io());
+    }
 
-                listener.onZoneUpdateEmitted(zone);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                //No-op
-            }
-        });
+    public Flowable<Zone> getAllZones(@NonNull final Context context) {
+        ZoneModelQueries queries = BindleDatabase.getInstance(context).getZoneModelQueries();
+        return RxFirebaseDatabase
+          .observeChildEvent(zoneDataBaseReference, Zone.class)
+          .subscribeOn(Schedulers.io())
+          .filter(event -> event.getEventType().equals(RxFirebaseChildEvent.EventType.ADDED))
+          .map(RxFirebaseChildEvent::getValue)
+          .doOnNext(zone -> queries.insertItem(zone.getLocation(),
+            zone.getChatName(), zone.getName(), zone.getUserCount()));
     }
 
     public void addUserToCount(@NonNull final String zoneName) {
@@ -109,11 +114,15 @@ public final class FireRepo {
         });
     }
 
-    public void pushZoneChat(@NonNull final String chatName,
-                             @NonNull final Message message) {
+    public String pushZoneChatMessage(@NonNull final String chatName,
+                                      @NonNull final Message message) {
         //TODO: During authentication user should set a display name so we can pass that for usename.
         message.setUserName(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-        zoneChatDataBaseReference.child(chatName).push().setValue(message);
+        DatabaseReference reference = zoneChatDataBaseReference.child(chatName).push();
+        String key = reference.getKey();
+        message.setiD(key);
+        reference.setValue(message);
+        return key;
     }
 
     public void addZoneChat(@NonNull final String chatName) {
@@ -128,31 +137,17 @@ public final class FireRepo {
         groupDataBaseReference.child(group.getTitle()).setValue(group);
     }
 
-    public void getGroup(@NonNull final String key,
-                         @NonNull final OnGroupUpdateEmittedListener listener) {
-        Disposable disposable =
-          RxFirebaseDatabase
-            .observeSingleValueEvent(groupDataBaseReference.child(key), Group.class)
-            .subscribeOn(Schedulers.io())
-            .subscribe(group -> listener.onGroupUpdateEmitted(group));
-//        groupDataBaseReference.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                listener.onGroupUpdateEmitted(dataSnapshot.getValue(Group.class));
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                //No-op
-//            }
-//        });
+    public Maybe<Group> getGroup(@NonNull final String key) {
+        return RxFirebaseDatabase
+          .observeSingleValueEvent(groupDataBaseReference.child(key), Group.class)
+          .subscribeOn(Schedulers.io());
     }
 
-    public Maybe<Group> getGroups() {
-        return RxFirebaseDatabase
-          .observeSingleValueEvent(groupDataBaseReference, Group.class)
+    public Flowable<Group> getGroups() {
+        return RxFirebaseDatabase.observeChildEvent(groupDataBaseReference, Group.class)
           .subscribeOn(Schedulers.io())
-          .doOnSuccess(group -> Log.d(TAG, "getGroups: " + group.getTitle()));
+          .filter(event -> event.getEventType().equals(RxFirebaseChildEvent.EventType.ADDED))
+          .map(RxFirebaseChildEvent::getValue);
     }
 
     public void addUserToGroup(@NonNull final String groupKey) {
@@ -203,9 +198,15 @@ public final class FireRepo {
         });
     }
 
-    public void pushGroupChat(@NonNull final String chatName,
-                              @NonNull final Message message) {
-        groupChatDataBaseReference.child(chatName).push().setValue(message);
+    public String pushGroupChatMessage(@NonNull final String chatName,
+                                       @NonNull final Message message) {
+        //TODO: During authentication user should set a display name so we can pass that for usename.
+        message.setUserName(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        DatabaseReference reference = groupChatDataBaseReference.child(chatName).push();
+        String key = reference.getKey();
+        message.setiD(key);
+        reference.setValue(message);
+        return key;
     }
 
     public void addGroupChat(@NonNull final String chatName) {
@@ -226,14 +227,6 @@ public final class FireRepo {
 
     public final Query getGroupMessageDatabaseReference(@NonNull final String chatName) {
         return groupChatDataBaseReference.child(chatName);
-    }
-
-    public interface OnZoneUpdateEmittedListener {
-        void onZoneUpdateEmitted(Zone zone);
-    }
-
-    public interface OnGroupUpdateEmittedListener {
-        void onGroupUpdateEmitted(Group group);
     }
 
     public void loginToFireBase(@NonNull final String email,

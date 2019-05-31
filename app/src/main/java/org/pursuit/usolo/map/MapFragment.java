@@ -37,11 +37,14 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 
+import org.pursuit.firebasetools.model.Zone;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
 
 import com.android.interactionlistener.OnFragmentInteractionListener;
+
+import io.reactivex.disposables.Disposable;
 
 public final class MapFragment extends Fragment
   implements View.OnTouchListener {
@@ -63,6 +66,7 @@ public final class MapFragment extends Fragment
     private Animation fabOpen, fabClose, rotateForward, rotateBackward;
     private MapboxMap mapboxMap;
     private Dialog zoneDialog;
+    private Disposable disposable;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -89,7 +93,8 @@ public final class MapFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         zoneDialog = new Dialog(getContext());
-        zoneViewModel.getZone(zone -> makeGeoFence(zone.getLocation()));
+        disposable = zoneViewModel.getZoneLocation()
+          .subscribe(this::makeGeoFence);
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
