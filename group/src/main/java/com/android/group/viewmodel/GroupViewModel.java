@@ -33,7 +33,7 @@ public final class GroupViewModel extends ViewModel {
                 userSelectedVenue.getCategories()[0].getPluralName(),
                 new LatLng(userSelectedVenue.getLocation().getLat(),
                         userSelectedVenue.getLocation().getLng()), groupName.toLowerCase() + "Chat",
-                groupName.toLowerCase(), 1);
+                groupName.toLowerCase(), 1, address, image_url, buiness_name);
         Log.d(TAG, "createGroup: " + currentGroup.toString());
     }
 
