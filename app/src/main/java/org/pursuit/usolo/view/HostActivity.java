@@ -17,6 +17,7 @@ import com.android.authentication.view.AuthenticationFragment;
 import com.android.group.view.AddLocationFragment;
 import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.view.StartGroupFragment;
+import com.android.group.view.joingroup.GroupChatView;
 import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.example.exploregroup.view.ExploreGroupsFragment;
 import com.example.exploregroup.view.ViewGroupFragment;
@@ -100,7 +101,7 @@ public final class HostActivity extends AppCompatActivity
 
     @Override
     public void inflateGroupChatFragment(Group group) {
-
+        inflateFragment(GroupChatView.newInstance(group),true);
     }
 
     @Override
