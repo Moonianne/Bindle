@@ -1,14 +1,18 @@
 package com.example.exploregroup.view;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.example.exploregroup.R;
 import com.squareup.picasso.Picasso;
 
@@ -19,8 +23,9 @@ import org.pursuit.firebasetools.model.Group;
 public class ViewGroupFragment extends Fragment {
 
     public static final String GROUP_KEY = "VIEW_GROUP_KEY";
-    private View rootView;
+    private OnFragmentInteractionListener listener;
     private FireRepo fireRepo;
+    private Group group;
 
     public ViewGroupFragment() {
     }
@@ -36,21 +41,28 @@ public class ViewGroupFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_view_group, container, false);
-        Bundle bundle = getArguments();
-        ImageView viewGroupImageView = rootView.findViewById(R.id.view_group_location_image_view);
-        TextView viewGroupNameTextView = rootView.findViewById(R.id.view_group_name_text_view);
-        TextView viewGroupDescriptionTextView = rootView.findViewById(R.id.view_group_description_text_view);
-        if(bundle != null){
-            Group group = (Group) getArguments().getSerializable(GROUP_KEY);
-            Picasso.get().load(group.getImage_url()).into(viewGroupImageView);
-            viewGroupNameTextView.setText(group.getTitle());
-            viewGroupDescriptionTextView.setText(group.getDescription());
+        View rootView = inflater.inflate(R.layout.fragment_view_group, container, false);
+        if(getArguments() != null){
+            group = (Group) getArguments().getSerializable(GROUP_KEY);
+            Picasso.get().load(group.getImage_url()).into(rootView.<ImageView>findViewById(R.id.view_group_location_image_view));
+            rootView.<TextView>findViewById(R.id.view_group_name_text_view).setText(group.getTitle());
+            rootView.<TextView>findViewById(R.id.view_group_description_text_view).setText(group.getDescription());
         }
 
+        rootView.findViewById(R.id.join_group_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
+                if(sharedPrefs.getString("current_group","").equals("")) {
+                    sharedPrefs.edit().putString("current_group", group.getChatName()).apply();
+                    listener.inflateGroupChatFragment(group);
+                }else{
+                    Toast.makeText(getContext(), "Already in Group", Toast.LENGTH_SHORT).show();
+                }
 
-
+            }
+        });
         fireRepo = FireRepo.getInstance();
         return rootView;
     }

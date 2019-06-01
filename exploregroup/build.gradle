@@ -51,4 +51,5 @@ dependencies {
     implementation project(path: ':group')
     implementation project(path: ':firebasetools')
     implementation project(path: ':interactionlistener')
+    implementation project(path: ':baseresources')
 }
