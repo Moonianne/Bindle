@@ -2,7 +2,10 @@ package com.android.group.view.joingroup;
 
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,7 +22,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.group.R;
+import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.viewmodel.GroupChatViewModel;
+import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.Query;
@@ -43,6 +48,8 @@ public class GroupChatView extends Fragment {
     private RecyclerView groupChatRecycler;
     private LinearLayoutManager layoutManager;
     private FirebaseRecyclerAdapter<Message, GroupMessageViewHolder> fireBaseAdapter;
+    private SharedPreferences sharedPreferences;
+    private OnFragmentInteractionCompleteListener listener;
 
     public GroupChatView() {
     }
@@ -55,6 +62,16 @@ public class GroupChatView extends Fragment {
         return fragment;
     }
 
+       @Override
+        public void onAttach(Context context) {
+            super.onAttach(context);
+            if (context instanceof OnFragmentInteractionListener) {
+                listener = (OnFragmentInteractionCompleteListener) context;
+            } else {
+                throw new RuntimeException();
+            }
+        }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +79,7 @@ public class GroupChatView extends Fragment {
         if (getArguments() != null) {
             group = (Group) getArguments().getSerializable(GROUP_OBJECT);
         }
+
     }
 
     @Override
@@ -84,6 +102,15 @@ public class GroupChatView extends Fragment {
         sendMessageOnClick();
         registerAdapter();
         groupChatRecycler.setAdapter(fireBaseAdapter);
+
+        groupLeaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                sharedPreferences.getString("current_group", "");
+                listener.closeFragment();
+            }
+        });
 
     }
 
