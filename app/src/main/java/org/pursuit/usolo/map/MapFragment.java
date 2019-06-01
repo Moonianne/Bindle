@@ -129,7 +129,7 @@ public final class MapFragment extends Fragment
                     zoneViewModel.getGroup(current_group).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Group>() {
                         @Override
                         public void accept(Group group) throws Exception {
-                            listener.inflateGroupChatFragment(group);
+//                            listener.inflateGroupChatFragment(group);
                         }
                     }, new Consumer<Throwable>() {
                         @Override
@@ -194,17 +194,14 @@ public final class MapFragment extends Fragment
         mapView = view.findViewById(R.id.mapView);
         mapView.getMapAsync(mapboxMap -> {
             MapFragment.this.mapboxMap = mapboxMap;
-            mapboxMap.setStyle(new Style.Builder().fromUrl(MAPBOX_STYLE_URL), new Style.OnStyleLoaded() {
-                @Override
-                public void onStyleLoaded(@NonNull Style style) {
-                    MapFragment.this.enableLocationComponent(style);
-                    MapFragment.this.setZoneStyle(style);
-                    subscribe = zoneViewModel.getAllZones(MapFragment.this.getContext())
-                      .observeOn(AndroidSchedulers.mainThread())
-                      .subscribe(zone -> {
-                          MapFragment.this.showZone(zone.getLocation(), MARKER_IMAGE);
-                      });
-                }
+            mapboxMap.setStyle(new Style.Builder().fromUrl(MAPBOX_STYLE_URL), style -> {
+                MapFragment.this.enableLocationComponent(style);
+                MapFragment.this.setZoneStyle(style);
+                subscribe = zoneViewModel.getAllZones(MapFragment.this.getContext())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe(zone -> {
+                      MapFragment.this.showZone(zone.getLocation(), MARKER_IMAGE);
+                  });
             });
         });
     }
