@@ -1,11 +1,17 @@
 package org.pursuit.userprofile.view;
 
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +21,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jakewharton.rxbinding3.view.RxView;
+
+import org.jetbrains.annotations.NotNull;
 import org.pursuit.userprofile.R;
 import org.pursuit.userprofile.viewmodel.ProfileViewModel;
+
+import java.io.File;
+import java.util.Objects;
+
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 
 public class ProfileView extends Fragment {
 
+    private static final int REQUEST_GET_SINGLE_FILE = 314;
+
+    private static boolean isCurrentUserProfile = true;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private ProfileViewModel profileViewModel;
     private EditText aboutMeEditText, interestsEditText;
-    private ImageView editAboutMeButton, editInterestsButton, finishInterestsButton, finishAboutMeButton;
+    private ImageView editAboutMeButton, editInterestsButton, finishInterestsButton, finishAboutMeButton, profilePhoto;
     private TextView displayNameView, aboutMeView, interestsView, locationView;
     private Button logOutButton, uploadPhotoButton;
-    private static boolean isCurrentUserProfile = true;
 
     public static ProfileView newInstance(boolean bool) {
         isCurrentUserProfile = bool;
@@ -48,63 +67,75 @@ public class ProfileView extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        if (isCurrentUserProfile){
-            findViews(view);
+        findViews(view);
+        if (isCurrentUserProfile) {
 
             displayNameView.setText(profileViewModel.getUsername());
             locationView.setText(profileViewModel.getLocation(getContext()));
+            compositeDisposable.add(RxView.clicks(editAboutMeButton)
+              .subscribe(unit -> setAboutMeVisibility(true)));
+            compositeDisposable.add(RxView.clicks(finishAboutMeButton)
+              .subscribe(unit -> {
+                  //TODO send data to firebase
+                  setAboutMeVisibility(false);
+              }));
+            compositeDisposable.add(RxView.clicks(editInterestsButton)
+              .subscribe(unit1 -> {
+                  setInterestsVisibility(true);
+                  finishInterestsButton.setOnClickListener(v1 -> setInterestsVisibility(false));
+              }));
+            compositeDisposable.add(RxView.clicks(uploadPhotoButton)
+              .subscribe(unit -> startActivityForResult(Intent
+                .createChooser(profileViewModel.getPhotoIntent(),
+                  "Select Picture"), REQUEST_GET_SINGLE_FILE)));
 
-            editAboutMeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setAboutMeVisibility(true);
-
-                    finishAboutMeButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //TODO send data to firebase
-                            setAboutMeVisibility(false);
-                        }
-                    });
-                }
+            logOutButton.setOnClickListener(v -> {
+                //TODO firebase needed for the user log out
             });
-
-            editInterestsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setInterestsVisibility(true);
-
-                    finishInterestsButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            setInterestsVisibility(false);
-                        }
-                    });
-                }
-            });
-
-            uploadPhotoButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //TODO intent for photo and store profile photo in firebase
-                }
-            });
-
-            logOutButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //TODO firebase needed for the user log out
-                }
-            });
-        }else {
-            findViews(view);
+        } else {
             setExtraViewsVisibility();
-
             displayNameView.setText(profileViewModel.getUsername());
             locationView.setText(profileViewModel.getLocation(getContext()));
         }
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            if (resultCode == Activity.RESULT_OK) {
+                if (requestCode == REQUEST_GET_SINGLE_FILE) {
+                    Uri selectedImageUri = data.getData();
+                    final String path = getPathFromURI(selectedImageUri);
+                    if (path != null) {
+                        File f = new File(path);
+                        selectedImageUri = Uri.fromFile(f);
+                    }
+                    profilePhoto.setImageURI(selectedImageUri);
+                }
+            }
+        } catch (Exception e) {
+            Log.e("FileSelectorActivity", "File select error", e);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        compositeDisposable.dispose();
+        super.onDestroy();
+    }
+
+    public String getPathFromURI(Uri contentUri) {
+        String res = null;
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = Objects.requireNonNull(getContext()).getContentResolver()
+          .query(contentUri, proj, null, null, null);
+        if (cursor.moveToFirst()) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            res = cursor.getString(column_index);
+        }
+        cursor.close();
+        return res;
     }
 
     private void setExtraViewsVisibility() {
@@ -151,6 +182,7 @@ public class ProfileView extends Fragment {
     }
 
     private void findViews(@NonNull View view) {
+        profilePhoto = view.findViewById(R.id.profilephoto);
         locationView = view.findViewById(R.id.locationView);
         displayNameView = view.findViewById(R.id.profile_display_name);
         aboutMeView = view.findViewById(R.id.aboutme_textview);
