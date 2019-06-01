@@ -99,6 +99,11 @@ public final class HostActivity extends AppCompatActivity
     }
 
     @Override
+    public void inflateGroupChatFragment(Group group) {
+
+    }
+
+    @Override
     public void openDirections(String venueAddress) {
         Uri parseAddress = Uri.parse("google.navigation:q=" + venueAddress + "&mode=transit");
         Intent navIntent = new Intent(android.content.Intent.ACTION_VIEW, parseAddress);

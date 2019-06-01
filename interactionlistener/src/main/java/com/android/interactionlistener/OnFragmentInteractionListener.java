@@ -17,4 +17,6 @@ public interface OnFragmentInteractionListener {
     void inflateExploreGroupsFragment();
 
     void inflateViewGroupFragment(Group group);
+
+    void inflateGroupChatFragment(Group group);
 }
