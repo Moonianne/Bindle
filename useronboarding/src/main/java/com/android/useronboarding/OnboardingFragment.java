@@ -13,6 +13,10 @@ public class OnboardingFragment extends Fragment {
     public OnboardingFragment() {
     }
 
+    public static OnboardingFragment getInstance(){
+        return new OnboardingFragment();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

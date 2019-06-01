@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">useronboarding</string>
+    <string name="display_name">Display Name..</string>
+    <string name="tell_bindlers_about_yourself">Tell Bindlers about Yourself..</string>
+    <string name="welcome_to_bindle">Welcome to Bindle!</string>
+    <string name="what_are_you_in_to">What are you in to?</string>
 </resources>

@@ -1,7 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cPrimary"
+    android:orientation="vertical"
+    android:padding="20dp"
     tools:context=".OnboardingFragment">
-</FrameLayout>
+
+    <TextView
+        android:id="@+id/textView_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/maven_pro_bold"
+        android:text="@string/welcome_to_bindle"
+        android:textColor="@color/cPrimaryDark"
+        android:textSize="28sp" />
+
+    <EditText
+        android:id="@+id/editText_display_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/rectangle_round_light_gray"
+        android:hint="@string/display_name"
+        android:inputType="text"
+        android:maxLines="1"
+        android:padding="10dp"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView_interests"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/maven_pro_bold"
+        android:text="@string/what_are_you_in_to"
+        android:textColor="@color/cPrimaryDark"
+        android:textSize="28sp" />
+
+    <EditText
+        android:id="@+id/editText_about_me"
+        android:layout_width="match_parent"
+        android:layout_height="272dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rectangle_round_light_gray"
+        android:gravity="top|start"
+        android:hint="@string/tell_bindlers_about_yourself"
+        android:inputType="textLongMessage|textMultiLine|textCapSentences"
+        android:padding="10dp"
+        android:textSize="18sp" />
+</LinearLayout>
