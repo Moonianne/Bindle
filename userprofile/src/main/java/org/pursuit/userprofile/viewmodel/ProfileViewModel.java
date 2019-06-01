@@ -3,6 +3,7 @@ package org.pursuit.userprofile.viewmodel;
 import android.Manifest;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -21,7 +22,7 @@ import java.util.Locale;
 
 public class ProfileViewModel extends ViewModel {
 
-    private FireRepo fireRepo = FireRepo.getInstance();
+    private final FireRepo fireRepo = FireRepo.getInstance();
 
     public String getUsername() {
         Log.d("profileViewModel - ", "email: " + fireRepo.getUser().getEmail());
@@ -51,4 +52,10 @@ public class ProfileViewModel extends ViewModel {
         return cityName + ", " + stateName + ", " + countryName;
     }
 
+    public Intent getPhotoIntent() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        return intent;
+    }
 }
