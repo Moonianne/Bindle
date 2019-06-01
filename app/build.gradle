@@ -38,6 +38,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
+    implementation 'com.airbnb.android:lottie:2.7.0'
     implementation project(path: ':zonechat')
     implementation project(path: ':group')
     implementation project(path: ':authentication')

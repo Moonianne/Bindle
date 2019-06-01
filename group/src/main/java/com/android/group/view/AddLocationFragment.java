@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.group.R;
 import com.android.group.model.bindle.BindleBusiness;
 import com.android.group.network.constants.CategoryConstants;
@@ -32,7 +33,7 @@ public final class AddLocationFragment extends Fragment {
     private View rootView;
     private NetworkViewModel viewModel;
     private AddLocationAdapter adapter;
-    private ProgressBar progressBar;
+    private LottieAnimationView lottieAnimationView;
     private List<BindleBusiness> bindleBusinessesList = new ArrayList<>();
     private Disposable disposable;
 
@@ -56,7 +57,7 @@ public final class AddLocationFragment extends Fragment {
     }
 
     private void findViews() {
-        progressBar = rootView.findViewById(R.id.add_location_progress_bar);
+        lottieAnimationView = rootView.findViewById(R.id.bindle_color_load);
     }
 
     private void getViewModel() {
@@ -86,14 +87,14 @@ public final class AddLocationFragment extends Fragment {
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                progressBar.setVisibility(View.VISIBLE);
+                lottieAnimationView.setVisibility(View.VISIBLE);
                 bindleBusinessesList.clear();
                 disposable = viewModel.makeBindleBusinessNetworkCall(CategoryConstants.CATEGORIES[position])
                         .doOnSubscribe(unit -> adapter.clear())
                         .subscribe(bindleBusiness -> {
                             bindleBusinessesList.add(bindleBusiness);
                             adapter.addData(bindleBusiness);
-                            progressBar.setVisibility(View.GONE);
+                            lottieAnimationView.setVisibility(View.GONE);
                         });
             }
 
