@@ -1,6 +1,7 @@
 package com.example.exploregroup.view;
 
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -36,6 +37,14 @@ public class ViewGroupFragment extends Fragment {
         ViewGroupFragment viewGroupFragment = new ViewGroupFragment();
         viewGroupFragment.setArguments(bundle);
         return viewGroupFragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof OnFragmentInteractionListener){
+            listener = (OnFragmentInteractionListener) context;
+        }
     }
 
     @Override
