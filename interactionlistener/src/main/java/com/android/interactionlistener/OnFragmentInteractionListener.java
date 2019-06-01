@@ -1,5 +1,7 @@
 package com.android.interactionlistener;
 
+import org.pursuit.firebasetools.model.Group;
+
 public interface OnFragmentInteractionListener {
 
     void inflateStartGroupFragment();
@@ -14,5 +16,5 @@ public interface OnFragmentInteractionListener {
 
     void inflateExploreGroupsFragment();
 
-    void inflateViewGroupFragment();
+    void inflateViewGroupFragment(Group group);
 }

@@ -93,7 +93,7 @@ public final class HostActivity extends AppCompatActivity
     }
 
     @Override
-    public void inflateViewGroupFragment() {
+    public void inflateViewGroupFragment(Group group) {
         inflateFragment(ViewGroupFragment.newInstance(),true);
     }
 
