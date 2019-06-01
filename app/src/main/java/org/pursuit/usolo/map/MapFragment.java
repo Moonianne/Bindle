@@ -24,6 +24,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.TextView;
+
 
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -34,6 +36,7 @@ import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolClickListener;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
@@ -75,6 +78,8 @@ public final class MapFragment extends Fragment
     private Dialog zoneDialog;
     private Disposable disposable;
     SharedPreferences sharedPreferences;
+    private SymbolManager symbolManager;
+    private Disposable subscribe;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -147,6 +152,12 @@ public final class MapFragment extends Fragment
           this.mapboxMap = mapboxMap);
     }
 
+    @Override
+    public void onDestroy() {
+        disposable.dispose();
+        super.onDestroy();
+    }
+
     private void setOnClick(View view) {
         view.setOnClickListener(v -> {
             animateFAB();
@@ -183,33 +194,48 @@ public final class MapFragment extends Fragment
         mapView = view.findViewById(R.id.mapView);
         mapView.getMapAsync(mapboxMap -> {
             MapFragment.this.mapboxMap = mapboxMap;
-            mapboxMap.setStyle(new Style.Builder().fromUrl(MAPBOX_STYLE_URL), style -> {
-                enableLocationComponent(style);
-                addZoneMarker(style, new LatLng(40.7430877, -73.9419287));
-
+            mapboxMap.setStyle(new Style.Builder().fromUrl(MAPBOX_STYLE_URL), new Style.OnStyleLoaded() {
+                @Override
+                public void onStyleLoaded(@NonNull Style style) {
+                    MapFragment.this.enableLocationComponent(style);
+                    MapFragment.this.setZoneStyle(style);
+                    subscribe = zoneViewModel.getAllZones(MapFragment.this.getContext())
+                      .observeOn(AndroidSchedulers.mainThread())
+                      .subscribe(zone -> {
+                          MapFragment.this.showZone(zone.getLocation(), MARKER_IMAGE);
+                      });
+                }
             });
         });
     }
 
-    private void addZoneMarker(Style style, LatLng zone) {
-
-        style.addImage(MARKER_IMAGE, BitmapFactory.decodeResource(
-          MapFragment.this.getResources(), R.drawable.zone_marker));
-
-        SymbolManager symbolManager = new SymbolManager(mapView, mapboxMap, style, null,
+    private void setZoneStyle(Style style) {
+        style.addImage(MapFragment.MARKER_IMAGE,
+          BitmapFactory.decodeResource(MapFragment.this.getResources(),
+            R.drawable.smallbindle));
+        symbolManager = new SymbolManager(mapView, mapboxMap, style, null,
           new GeoJsonOptions().withTolerance(0.4f));
-        symbolManager.addClickListener(symbol -> showZoneDialog());
-
+        symbolManager.addClickListener(new OnSymbolClickListener() {
+            @Override
+            public void onAnnotationClick(Symbol symbol) {
+                MapFragment.this.showZoneDialog();
+            }
+        });
         symbolManager.setIconAllowOverlap(true);
         symbolManager.setTextAllowOverlap(true);
-        Symbol symbol = symbolManager.create(new SymbolOptions()
-          .withLatLng(zone) //replace with zone LatLng
-          .withIconImage(MARKER_IMAGE)
+    }
+
+    private void showZone(@NonNull final LatLng zone,
+                          @NonNull final String iconKey) {
+        symbolManager.create(new SymbolOptions()
+          .withLatLng(zone)
+          .withIconImage(iconKey)
           .withIconSize(.5f));
     }
 
     private void showZoneDialog() {
         zoneDialog.setContentView(R.layout.zone_dialog_layout);
+        TextView textViewzoneName = zoneDialog.findViewById(R.id.zone_dialog_name);
         Button viewZoneForumButton = zoneDialog.findViewById(R.id.view_zone_button);
         viewZoneForumButton.setOnClickListener(v -> {
             listener.inflateZoneChatFragment();
@@ -226,7 +252,6 @@ public final class MapFragment extends Fragment
     @SuppressWarnings({"MissingPermission"})
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
         final LocationComponent locationComponent = mapboxMap.getLocationComponent();
-
         locationComponent.activateLocationComponent(
           LocationComponentActivationOptions.builder(getContext(), loadedMapStyle).build());
         locationComponent.setLocationComponentEnabled(true);
@@ -327,5 +352,4 @@ public final class MapFragment extends Fragment
         fab2.setClickable(true);
         fabProfile.setClickable(true);
     }
-
 }
