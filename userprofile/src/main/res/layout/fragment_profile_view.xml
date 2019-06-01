@@ -10,12 +10,13 @@
         android:id="@+id/locationView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="40dp"
         android:fontFamily="@font/maven_pro_medium"
         android:text="location"
         android:textColor="@color/cPrimaryDark"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/upload_profile_photoButton" />
 
@@ -24,9 +25,8 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="52dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:elevation="5dp"
         android:scaleType="fitXY"
         android:src="@drawable/userprofile_border"
@@ -80,78 +80,62 @@
         android:id="@+id/interest_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="60dp"
         android:fontFamily="@font/maven_pro_medium"
         android:gravity="center"
         android:text="My Interests"
         android:textColor="@color/cPrimaryDark"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/locationView"
-        app:layout_constraintVertical_bias="0.268" />
+        app:layout_constraintTop_toBottomOf="@+id/locationView" />
 
     <TextView
         android:id="@+id/interests_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:fontFamily="@font/maven_pro_medium"
         android:text="art, music, beer"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/aboutMe_header"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/interest_header"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintBottom_toBottomOf="@id/interest_editText"
+        app:layout_constraintEnd_toEndOf="@id/interest_editText"
+        app:layout_constraintStart_toStartOf="@id/interest_editText"
+        app:layout_constraintTop_toTopOf="@id/interest_editText" />
 
     <EditText
         android:id="@+id/interest_editText"
         android:layout_width="128dp"
         android:layout_height="36dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/aboutMe_header"
-        app:layout_constraintEnd_toStartOf="@+id/finishEdit_interestsButton"
-        app:layout_constraintHorizontal_bias="0.921"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/interest_header"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/interest_header" />
 
     <ImageView
         android:id="@+id/finishEdit_interestsButton"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/ic_done_dark_24dp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.169"
         app:layout_constraintStart_toEndOf="@+id/interests_textview"
-        app:layout_constraintTop_toBottomOf="@+id/profilephoto_border"
-        app:layout_constraintVertical_bias="0.391" />
+        app:layout_constraintTop_toBottomOf="@+id/interest_header" />
 
     <ImageView
         android:id="@+id/edit_interestsButton"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/ic_edit_dark_24dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.086"
         app:layout_constraintStart_toEndOf="@+id/interests_textview"
         app:layout_constraintTop_toBottomOf="@+id/interest_header" />
 
@@ -160,50 +144,43 @@
         android:id="@+id/aboutMe_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="568dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="48dp"
         android:fontFamily="@font/maven_pro_medium"
         android:gravity="center"
         android:text="About Me"
         android:textColor="@color/cPrimaryDark"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/edit_aboutMe_button"
-        app:layout_constraintHorizontal_bias="0.839"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/interest_editText" />
 
     <ImageView
         android:id="@+id/edit_aboutMe_button"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="52dp"
+        android:layout_marginEnd="44dp"
         android:background="@drawable/ic_edit_dark_24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/aboutMe_header" />
+        app:layout_constraintBottom_toBottomOf="@+id/finishEdit_aboutMe_button"
+        app:layout_constraintEnd_toEndOf="@+id/finishEdit_aboutMe_button"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/finishEdit_aboutMe_button"
+        app:layout_constraintTop_toTopOf="@+id/finishEdit_aboutMe_button"
+        app:layout_constraintVertical_bias="0.0" />
 
 
     <TextView
         android:id="@+id/aboutme_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:fontFamily="@font/maven_pro_medium"
         android:text="A little about me..."
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/edit_aboutMe_button"
-        app:layout_constraintHorizontal_bias="0.738"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/aboutMe_header"
-        app:layout_constraintVertical_bias="0.004" />
+        app:layout_constraintBottom_toBottomOf="@id/aboutMe_editText"
+        app:layout_constraintTop_toTopOf="@id/aboutMe_editText"
+        app:layout_constraintLeft_toLeftOf="@id/aboutMe_editText"
+        app:layout_constraintRight_toRightOf="@id/aboutMe_editText"
+        tools:layout_editor_absoluteX="8dp" />
 
     <EditText
         android:id="@+id/aboutMe_editText"
@@ -212,26 +189,23 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/finishEdit_aboutMe_button"
-        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/aboutMe_header"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/aboutMe_header" />
 
     <ImageView
         android:id="@+id/finishEdit_aboutMe_button"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="28dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/ic_done_dark_24dp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/aboutme_textview"
+        app:layout_constraintHorizontal_bias="0.212"
+        app:layout_constraintStart_toEndOf="@+id/aboutMe_editText"
         app:layout_constraintTop_toBottomOf="@+id/aboutMe_header" />
 
     <Button
