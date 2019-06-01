@@ -29,7 +29,7 @@ public final class StartGroupFragment extends Fragment
     private OnFragmentInteractionListener interactionListener;
     private OnFragmentInteractionCompleteListener interactionCompleteListener;
     private TextView locationTextView;
-    private Venue userSelectedBindleBusiness;
+    private BindleBusiness userSelectedBindleBusiness;
 
     public static StartGroupFragment newInstance() {
         return new StartGroupFragment();
@@ -76,8 +76,8 @@ public final class StartGroupFragment extends Fragment
 
     @Override
     public void bindleBusinessSelected(BindleBusiness bindleBusiness) {
-        userSelectedBindleBusiness = bindleBusiness.getVenue();
-        locationTextView.setText(userSelectedBindleBusiness.getLocation().getAddress());
+        userSelectedBindleBusiness = bindleBusiness;
+        locationTextView.setText(userSelectedBindleBusiness.getVenue().getLocation().getAddress());
     }
 
     private void setStartButtonOnClickListener(View view) {

@@ -3,6 +3,7 @@ package com.android.group.viewmodel;
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
+import com.android.group.model.bindle.BindleBusiness;
 import com.android.group.model.foursquare.Venue;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
@@ -24,16 +25,16 @@ public final class GroupViewModel extends ViewModel {
     }
 
     public void createGroup(String groupName,
-                            Venue userSelectedVenue,
+                            BindleBusiness bindleBusiness,
                             String groupDescription) {
         List<User> userList = new LinkedList<>();
         User user = new User("Eric", "ericdiazjr21@gmail.com", "I like to code and dance bachata.", "Nightlife", "pursuit", null, null, null);
         userList.add(user);
         currentGroup = new Group(userList, groupDescription,
-                userSelectedVenue.getCategories()[0].getPluralName(),
-                new LatLng(userSelectedVenue.getLocation().getLat(),
-                        userSelectedVenue.getLocation().getLng()), groupName.toLowerCase() + "Chat",
-                groupName.toLowerCase(), 1, address, image_url, buiness_name);
+                bindleBusiness.getVenue().getCategories()[0].getPluralName(),
+                new LatLng(bindleBusiness.getVenue().getLocation().getLat(),
+                        bindleBusiness.getVenue().getLocation().getLng()), groupName.toLowerCase() + "Chat",
+                groupName.toLowerCase(), 1, bindleBusiness.getVenue().getLocation().getAddress(), bindleBusiness.getBusiness().getImage_url(), bindleBusiness.getVenue().getName());
         Log.d(TAG, "createGroup: " + currentGroup.toString());
     }
 
