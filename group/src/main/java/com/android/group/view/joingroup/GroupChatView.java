@@ -107,7 +107,7 @@ public class GroupChatView extends Fragment {
             @Override
             public void onClick(View v) {
                 sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                sharedPreferences.getString("current_group", "");
+                sharedPreferences.edit().putString("current_group", "").apply();
                 listener.closeFragment();
             }
         });

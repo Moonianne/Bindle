@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModel;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.pursuit.firebasetools.Repository.FireRepo;
+import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Zone;
 
 import io.reactivex.Maybe;
@@ -29,6 +30,11 @@ public final class ZoneViewModel extends ViewModel {
     public void loginToFireBase(String email, String password) {
         fireRepo.loginToFireBase(email, password);
     }
+
+    public Maybe<Group> getGroup(String chatKey){
+        return fireRepo.getGroup(chatKey);
+    }
+
 
     public void addUserToZoneCount(String zoneName) {
         fireRepo.addUserToCount(zoneName);

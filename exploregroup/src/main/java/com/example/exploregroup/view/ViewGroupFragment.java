@@ -64,7 +64,7 @@ public class ViewGroupFragment extends Fragment {
                 SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
                 if(sharedPrefs.getString("current_group","").equals("")) {
-                    sharedPrefs.edit().putString("current_group", group.getChatName()).apply();
+                    sharedPrefs.edit().putString("current_group", group.getTitle()).apply();
                     listener.inflateGroupChatFragment(group);
                 }else{
                     Toast.makeText(getContext(), "Already in Group", Toast.LENGTH_SHORT).show();

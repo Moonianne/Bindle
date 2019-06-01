@@ -5,10 +5,12 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -37,6 +39,8 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 
+import org.pursuit.firebasetools.Repository.FireRepo;
+import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Zone;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
@@ -44,7 +48,9 @@ import org.pursuit.usolo.map.utils.GeoFenceCreator;
 
 import com.android.interactionlistener.OnFragmentInteractionListener;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 public final class MapFragment extends Fragment
   implements View.OnTouchListener {
@@ -64,9 +70,11 @@ public final class MapFragment extends Fragment
     private FloatingActionButton fab, fab1, fab2, fabProfile;
     private BottomSheetBehavior bottomSheetBehavior;
     private Animation fabOpen, fabClose, rotateForward, rotateBackward;
+    private Button viewForum;
     private MapboxMap mapboxMap;
     private Dialog zoneDialog;
     private Disposable disposable;
+    SharedPreferences sharedPreferences;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -87,6 +95,7 @@ public final class MapFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         zoneViewModel = ViewModelProviders.of(this).get(ZoneViewModel.class);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
     }
 
     @Override
@@ -107,6 +116,27 @@ public final class MapFragment extends Fragment
         setOnClick(fab1);
         setOnClick(fab2);
         setOnClick(fabProfile);
+        viewForum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String current_group = sharedPreferences.getString("current_group", "");
+                if (!current_group.equals("")) {
+                    zoneViewModel.getGroup(current_group).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Group>() {
+                        @Override
+                        public void accept(Group group) throws Exception {
+                            listener.inflateGroupChatFragment(group);
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            Log.d(".MapFragment: ", throwable.toString());
+                        }
+                    });
+
+                }
+
+            }
+        });
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheet.setOnTouchListener(this);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -144,6 +174,7 @@ public final class MapFragment extends Fragment
         fab = view.findViewById(R.id.fab);
         fab1 = view.findViewById(R.id.fab1);
         fab2 = view.findViewById(R.id.fab2);
+        viewForum = view.findViewById(R.id.view_your_group_button);
         fabProfile = view.findViewById(R.id.fab_profile);
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
