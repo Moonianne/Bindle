@@ -35,7 +35,6 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:fontFamily="@font/maven_pro_medium"
-                    android:text="Zone name"
                     android:textAlignment="center"
                     android:textColor="@color/cDark"
                     android:textSize="25sp"
