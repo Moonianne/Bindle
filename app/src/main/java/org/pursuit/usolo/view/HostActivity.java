@@ -101,7 +101,7 @@ public final class HostActivity extends AppCompatActivity
 
     @Override
     public void inflateGroupChatFragment(Group group) {
-
+        inflateFragment(GroupChatView.newInstance(group),true);
     }
 
     @Override
