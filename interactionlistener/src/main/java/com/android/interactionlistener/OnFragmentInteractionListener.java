@@ -13,4 +13,6 @@ public interface OnFragmentInteractionListener {
     void openDirections(String VenueAddress);
 
     void inflateExploreGroupsFragment();
+
+    void inflateViewGroupFragment();
 }

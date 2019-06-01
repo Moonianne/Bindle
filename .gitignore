@@ -6,3 +6,4 @@
 /build
 /captures
 .externalNativeBuild
+/localdb/build/outputs/logs/
