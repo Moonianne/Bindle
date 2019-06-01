@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.exploregroup.R;
+import com.squareup.picasso.Picasso;
 
 import org.pursuit.firebasetools.Repository.FireRepo;
 import org.pursuit.firebasetools.model.Group;
@@ -37,9 +38,18 @@ public class ViewGroupFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_view_group, container, false);
         Bundle bundle = getArguments();
+        ImageView viewGroupImageView = rootView.findViewById(R.id.view_group_location_image_view);
+        TextView viewGroupNameTextView = rootView.findViewById(R.id.view_group_name_text_view);
+        TextView viewGroupDescriptionTextView = rootView.findViewById(R.id.view_group_description_text_view);
         if(bundle != null){
             Group group = (Group) getArguments().getSerializable(GROUP_KEY);
+            Picasso.get().load(group.getImage_url()).into(viewGroupImageView);
+            viewGroupNameTextView.setText(group.getTitle());
+            viewGroupDescriptionTextView.setText(group.getDescription());
         }
+
+
+
 
         fireRepo = FireRepo.getInstance();
         return rootView;

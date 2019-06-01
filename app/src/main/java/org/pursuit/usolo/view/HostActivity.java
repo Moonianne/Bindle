@@ -21,6 +21,7 @@ import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.example.exploregroup.view.ExploreGroupsFragment;
 import com.example.exploregroup.view.ViewGroupFragment;
 
+import org.pursuit.firebasetools.model.Group;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
@@ -94,7 +95,7 @@ public final class HostActivity extends AppCompatActivity
 
     @Override
     public void inflateViewGroupFragment(Group group) {
-        inflateFragment(ViewGroupFragment.newInstance(),true);
+        inflateFragment(ViewGroupFragment.newInstance(group),true);
     }
 
     @Override
