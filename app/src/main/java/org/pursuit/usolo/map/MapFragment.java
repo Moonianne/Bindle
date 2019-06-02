@@ -29,6 +29,8 @@ import android.widget.TextView;
 import com.android.interactionlistener.OnBackPressedInteraction;
 import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
@@ -43,6 +45,7 @@ import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
+import org.jetbrains.annotations.NotNull;
 import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Zone;
 import org.pursuit.usolo.R;
@@ -67,6 +70,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     public static final String GROUP_PREFS = "GROUP";
     public static final String CURRENT_GROUP_KEY = "current_group";
 
+    private FloatingActionButton fabRecenterUser;
     private CompositeDisposable disposables = new CompositeDisposable();
     private ZoneViewModel zoneViewModel;
     private OnFragmentInteractionListener listener;
@@ -83,6 +87,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     private SharedPreferences sharedPreferences;
     private SymbolManager symbolManager;
     private String currentGroupSharedPref;
+    private LocationComponent locationComponent;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -126,6 +131,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         findViews(view);
         setCurrentActivityView();
         getGroup();
+        fabRecenterUser = view.findViewById(R.id.fab_recenter);
         fab = view.findViewById(R.id.fab);
         fab1 = view.findViewById(R.id.fab1);
         fab2 = view.findViewById(R.id.fab2);
@@ -250,6 +256,10 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
             MapFragment.this.mapboxMap = mapboxMap;
             mapboxMap.setStyle(new Style.Builder().fromUrl(MAPBOX_STYLE_URL), style -> {
                 enableLocationComponent(style);
+                fabRecenterUser.setOnClickListener(v -> {
+                    CameraPosition position = getCameraPosition();
+                    mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position), 2000);
+                });
                 setZoneStyle(style);
                 disposables.add(zoneViewModel.getAllZones(Objects.requireNonNull(getContext()))
                   .map(zone -> zoneViewModel.getMapFeature(zone))
@@ -273,6 +283,15 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
                 });
             });
         });
+    }
+
+    @NotNull
+    private CameraPosition getCameraPosition() {
+        return new CameraPosition.Builder()
+                          .target(new LatLng(Objects.requireNonNull(locationComponent.getLastKnownLocation())))
+                            .zoom(13)
+                            .tilt(30)
+                            .build();
     }
 
 
@@ -311,7 +330,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
 
     @SuppressWarnings({"MissingPermission"})
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
-        final LocationComponent locationComponent = mapboxMap.getLocationComponent();
+        locationComponent = mapboxMap.getLocationComponent();
         locationComponent.activateLocationComponent(
           LocationComponentActivationOptions
             .builder(Objects.requireNonNull(getContext()), loadedMapStyle).build());
