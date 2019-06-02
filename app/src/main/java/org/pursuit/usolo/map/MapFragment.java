@@ -28,6 +28,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
+
+import com.android.interactionlistener.OnBackPressedInteraction;
 import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.Point;
@@ -68,7 +70,7 @@ import io.reactivex.functions.Consumer;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
 
 public final class MapFragment extends Fragment
-  implements View.OnTouchListener {
+  implements View.OnTouchListener, OnBackPressedInteraction {
 
     private static final String TAG = "MapFragment";
     private static final String MAPBOX_ACCESS_TOKEN =
@@ -143,10 +145,18 @@ public final class MapFragment extends Fragment
 
         viewForum.setOnClickListener(v -> {
             String current_group = sharedPreferences.getString("current_group", "");
-            if (current_group != null && !current_group.equals("")) {
-                disposables.add(zoneViewModel.getGroup(current_group).observeOn(AndroidSchedulers.mainThread()).subscribe(group -> {
-                    //                            listener.inflateGroupChatFragment(group);
-                }, throwable -> Log.d(".MapFragment: ", throwable.toString())));
+            if (!current_group.equals("")) {
+                zoneViewModel.getGroup(current_group).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Group>() {
+                    @Override
+                    public void accept(Group group) throws Exception {
+                        listener.inflateGroupChatFragment(group);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Log.d(".MapFragment: ", throwable.toString());
+                    }
+                });
             }
         });
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
@@ -230,6 +240,7 @@ public final class MapFragment extends Fragment
             R.drawable.smallbindle));
         symbolManager = new SymbolManager(mapView, mapboxMap, style, null,
           new GeoJsonOptions().withTolerance(0.4f));
+        symbolManager.addClickListener(symbol -> showZoneDialog(symbol));
         symbolManager.setIconAllowOverlap(true);
         symbolManager.setTextAllowOverlap(true);
     }
@@ -359,5 +370,17 @@ public final class MapFragment extends Fragment
         fab1.setClickable(true);
         fab2.setClickable(true);
         fabProfile.setClickable(true);
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            enableFabs();
+            return true;
+        } else {
+
+            return false;
+        }
     }
 }
