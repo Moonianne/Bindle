@@ -254,6 +254,17 @@
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_recenter"
+        android:layout_gravity="bottom|start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:elevation="6dp"
+        android:layout_marginBottom="64dp"
+
+        android:src="@drawable/ic_my_location_black_24dp"/>
+
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

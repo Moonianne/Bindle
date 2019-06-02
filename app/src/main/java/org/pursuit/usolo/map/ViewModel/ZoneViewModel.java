@@ -8,7 +8,9 @@ import android.support.annotation.NonNull;
 
 import com.mapbox.geojson.Point;
 import com.mapbox.geojson.Polygon;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 
 import org.jetbrains.annotations.NotNull;
 import org.pursuit.firebasetools.Repository.FireRepo;
@@ -110,4 +112,11 @@ public final class ZoneViewModel extends ViewModel {
         return points;
     }
 
+    public CameraPosition getPosition(Symbol symbol) {
+        return new CameraPosition.Builder()
+          .target(new LatLng(symbol.getLatLng()))
+          .zoom(12)
+          .tilt(40)
+          .build();
+    }
 }
