@@ -2,13 +2,19 @@ package org.pursuit.usolo.map.ViewModel;
 
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
+import android.graphics.PointF;
+import android.graphics.RectF;
 import android.support.annotation.NonNull;
 
+import com.mapbox.geojson.Point;
+import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
+import org.jetbrains.annotations.NotNull;
 import org.pursuit.firebasetools.Repository.FireRepo;
 import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Zone;
+import org.pursuit.usolo.model.MapFeature;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +25,8 @@ import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public final class ZoneViewModel extends ViewModel {
+    public static final double METER_RADIUS = 300d;
+
     private FireRepo fireRepo = FireRepo.getInstance();
     private List<String> zoneNames = new ArrayList<>();
 
@@ -54,7 +62,52 @@ public final class ZoneViewModel extends ViewModel {
             .addAll(Collections.singleton(zone.getName())));
     }
 
-    public String getZoneName(int id) {
-        return zoneNames.get(id);
+    public List<String> getZoneNames() {
+        return zoneNames;
     }
+
+    @NotNull
+    public Polygon getGeometry(MapFeature mapFeature) {
+        return Polygon.fromLngLats(mapFeature.points);
+    }
+
+    @NotNull
+    public RectF getRectF(PointF pointf) {
+        return new RectF(pointf.x - 10, pointf.y - 10, pointf.x + 10, pointf.y + 10);
+    }
+
+    @NotNull
+    public MapFeature getMapFeature(Zone zone) {
+        return new MapFeature(zone.getName(), zone.getLocation(), getPointsLists(zone.getLocation()));
+    }
+
+    @NotNull
+    private List<List<Point>> getPointsLists(LatLng location) {
+        int degreesBetweenPoints = 8;
+        int numberOfPointers = (int) Math.floor(360 / degreesBetweenPoints);
+        double distRadians = METER_RADIUS / 6371000.0;
+        double centerLatRadians = location.getLatitude() * Math.PI / 180;
+        double centerLonRadians = location.getLongitude() * Math.PI / 180;
+        List<Point> coordinates = new ArrayList<>(numberOfPointers);
+        for (int i = 0; i < numberOfPointers; i++) {
+            double degrees = (double) i * degreesBetweenPoints;
+            double degreeRadians = degrees * Math.PI / 180;
+            double pointLatRadians =
+              Math.asin(Math.sin(centerLatRadians)
+                * Math.cos(distRadians) + Math.cos(centerLatRadians)
+                * Math.sin(distRadians) * Math.cos(degreeRadians));
+            double pointLonRadians =
+              centerLonRadians + Math.atan2(Math.sin(degreeRadians)
+                  * Math.sin(distRadians) * Math.cos(centerLatRadians),
+                Math.cos(distRadians) - Math.sin(centerLatRadians) * Math.sin(pointLatRadians));
+            double pointLat = pointLatRadians * 180 / Math.PI;
+            double pointLong = pointLonRadians * 180 / Math.PI;
+            Point point = Point.fromLngLat(pointLong, pointLat);
+            coordinates.add(point);
+        }
+        List<List<Point>> points = new ArrayList<>();
+        points.add(coordinates);
+        return points;
+    }
+
 }
