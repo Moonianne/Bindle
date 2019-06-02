@@ -12,12 +12,12 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -66,6 +66,7 @@ import java.util.Objects;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.disposables.Disposable;
 
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
 
@@ -78,6 +79,8 @@ public final class MapFragment extends Fragment
     private static final String MAPBOX_STYLE_URL =
       "mapbox://styles/naomyp/cjvpowkpn0yd01co7844p4m6w";
     private static final String MARKER_IMAGE = "custom-marker";
+    public static final String GROUP_PREFS = "GROUP";
+    public static final String CURRENT_GROUP_KEY = "current_group";
 
     private CompositeDisposable disposables = new CompositeDisposable();
     private ZoneViewModel zoneViewModel;
@@ -87,11 +90,17 @@ public final class MapFragment extends Fragment
     private FloatingActionButton fab, fab1, fab2, fabProfile;
     private BottomSheetBehavior bottomSheetBehavior;
     private Animation fabOpen, fabClose, rotateForward, rotateBackward;
-    private Button viewForum;
+    private Button viewForum, leaveGroup;
+    private TextView currentActivityHeader, groupTitle, groupLocation;
+    private CardView currentActivityCard;
+    private Group currentGroup;
     private MapboxMap mapboxMap;
     private Dialog zoneDialog;
-    SharedPreferences sharedPreferences;
+    private Disposable disposable;
+    private SharedPreferences sharedPreferences;
     private SymbolManager symbolManager;
+    private Disposable subscribe;
+    private String currentGroupSharedPref;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -112,7 +121,10 @@ public final class MapFragment extends Fragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         zoneViewModel = ViewModelProviders.of(this).get(ZoneViewModel.class);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        sharedPreferences = getActivity().getSharedPreferences(GROUP_PREFS, Context.MODE_PRIVATE);
+        if (sharedPreferences.contains(CURRENT_GROUP_KEY)) {
+            currentGroupSharedPref = sharedPreferences.getString(CURRENT_GROUP_KEY, "");
+        }
     }
 
     @Override
@@ -129,8 +141,9 @@ public final class MapFragment extends Fragment
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         findViews(view);
+//        setCurrentActivityView();
+        getGroup();
         fab = view.findViewById(R.id.fab);
         fab1 = view.findViewById(R.id.fab1);
         fab2 = view.findViewById(R.id.fab2);
@@ -141,24 +154,8 @@ public final class MapFragment extends Fragment
         fabProfile.setOnClickListener(v -> onFabClick(v));
 
         assignAnimations();
+        setActivityOnClick();
 
-
-        viewForum.setOnClickListener(v -> {
-            String current_group = sharedPreferences.getString("current_group", "");
-            if (!current_group.equals("")) {
-                zoneViewModel.getGroup(current_group).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Group>() {
-                    @Override
-                    public void accept(Group group) throws Exception {
-                        listener.inflateGroupChatFragment(group);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Log.d(".MapFragment: ", throwable.toString());
-                    }
-                });
-            }
-        });
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheet.setOnTouchListener(this);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -191,6 +188,41 @@ public final class MapFragment extends Fragment
         super.onDestroy();
     }
 
+    private void setActivityOnClick() {
+        viewForum.setOnClickListener(v -> {
+            if (!currentGroupSharedPref.equals("")) {
+                listener.inflateGroupChatFragment(currentGroup);
+            }
+        });
+        leaveGroup.setOnClickListener(v -> {
+            sharedPreferences.edit().clear().apply();
+            setCurrentActivityView();
+        });
+    }
+
+    private void getGroup() {
+        if (currentGroupSharedPref != null) {
+            Disposable disposable = zoneViewModel.getGroup(currentGroupSharedPref).observeOn(AndroidSchedulers.mainThread())
+              .subscribe(group -> {
+                    currentGroup = group;
+                    Log.d("naomy: ", group.getTitle());
+                }, throwable -> Log.d("naomy: ", throwable.toString()),
+                this::setCurrentActivityView);
+        }
+    }
+
+    private void setCurrentActivityView() {
+        if (sharedPreferences.contains(CURRENT_GROUP_KEY)) {
+            currentActivityHeader.setText(R.string.your_current_activity);
+            currentActivityCard.setVisibility(View.VISIBLE);
+            groupTitle.setText(currentGroup.getTitle());
+            groupLocation.setText(currentGroup.getAddress());
+        } else {
+            currentActivityHeader.setText(R.string.current_activity_none);
+            currentActivityCard.setVisibility(View.INVISIBLE);
+        }
+    }
+
     private void assignAnimations() {
         fabOpen = AnimationUtils.loadAnimation(getContext(), R.anim.fab_open);
         fabClose = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
@@ -199,7 +231,13 @@ public final class MapFragment extends Fragment
     }
 
     private void findViews(@NonNull View view) {
+        currentActivityCard = view.findViewById(R.id.current_activity_card);
+        currentActivityHeader = view.findViewById(R.id.current_activity_textHeader);
+        groupTitle = view.findViewById(R.id.textView_activity_name);
+        groupLocation = view.findViewById(R.id.textView_activity_address);
         viewForum = view.findViewById(R.id.view_your_group_button);
+        leaveGroup = view.findViewById(R.id.leave_group_button);
+        fabProfile = view.findViewById(R.id.fab_profile);
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setPeekHeight(130);
@@ -233,6 +271,7 @@ public final class MapFragment extends Fragment
             });
         });
     }
+
 
     private void setZoneStyle(Style style) {
         style.addImage(MapFragment.MARKER_IMAGE,
@@ -288,6 +327,9 @@ public final class MapFragment extends Fragment
     public void onResume() {
         super.onResume();
         mapView.onResume();
+        if (sharedPreferences.contains(CURRENT_GROUP_KEY) && currentGroupSharedPref == null) {
+            currentGroupSharedPref = sharedPreferences.getString(CURRENT_GROUP_KEY, "");
+        }
     }
 
     @Override
