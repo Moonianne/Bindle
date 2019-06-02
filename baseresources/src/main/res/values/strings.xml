@@ -6,6 +6,7 @@
     <string name="firebase_password" translatable="false">password123</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="your_current_activity">Your current activity</string>
+    <string name="current_activity_none">This is where you would see your current group, you are not in one yet. Explore some groups and join!</string>
     <string name="happening_now_nearby">Happening now nearby</string>
     <string name="search_for_groups_by_category">Search for groups by category</string>
     <string name="nightlife">NIGHTLIFE</string>

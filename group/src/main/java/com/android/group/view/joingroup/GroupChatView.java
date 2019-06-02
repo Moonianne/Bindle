@@ -37,6 +37,8 @@ import org.pursuit.firebasetools.model.Message;
 public class GroupChatView extends Fragment {
 
     private static final String GROUP_OBJECT = "group_chat";
+    public static final String GROUP_PREFS = "GROUP";
+    public static final String CURRENT_GROUP_KEY = "current_group";
 
     private Group group;
     private static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
@@ -106,8 +108,8 @@ public class GroupChatView extends Fragment {
         groupLeaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                sharedPreferences.edit().putString("current_group", "").apply();
+                sharedPreferences = getActivity().getSharedPreferences(GROUP_PREFS, Context.MODE_PRIVATE);
+                sharedPreferences.edit().clear().apply();
                 listener.closeFragment();
             }
         });
