@@ -42,14 +42,15 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 
-import org.pursuit.firebasetools.Repository.FireRepo;
 import org.pursuit.firebasetools.model.Group;
-import org.pursuit.firebasetools.model.Zone;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
 
 import com.android.interactionlistener.OnFragmentInteractionListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -67,6 +68,7 @@ public final class MapFragment extends Fragment
     private static final String MARKER_IMAGE = "custom-marker";
 
     private ZoneViewModel zoneViewModel;
+    ArrayList<String> zoneNamesList = new ArrayList<>();
     private OnFragmentInteractionListener listener;
     private MapView mapView;
     private boolean isFabOpen;
@@ -198,10 +200,7 @@ public final class MapFragment extends Fragment
                 MapFragment.this.enableLocationComponent(style);
                 MapFragment.this.setZoneStyle(style);
                 subscribe = zoneViewModel.getAllZones(MapFragment.this.getContext())
-                  .observeOn(AndroidSchedulers.mainThread())
-                  .subscribe(zone -> {
-                      MapFragment.this.showZone(zone.getLocation(), MARKER_IMAGE);
-                  });
+                  .subscribe(zone -> MapFragment.this.showZone(zone.getLocation(), MARKER_IMAGE));
             });
         });
     }
@@ -215,7 +214,7 @@ public final class MapFragment extends Fragment
         symbolManager.addClickListener(new OnSymbolClickListener() {
             @Override
             public void onAnnotationClick(Symbol symbol) {
-                MapFragment.this.showZoneDialog();
+                MapFragment.this.showZoneDialog(symbol);
             }
         });
         symbolManager.setIconAllowOverlap(true);
@@ -230,10 +229,12 @@ public final class MapFragment extends Fragment
           .withIconSize(.5f));
     }
 
-    private void showZoneDialog() {
+    private void showZoneDialog(Symbol symbol) {
         zoneDialog.setContentView(R.layout.zone_dialog_layout);
-        TextView textViewzoneName = zoneDialog.findViewById(R.id.zone_dialog_name);
         Button viewZoneForumButton = zoneDialog.findViewById(R.id.view_zone_button);
+        TextView textViewzoneName = zoneDialog.findViewById(R.id.zone_dialog_name);
+        textViewzoneName.setText(zoneViewModel
+          .getZoneName((int) symbol.getId()));
         viewZoneForumButton.setOnClickListener(v -> {
             listener.inflateZoneChatFragment();
             zoneDialog.dismiss();

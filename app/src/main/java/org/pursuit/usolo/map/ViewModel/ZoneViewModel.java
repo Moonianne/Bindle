@@ -10,12 +10,17 @@ import org.pursuit.firebasetools.Repository.FireRepo;
 import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Zone;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public final class ZoneViewModel extends ViewModel {
     private FireRepo fireRepo = FireRepo.getInstance();
+    private List<String> zoneNames = new ArrayList<>();
 
     public Maybe<Zone> getZone() {
         return fireRepo
@@ -34,7 +39,7 @@ public final class ZoneViewModel extends ViewModel {
         fireRepo.loginToFireBase(email, password);
     }
 
-    public Maybe<Group> getGroup(String chatKey){
+    public Maybe<Group> getGroup(String chatKey) {
         return fireRepo.getGroup(chatKey);
     }
 
@@ -44,6 +49,13 @@ public final class ZoneViewModel extends ViewModel {
     }
 
     public Flowable<Zone> getAllZones(@NonNull Context context) {
-        return fireRepo.getAllZones(context);
+        return fireRepo.getAllZones(context)
+          .doOnNext(zone -> zoneNames
+            .addAll(Collections.singleton(zone.getName())))
+          .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public String getZoneName(int id) {
+        return zoneNames.get(id);
     }
 }
