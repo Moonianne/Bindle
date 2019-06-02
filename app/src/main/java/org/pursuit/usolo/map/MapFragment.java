@@ -24,6 +24,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.TextView;
+
 
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -34,19 +36,22 @@ import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolClickListener;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 
-import org.pursuit.firebasetools.Repository.FireRepo;
 import org.pursuit.firebasetools.model.Group;
-import org.pursuit.firebasetools.model.Zone;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
 
 import com.android.interactionlistener.OnFragmentInteractionListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -75,6 +80,8 @@ public final class MapFragment extends Fragment
     private Dialog zoneDialog;
     private Disposable disposable;
     SharedPreferences sharedPreferences;
+    private SymbolManager symbolManager;
+    private Disposable subscribe;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -101,7 +108,7 @@ public final class MapFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        zoneDialog = new Dialog(getContext());
+        zoneDialog = new Dialog(Objects.requireNonNull(getContext()));
         disposable = zoneViewModel.getZoneLocation()
           .subscribe(this::makeGeoFence);
         return inflater.inflate(R.layout.fragment_map, container, false);
@@ -116,25 +123,20 @@ public final class MapFragment extends Fragment
         setOnClick(fab1);
         setOnClick(fab2);
         setOnClick(fabProfile);
-        viewForum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String current_group = sharedPreferences.getString("current_group", "");
-                if (!current_group.equals("")) {
-                    zoneViewModel.getGroup(current_group).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Group>() {
-                        @Override
-                        public void accept(Group group) throws Exception {
-                            listener.inflateGroupChatFragment(group);
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
-                            Log.d(".MapFragment: ", throwable.toString());
-                        }
-                    });
-
-                }
-
+        viewForum.setOnClickListener(v -> {
+            String current_group = sharedPreferences.getString("current_group", "");
+            if (!current_group.equals("")) {
+                zoneViewModel.getGroup(current_group).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Group>() {
+                    @Override
+                    public void accept(Group group) throws Exception {
+//                            listener.inflateGroupChatFragment(group);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Log.d(".MapFragment: ", throwable.toString());
+                    }
+                });
             }
         });
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
@@ -145,6 +147,12 @@ public final class MapFragment extends Fragment
         mapView = view.findViewById(R.id.mapView);
         mapView.getMapAsync(mapboxMap ->
           this.mapboxMap = mapboxMap);
+    }
+
+    @Override
+    public void onDestroy() {
+        disposable.dispose();
+        super.onDestroy();
     }
 
     private void setOnClick(View view) {
@@ -185,32 +193,37 @@ public final class MapFragment extends Fragment
             MapFragment.this.mapboxMap = mapboxMap;
             mapboxMap.setStyle(new Style.Builder().fromUrl(MAPBOX_STYLE_URL), style -> {
                 enableLocationComponent(style);
-                addZoneMarker(style, new LatLng(40.7430877, -73.9419287));
-
+                setZoneStyle(style);
+                subscribe = zoneViewModel.getAllZones(Objects.requireNonNull(getContext()))
+                  .subscribe(zone -> showZone(zone.getLocation()));
             });
         });
     }
 
-    private void addZoneMarker(Style style, LatLng zone) {
-
-        style.addImage(MARKER_IMAGE, BitmapFactory.decodeResource(
-          MapFragment.this.getResources(), R.drawable.zone_marker));
-
-        SymbolManager symbolManager = new SymbolManager(mapView, mapboxMap, style, null,
+    private void setZoneStyle(Style style) {
+        style.addImage(MapFragment.MARKER_IMAGE,
+          BitmapFactory.decodeResource(MapFragment.this.getResources(),
+            R.drawable.smallbindle));
+        symbolManager = new SymbolManager(mapView, mapboxMap, style, null,
           new GeoJsonOptions().withTolerance(0.4f));
-        symbolManager.addClickListener(symbol -> showZoneDialog());
-
+        symbolManager.addClickListener(symbol -> showZoneDialog(symbol));
         symbolManager.setIconAllowOverlap(true);
         symbolManager.setTextAllowOverlap(true);
-        Symbol symbol = symbolManager.create(new SymbolOptions()
-          .withLatLng(zone) //replace with zone LatLng
+    }
+
+    private void showZone(@NonNull final LatLng zone){
+        symbolManager.create(new SymbolOptions()
+          .withLatLng(zone)
           .withIconImage(MARKER_IMAGE)
           .withIconSize(.5f));
     }
 
-    private void showZoneDialog() {
+    private void showZoneDialog(Symbol symbol) {
         zoneDialog.setContentView(R.layout.zone_dialog_layout);
         Button viewZoneForumButton = zoneDialog.findViewById(R.id.view_zone_button);
+        TextView textViewzoneName = zoneDialog.findViewById(R.id.zone_dialog_name);
+        textViewzoneName.setText(zoneViewModel
+          .getZoneName((int) symbol.getId()));
         viewZoneForumButton.setOnClickListener(v -> {
             listener.inflateZoneChatFragment();
             zoneDialog.dismiss();
@@ -226,9 +239,8 @@ public final class MapFragment extends Fragment
     @SuppressWarnings({"MissingPermission"})
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
         final LocationComponent locationComponent = mapboxMap.getLocationComponent();
-
         locationComponent.activateLocationComponent(
-          LocationComponentActivationOptions.builder(getContext(), loadedMapStyle).build());
+          LocationComponentActivationOptions.builder(Objects.requireNonNull(getContext()), loadedMapStyle).build());
         locationComponent.setLocationComponentEnabled(true);
         locationComponent.setCameraMode(CameraMode.TRACKING);
         locationComponent.setRenderMode(RenderMode.NORMAL);
@@ -327,5 +339,4 @@ public final class MapFragment extends Fragment
         fab2.setClickable(true);
         fabProfile.setClickable(true);
     }
-
 }
