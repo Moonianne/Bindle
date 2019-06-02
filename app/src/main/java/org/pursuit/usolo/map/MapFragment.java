@@ -1,7 +1,6 @@
 package org.pursuit.usolo.map;
 
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -20,7 +19,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -28,12 +26,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
-
 import com.android.interactionlistener.OnBackPressedInteraction;
 import com.android.interactionlistener.OnFragmentInteractionListener;
-import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.Point;
-import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
@@ -43,35 +37,26 @@ import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
-import org.jetbrains.annotations.NotNull;
+import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Zone;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
-import org.pursuit.usolo.model.MapFeature;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.disposables.Disposable;
 
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
 
-public final class MapFragment extends Fragment
-  implements View.OnTouchListener, OnBackPressedInteraction {
+public final class MapFragment extends Fragment implements OnBackPressedInteraction {
 
     private static final String TAG = "MapFragment";
     private static final String MAPBOX_ACCESS_TOKEN =
@@ -90,16 +75,13 @@ public final class MapFragment extends Fragment
     private FloatingActionButton fab, fab1, fab2, fabProfile;
     private BottomSheetBehavior bottomSheetBehavior;
     private Animation fabOpen, fabClose, rotateForward, rotateBackward;
-    private Button viewForum, leaveGroup;
     private TextView currentActivityHeader, groupTitle, groupLocation;
     private CardView currentActivityCard;
     private Group currentGroup;
     private MapboxMap mapboxMap;
     private Dialog zoneDialog;
-    private Disposable disposable;
     private SharedPreferences sharedPreferences;
     private SymbolManager symbolManager;
-    private Disposable subscribe;
     private String currentGroupSharedPref;
 
     public static MapFragment newInstance() {
@@ -142,7 +124,7 @@ public final class MapFragment extends Fragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
-//        setCurrentActivityView();
+        setCurrentActivityView();
         getGroup();
         fab = view.findViewById(R.id.fab);
         fab1 = view.findViewById(R.id.fab1);
@@ -155,12 +137,33 @@ public final class MapFragment extends Fragment
 
         assignAnimations();
         setActivityOnClick();
-
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
-        bottomSheet.setOnTouchListener(this);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setPeekHeight(130);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int i) {
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                    enableFabs();
+                } else {
+                    fab.hide();
+                    if (isFabOpen) {
+                        disableFabs();
+                        isFabOpen = false;
+                    }
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+                fab.hide();
+                if (isFabOpen) {
+                    disableFabs();
+                    isFabOpen = false;
+                }
+            }
+        });
         mapView = view.findViewById(R.id.mapView);
         mapView.getMapAsync(mapboxMap ->
           this.mapboxMap = mapboxMap);
@@ -189,38 +192,32 @@ public final class MapFragment extends Fragment
     }
 
     private void setActivityOnClick() {
-        viewForum.setOnClickListener(v -> {
-            if (!currentGroupSharedPref.equals("")) {
-                listener.inflateGroupChatFragment(currentGroup);
-            }
-        });
-        leaveGroup.setOnClickListener(v -> {
-            sharedPreferences.edit().clear().apply();
-            setCurrentActivityView();
-        });
+
+
     }
 
     private void getGroup() {
         if (currentGroupSharedPref != null) {
-            Disposable disposable = zoneViewModel.getGroup(currentGroupSharedPref).observeOn(AndroidSchedulers.mainThread())
-              .subscribe(group -> {
-                    currentGroup = group;
-                    Log.d("naomy: ", group.getTitle());
-                }, throwable -> Log.d("naomy: ", throwable.toString()),
-                this::setCurrentActivityView);
+            disposables.add(zoneViewModel
+              .getGroup(currentGroupSharedPref)
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribe(this::setCurrentActivityView,
+                throwable -> Log.d("naomy: ", throwable.toString())));
         }
     }
 
+    private void setCurrentActivityView(Group group) {
+        currentGroup = group;
+        currentActivityHeader.setText(R.string.your_current_activity);
+        currentActivityCard.setVisibility(View.VISIBLE);
+        groupTitle.setText(currentGroup.getTitle());
+        groupLocation.setText(currentGroup.getAddress());
+    }
+
     private void setCurrentActivityView() {
-        if (sharedPreferences.contains(CURRENT_GROUP_KEY)) {
-            currentActivityHeader.setText(R.string.your_current_activity);
-            currentActivityCard.setVisibility(View.VISIBLE);
-            groupTitle.setText(currentGroup.getTitle());
-            groupLocation.setText(currentGroup.getAddress());
-        } else {
-            currentActivityHeader.setText(R.string.current_activity_none);
-            currentActivityCard.setVisibility(View.INVISIBLE);
-        }
+        currentActivityHeader.setText(R.string.current_activity_none);
+        currentActivityCard.setVisibility(View.INVISIBLE);
+
     }
 
     private void assignAnimations() {
@@ -235,8 +232,14 @@ public final class MapFragment extends Fragment
         currentActivityHeader = view.findViewById(R.id.current_activity_textHeader);
         groupTitle = view.findViewById(R.id.textView_activity_name);
         groupLocation = view.findViewById(R.id.textView_activity_address);
-        viewForum = view.findViewById(R.id.view_your_group_button);
-        leaveGroup = view.findViewById(R.id.leave_group_button);
+        view.<Button>findViewById(R.id.view_your_group_button).setOnClickListener(v -> {
+            if (currentGroupSharedPref != null)
+                listener.inflateGroupChatFragment(currentGroup);
+        });
+        view.<Button>findViewById(R.id.leave_group_button).setOnClickListener(v -> {
+            sharedPreferences.edit().clear().apply();
+            setCurrentActivityView();
+        });
         fabProfile = view.findViewById(R.id.fab_profile);
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
@@ -279,7 +282,6 @@ public final class MapFragment extends Fragment
             R.drawable.smallbindle));
         symbolManager = new SymbolManager(mapView, mapboxMap, style, null,
           new GeoJsonOptions().withTolerance(0.4f));
-        symbolManager.addClickListener(symbol -> showZoneDialog(symbol));
         symbolManager.setIconAllowOverlap(true);
         symbolManager.setTextAllowOverlap(true);
     }
@@ -311,7 +313,8 @@ public final class MapFragment extends Fragment
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
         final LocationComponent locationComponent = mapboxMap.getLocationComponent();
         locationComponent.activateLocationComponent(
-          LocationComponentActivationOptions.builder(Objects.requireNonNull(getContext()), loadedMapStyle).build());
+          LocationComponentActivationOptions
+            .builder(Objects.requireNonNull(getContext()), loadedMapStyle).build());
         locationComponent.setLocationComponentEnabled(true);
         locationComponent.setCameraMode(CameraMode.TRACKING);
         locationComponent.setRenderMode(RenderMode.NORMAL);
@@ -327,8 +330,10 @@ public final class MapFragment extends Fragment
     public void onResume() {
         super.onResume();
         mapView.onResume();
-        if (sharedPreferences.contains(CURRENT_GROUP_KEY) && currentGroupSharedPref == null) {
+        setCurrentActivityView();
+        if (sharedPreferences.contains(CURRENT_GROUP_KEY)) {
             currentGroupSharedPref = sharedPreferences.getString(CURRENT_GROUP_KEY, "");
+            getGroup();
         }
     }
 
@@ -356,25 +361,7 @@ public final class MapFragment extends Fragment
         mapView.onDestroy();
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-            enableFabs();
-        }
-        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_DRAGGING) {
-            fab.hide();
-            if (isFabOpen) {
-                disableFabs();
-                isFabOpen = false;
-            }
-        }
-        return false;
-        // TODO: 2019-05-17 Figure out how to automatically
-        //  show fab once collapsed instead of clicking on View
-    }
-
-    public void animateFAB() {
+    private void animateFAB() {
         if (isFabOpen) {
             fab.startAnimation(rotateBackward);
             fab1.startAnimation(fabClose);
@@ -421,7 +408,6 @@ public final class MapFragment extends Fragment
             enableFabs();
             return true;
         } else {
-
             return false;
         }
     }
