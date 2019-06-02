@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PointF;
+import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -27,6 +29,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.Point;
+import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
@@ -40,22 +45,29 @@ import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolClickListener;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
+import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 
+import org.jetbrains.annotations.NotNull;
 import org.pursuit.firebasetools.model.Group;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
 
 import com.android.interactionlistener.OnFragmentInteractionListener;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
 
 public final class MapFragment extends Fragment
   implements View.OnTouchListener {
@@ -78,7 +90,9 @@ public final class MapFragment extends Fragment
     private Button viewForum;
     private MapboxMap mapboxMap;
     private Dialog zoneDialog;
-    private Disposable disposable;
+    private CompositeDisposable disposables;
+    private String geoJsonSourceId;
+    private String geoJsonLayerId;
     SharedPreferences sharedPreferences;
     private SymbolManager symbolManager;
     private Disposable subscribe;
@@ -108,9 +122,9 @@ public final class MapFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        zoneDialog = new Dialog(Objects.requireNonNull(getContext()));
-        disposable = zoneViewModel.getZoneLocation()
-          .subscribe(this::makeGeoFence);
+        zoneDialog = new Dialog(getContext());
+        disposables.add(zoneViewModel.getZoneLocation()
+          .subscribe(this::makeGeoFence));
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
@@ -196,6 +210,27 @@ public final class MapFragment extends Fragment
                 setZoneStyle(style);
                 subscribe = zoneViewModel.getAllZones(Objects.requireNonNull(getContext()))
                   .subscribe(zone -> showZone(zone.getLocation()));
+                LatLng latLng = new LatLng(40.7430877, -73.9419287);
+                MapFragment.this.addZoneMarker(style, latLng);
+                geoJsonSourceId = "source-id";
+                disposables.add(zoneViewModel.polygonCircleForCoordinate(latLng)
+                  .subscribe(polygon -> style.addSource(new GeoJsonSource(geoJsonSourceId, polygon)),
+                    throwable -> Log.d(TAG, "findViews: " + throwable.getMessage())));
+                geoJsonLayerId = "layer-id";
+                style.addLayer(new FillLayer(geoJsonLayerId, geoJsonSourceId).withProperties(
+                  fillColor(Color.parseColor("#3f7755CC"))));
+                mapboxMap.addOnMapClickListener(point -> {
+                    PointF pointf = mapboxMap.getProjection().toScreenLocation(point);
+                    RectF rectF = new RectF(pointf.x - 10, pointf.y - 10, pointf.x + 10, pointf.y + 10);
+                    List<Feature> featureList = mapboxMap.queryRenderedFeatures(rectF, geoJsonLayerId);
+                    if (featureList.size() > 0) {
+                        for (Feature feature : featureList) {
+                            showZoneDialog();
+                        }
+                        return true;
+                    }
+                    return false;
+                });
             });
         });
     }
