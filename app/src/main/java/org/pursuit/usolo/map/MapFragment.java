@@ -51,6 +51,7 @@ import com.android.interactionlistener.OnFragmentInteractionListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -68,7 +69,6 @@ public final class MapFragment extends Fragment
     private static final String MARKER_IMAGE = "custom-marker";
 
     private ZoneViewModel zoneViewModel;
-    ArrayList<String> zoneNamesList = new ArrayList<>();
     private OnFragmentInteractionListener listener;
     private MapView mapView;
     private boolean isFabOpen;
@@ -108,7 +108,7 @@ public final class MapFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        zoneDialog = new Dialog(getContext());
+        zoneDialog = new Dialog(Objects.requireNonNull(getContext()));
         disposable = zoneViewModel.getZoneLocation()
           .subscribe(this::makeGeoFence);
         return inflater.inflate(R.layout.fragment_map, container, false);
@@ -123,25 +123,20 @@ public final class MapFragment extends Fragment
         setOnClick(fab1);
         setOnClick(fab2);
         setOnClick(fabProfile);
-        viewForum.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String current_group = sharedPreferences.getString("current_group", "");
-                if (!current_group.equals("")) {
-                    zoneViewModel.getGroup(current_group).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Group>() {
-                        @Override
-                        public void accept(Group group) throws Exception {
+        viewForum.setOnClickListener(v -> {
+            String current_group = sharedPreferences.getString("current_group", "");
+            if (!current_group.equals("")) {
+                zoneViewModel.getGroup(current_group).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Group>() {
+                    @Override
+                    public void accept(Group group) throws Exception {
 //                            listener.inflateGroupChatFragment(group);
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
-                            Log.d(".MapFragment: ", throwable.toString());
-                        }
-                    });
-
-                }
-
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Log.d(".MapFragment: ", throwable.toString());
+                    }
+                });
             }
         });
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
@@ -197,10 +192,10 @@ public final class MapFragment extends Fragment
         mapView.getMapAsync(mapboxMap -> {
             MapFragment.this.mapboxMap = mapboxMap;
             mapboxMap.setStyle(new Style.Builder().fromUrl(MAPBOX_STYLE_URL), style -> {
-                MapFragment.this.enableLocationComponent(style);
-                MapFragment.this.setZoneStyle(style);
-                subscribe = zoneViewModel.getAllZones(MapFragment.this.getContext())
-                  .subscribe(zone -> MapFragment.this.showZone(zone.getLocation(), MARKER_IMAGE));
+                enableLocationComponent(style);
+                setZoneStyle(style);
+                subscribe = zoneViewModel.getAllZones(Objects.requireNonNull(getContext()))
+                  .subscribe(zone -> showZone(zone.getLocation()));
             });
         });
     }
@@ -211,21 +206,15 @@ public final class MapFragment extends Fragment
             R.drawable.smallbindle));
         symbolManager = new SymbolManager(mapView, mapboxMap, style, null,
           new GeoJsonOptions().withTolerance(0.4f));
-        symbolManager.addClickListener(new OnSymbolClickListener() {
-            @Override
-            public void onAnnotationClick(Symbol symbol) {
-                MapFragment.this.showZoneDialog(symbol);
-            }
-        });
+        symbolManager.addClickListener(symbol -> showZoneDialog(symbol));
         symbolManager.setIconAllowOverlap(true);
         symbolManager.setTextAllowOverlap(true);
     }
 
-    private void showZone(@NonNull final LatLng zone,
-                          @NonNull final String iconKey) {
+    private void showZone(@NonNull final LatLng zone){
         symbolManager.create(new SymbolOptions()
           .withLatLng(zone)
-          .withIconImage(iconKey)
+          .withIconImage(MARKER_IMAGE)
           .withIconSize(.5f));
     }
 
@@ -251,7 +240,7 @@ public final class MapFragment extends Fragment
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
         final LocationComponent locationComponent = mapboxMap.getLocationComponent();
         locationComponent.activateLocationComponent(
-          LocationComponentActivationOptions.builder(getContext(), loadedMapStyle).build());
+          LocationComponentActivationOptions.builder(Objects.requireNonNull(getContext()), loadedMapStyle).build());
         locationComponent.setLocationComponentEnabled(true);
         locationComponent.setCameraMode(CameraMode.TRACKING);
         locationComponent.setRenderMode(RenderMode.NORMAL);

@@ -51,8 +51,7 @@ public final class ZoneViewModel extends ViewModel {
     public Flowable<Zone> getAllZones(@NonNull Context context) {
         return fireRepo.getAllZones(context)
           .doOnNext(zone -> zoneNames
-            .addAll(Collections.singleton(zone.getName())))
-          .observeOn(AndroidSchedulers.mainThread());
+            .addAll(Collections.singleton(zone.getName())));
     }
 
     public String getZoneName(int id) {
