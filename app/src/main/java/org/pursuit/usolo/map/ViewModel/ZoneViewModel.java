@@ -2,6 +2,8 @@ package org.pursuit.usolo.map.ViewModel;
 
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
+import android.graphics.PointF;
+import android.graphics.RectF;
 import android.support.annotation.NonNull;
 
 import com.mapbox.geojson.Point;
@@ -12,9 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.pursuit.firebasetools.Repository.FireRepo;
 import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Zone;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.pursuit.usolo.model.MapFeature;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,12 +22,10 @@ import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public final class ZoneViewModel extends ViewModel {
-    public static final double METER_RADIUS = 200d;
+    public static final double METER_RADIUS = 300d;
 
     private FireRepo fireRepo = FireRepo.getInstance();
     private List<String> zoneNames = new ArrayList<>();
@@ -64,14 +62,23 @@ public final class ZoneViewModel extends ViewModel {
             .addAll(Collections.singleton(zone.getName())));
     }
 
-    public String getZoneName(int id) {
-        return zoneNames.get(id);
+    public List<String> getZoneNames() {
+        return zoneNames;
     }
-    public Observable<Polygon> polygonCircleForCoordinate(LatLng location) {
-        return Observable.just(location)
-          .subscribeOn(Schedulers.computation())
-          .map(loc -> Polygon.fromLngLats(getPointsLists(loc)))
-          .observeOn(AndroidSchedulers.mainThread());
+
+    @NotNull
+    public Polygon getGeometry(MapFeature mapFeature) {
+        return Polygon.fromLngLats(mapFeature.points);
+    }
+
+    @NotNull
+    public RectF getRectF(PointF pointf) {
+        return new RectF(pointf.x - 10, pointf.y - 10, pointf.x + 10, pointf.y + 10);
+    }
+
+    @NotNull
+    public MapFeature getMapFeature(Zone zone) {
+        return new MapFeature(zone.getName(), zone.getLocation(), getPointsLists(zone.getLocation()));
     }
 
     @NotNull
