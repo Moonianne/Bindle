@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 public final class AddLocationFragment extends Fragment {
 
@@ -95,7 +97,7 @@ public final class AddLocationFragment extends Fragment {
                             bindleBusinessesList.add(bindleBusiness);
                             adapter.addData(bindleBusiness);
                             lottieAnimationView.setVisibility(View.GONE);
-                        });
+                        },throwable -> Log.d(TAG, "accept: " + throwable));
             }
 
             @Override

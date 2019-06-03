@@ -46,7 +46,9 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
             Picasso.get().load(bindleBusiness.getBusiness().getImage_url()).into(itemView.<ImageView>findViewById(R.id.venue_image));
         }
         itemView.<TextView>findViewById(R.id.venue_name).setText(bindleBusiness.getVenue().getName());
-        itemView.<TextView>findViewById(R.id.venue_address).setText(bindleBusiness.getVenue().getLocation().getAddress());
+        itemView.<TextView>findViewById(R.id.venue_address).setText(String.format("%s\n%s",
+                bindleBusiness.getVenue().getLocation().getFormattedAddress()[0],
+                bindleBusiness.getVenue().getLocation().getFormattedAddress()[1]));
         itemView.<TextView>findViewById(R.id.select_text_view).setOnClickListener(v -> {
             listener.closeFragment();
             viewModel.setUserSelectedVenue(bindleBusiness);
@@ -81,7 +83,7 @@ public class AddLocationViewHolder extends RecyclerView.ViewHolder {
         view.<TextView>findViewById(R.id.textView_venue_name)
                 .setText(bindleBusiness.getVenue().getName());
         view.<TextView>findViewById(R.id.textView_venue_address)
-                .setText(bindleBusiness.getVenue().getLocation().getFormattedAddress().get(0).toString());
+                .setText(fullAddress);
         view.<Button>findViewById(R.id.button_directions)
                 .setOnClickListener(v -> onFragmentInteractionListener.openDirections(fullAddress));
     }
