@@ -34,6 +34,7 @@ import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Message;
 
 
+
 public class GroupChatView extends Fragment {
 
     private static final String GROUP_OBJECT = "group_chat";
@@ -164,8 +165,10 @@ public class GroupChatView extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (viewModel.hasText(charSequence)) {
+                    groupSendButton.setBackgroundResource(R.drawable.ic_send_purple_24dp);
                     groupSendButton.setEnabled(true);
                 } else {
+                    groupSendButton.setBackgroundResource(R.drawable.ic_send_white_24dp);
                     groupSendButton.setEnabled(false);
                 }
             }

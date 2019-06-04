@@ -1,165 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.motion.MotionLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:layoutDescription="@xml/motion_scene"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/cPrimary"
     tools:context=".view.joingroup.GroupChatView">
 
-    <View android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        android:background="@color/cPrimaryDark"
-        android:id="@+id/background"
-        app:layout_constraintBottom_toBottomOf="@id/space"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:alpha="0"
-        />
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/linearLayout"
+    <include
+        android:id="@+id/start_layout"
+        layout="@layout/group_chat_view_start"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:orientation="vertical"
-        android:padding="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/space"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="70dp"
+        app:layout_constraintBottom_toTopOf="@id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-
-
-        <TextView
-            android:id="@+id/groupChat_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/maven_pro_bold"
-            android:gravity="center"
-            android:text="Group Chat"
-            android:textColor="@color/cDark"
-            android:textSize="35sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/groupChat_location"/>
-
-        <TextView
-            android:id="@+id/groupChat_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="4dp"
-            android:fontFamily="@font/maven_pro_medium"
-            android:text="location"
-            android:textColor="@color/cDark"
-            app:layout_constraintTop_toBottomOf="@id/groupChat_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/groupChat_description"/>
-
-        <TextView
-            android:id="@+id/groupChat_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="4dp"
-            android:fontFamily="@font/maven_pro_medium"
-            android:text="description"
-            android:textColor="@color/cDark"
-            app:layout_constraintTop_toBottomOf="@id/groupChat_location"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/groupChat_category"/>
-
-        <TextView
-            android:id="@+id/groupChat_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="4dp"
-            android:fontFamily="@font/maven_pro_medium"
-            android:text="category"
-            android:textColor="@color/cDark"
-            app:layout_constraintTop_toBottomOf="@id/groupChat_description"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/button_container"/>
-
-        <LinearLayout
-            android:id="@+id/button_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/groupChat_category"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <Button
-                android:id="@+id/leave_group_button"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:background="@drawable/rectangle_round_white"
-                android:fontFamily="@font/maven_pro_bold"
-                android:text="Leave Group"
-                android:textColor="@color/cDark"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/groupChat_viewMembers_button"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:background="@drawable/rectangle_round_white"
-                android:fontFamily="@font/maven_pro_bold"
-                android:text="Bindlers"
-                android:textColor="@color/cDark"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-
-    </android.support.constraint.ConstraintLayout>
-
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/groupChat_rv"
-        android:layout_width="406dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:background="@android:color/transparent"
-        app:layout_constraintBottom_toTopOf="@+id/cardView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <Space
-        android:layout_width="0dp"
-        android:layout_height="8dp"
-        android:id="@+id/space"
-        app:layout_constraintStart_toEndOf="@+id/linearLayout"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout"/>
+        app:layout_constraintVertical_bias="0.0" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="415dp"
         android:layout_height="72dp"
         android:layout_gravity="center"
-        android:layout_marginBottom="4dp"
         android:elevation="8dp"
-        app:cardBackgroundColor="@color/cPrimaryLight"
-        app:cardCornerRadius="10dp"
+        app:cardBackgroundColor="@color/cPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -200,4 +69,4 @@
     </android.support.v7.widget.CardView>
 
 
-</android.support.constraint.motion.MotionLayout>
+</android.support.constraint.ConstraintLayout>

@@ -50,7 +50,7 @@
             android:layout_width="330dp"
             android:layout_height="70dp"
             android:layout_gravity="center"
-            android:background="@drawable/purple_gradient_rectangle_round"
+            android:background="@drawable/purple_rect_round"
             android:orientation="horizontal">
 
             <ImageView
@@ -97,7 +97,7 @@
         android:layout_width="320dp"
         android:layout_height="60dp"
         android:layout_gravity="center"
-        android:background="@drawable/purple_gradient_rectangle_round"
+        android:background="@drawable/purple_rect_round"
         android:elevation="4dp"
         android:fontFamily="@font/maven_pro_bold"
         android:gravity="center"

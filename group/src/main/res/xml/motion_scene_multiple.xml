@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@layout/group_chat_view_end"
+        motion:constraintSetStart="@layout/group_chat_view_start"
+        motion:duration="1000">
+
+        <OnSwipe
+            motion:dragDirection="dragUp"
+            motion:touchAnchorId="@id/bgView"
+            motion:touchAnchorSide="top" />
+
+    </Transition>
+
+
+</MotionScene>
