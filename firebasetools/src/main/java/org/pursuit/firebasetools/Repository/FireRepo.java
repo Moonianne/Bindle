@@ -55,9 +55,9 @@ public final class FireRepo {
         zoneDataBaseReference.child(zone.getName()).setValue(zone);
     }
 
-    public Maybe<Zone> getZone() {
+    public Maybe<Zone> getZone(@NonNull final String zoneKey) {
         return RxFirebaseDatabase
-          .observeSingleValueEvent(zoneDataBaseReference.child("pursuit"), Zone.class)
+          .observeSingleValueEvent(zoneDataBaseReference.child(zoneKey), Zone.class)
           .subscribeOn(Schedulers.io());
     }
 
