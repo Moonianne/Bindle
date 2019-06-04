@@ -24,6 +24,7 @@ import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public final class ZoneViewModel extends ViewModel {
@@ -31,6 +32,8 @@ public final class ZoneViewModel extends ViewModel {
 
     private FireRepo fireRepo = FireRepo.getInstance();
     private List<String> zoneNames = new ArrayList<>();
+    private List<Group> groups = new ArrayList<>();
+
 
     public Maybe<Zone> getZone() {
         return fireRepo
@@ -118,5 +121,16 @@ public final class ZoneViewModel extends ViewModel {
           .zoom(12)
           .tilt(40)
           .build();
+    }
+
+    public Single<List<Group>> getGroups() {
+        return fireRepo.getGroups()
+          .doOnNext(group -> groups.addAll(Collections.singleton(group)))
+          .take(5)
+          .toList();
+    }
+
+    public List<Group> getRecentGroupList() {
+        return this.groups;
     }
 }

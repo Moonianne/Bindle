@@ -17,6 +17,8 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,12 +52,17 @@ import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Zone;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
+import org.pursuit.usolo.map.nearbygroups.NearbyGroupAdapter;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
 
@@ -79,7 +86,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     private FloatingActionButton fab, fab1, fab2, fabProfile;
     private BottomSheetBehavior bottomSheetBehavior;
     private Animation fabOpen, fabClose, rotateForward, rotateBackward;
-    private TextView currentActivityHeader, groupTitle, groupLocation;
+    private TextView currentActivityHeader, nearbyActivityHeader, groupTitle, groupLocation;
     private CardView currentActivityCard;
     private Group currentGroup;
     private MapboxMap mapboxMap;
@@ -88,6 +95,10 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     private SymbolManager symbolManager;
     private String currentGroupSharedPref;
     private LocationComponent locationComponent;
+
+    RecyclerView recyclerView;
+    NearbyGroupAdapter nearbyGroupAdapter;
+
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -130,6 +141,8 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
         setCurrentActivityView();
+        nearbyGroupAdapter = new NearbyGroupAdapter(listener, Collections.emptyList());
+        setGroups();
         getGroup();
         fabRecenterUser = view.findViewById(R.id.fab_recenter);
         fab = view.findViewById(R.id.fab);
@@ -212,6 +225,26 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         }
     }
 
+    private void setGroups() {
+        disposables.add(zoneViewModel
+          .getGroups()
+          .observeOn(AndroidSchedulers.mainThread())
+          .subscribe(this::setNearbyActivityView));
+    }
+
+    private void setNearbyActivityView(List<Group> groupList) {
+        nearbyActivityHeader.setVisibility(View.VISIBLE);
+        setUpRV(groupList);
+
+    }
+
+    private void setUpRV(List<Group> groupList) {
+        nearbyGroupAdapter.updateList(groupList);
+        recyclerView.setAdapter(nearbyGroupAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+    }
+
     private void setCurrentActivityView(Group group) {
         currentGroup = group;
         currentActivityHeader.setText(R.string.your_current_activity);
@@ -234,6 +267,9 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     }
 
     private void findViews(@NonNull View view) {
+        recyclerView = view.findViewById(R.id.nearby_recycler);
+        nearbyActivityHeader = view.findViewById(R.id.happening_header);
+        nearbyActivityHeader.setVisibility(View.INVISIBLE);
         currentActivityCard = view.findViewById(R.id.current_activity_card);
         currentActivityHeader = view.findViewById(R.id.current_activity_textHeader);
         groupTitle = view.findViewById(R.id.textView_activity_name);
@@ -288,10 +324,10 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     @NotNull
     private CameraPosition getCameraPosition() {
         return new CameraPosition.Builder()
-                          .target(new LatLng(Objects.requireNonNull(locationComponent.getLastKnownLocation())))
-                            .zoom(13)
-                            .tilt(30)
-                            .build();
+          .target(new LatLng(Objects.requireNonNull(locationComponent.getLastKnownLocation())))
+          .zoom(13)
+          .tilt(30)
+          .build();
     }
 
 
@@ -354,6 +390,9 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
             currentGroupSharedPref = sharedPreferences.getString(CURRENT_GROUP_KEY, "");
             getGroup();
         }
+        setGroups();
+        if (zoneViewModel.getRecentGroupList().size() > 0)
+            nearbyGroupAdapter.updateList(zoneViewModel.getRecentGroupList());
     }
 
     @Override
