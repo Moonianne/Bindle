@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:layout_gravity="center_horizontal"
+    android:background="@color/colorTrans"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:padding="20dp"
+        app:cardBackgroundColor="@color/colorWhite"
+        app:cardCornerRadius="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:background="@color/cPrimary"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:layout_marginEnd="10dp"
+                android:padding="10dp"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/venue_name_nearby"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/maven_pro_bold"
+                    android:text="Name: "
+                    android:textColor="@color/cPrimaryDark"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/venue_address_nearby"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/maven_pro_medium"
+                    android:text="Address: "
+                    android:textColor="@color/cPrimaryDark"
+                    android:textSize="16sp" />
+
+
+                <Button
+                    android:id="@+id/view_group_nearby_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="50dp"
+                    android:padding="20dp"
+                    android:background="@drawable/rectangle_round_outline_purple"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="@font/maven_pro_bold"
+                    android:text="view group"
+                    android:textColor="@color/cPrimaryDark"
+                    android:textSize="12sp" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>
