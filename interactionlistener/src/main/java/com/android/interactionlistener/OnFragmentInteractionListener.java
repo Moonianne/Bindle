@@ -1,6 +1,5 @@
 package com.android.interactionlistener;
 
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
@@ -10,7 +9,7 @@ public interface OnFragmentInteractionListener {
 
     void inflateStartGroupFragment();
 
-    void inflateZoneChatFragment(@NonNull final String zoneName);
+    void inflateZoneChatFragment();
 
     void inflateProfileFragment(boolean bool);
 
