@@ -61,8 +61,6 @@ import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
 
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
 
@@ -155,7 +153,6 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         fabProfile.setOnClickListener(v -> onFabClick(v));
 
         assignAnimations();
-        setActivityOnClick();
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setPeekHeight(130);
@@ -208,11 +205,6 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     public void onDestroy() {
         disposables.dispose();
         super.onDestroy();
-    }
-
-    private void setActivityOnClick() {
-
-
     }
 
     private void getGroup() {
