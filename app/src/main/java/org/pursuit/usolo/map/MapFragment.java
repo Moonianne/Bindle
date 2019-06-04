@@ -70,13 +70,12 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     public static final String GROUP_PREFS = "GROUP";
     public static final String CURRENT_GROUP_KEY = "current_group";
 
-    private FloatingActionButton fabRecenterUser;
     private CompositeDisposable disposables = new CompositeDisposable();
     private ZoneViewModel zoneViewModel;
     private OnFragmentInteractionListener listener;
     private MapView mapView;
     private boolean isFabOpen;
-    private FloatingActionButton fab, fab1, fab2, fabProfile;
+    private FloatingActionButton fab, fab1, fab2, fabProfile, fabRecenterUser;
     private BottomSheetBehavior bottomSheetBehavior;
     private Animation fabOpen, fabClose, rotateForward, rotateBackward;
     private TextView currentActivityHeader, groupTitle, groupLocation;
@@ -133,8 +132,8 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         getGroup();
         fabRecenterUser = view.findViewById(R.id.fab_recenter);
         fab = view.findViewById(R.id.fab);
-        fab1 = view.findViewById(R.id.fab1);
-        fab2 = view.findViewById(R.id.fab2);
+        fab1 = view.findViewById(R.id.fabStartGroup);
+        fab2 = view.findViewById(R.id.fabFindGroup);
         fabProfile = view.findViewById(R.id.fab_profile);
         fab.setOnClickListener(v -> onFabClick(v));
         fab1.setOnClickListener(v -> onFabClick(v));
@@ -142,8 +141,8 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         fabProfile.setOnClickListener(v -> onFabClick(v));
 
         assignAnimations();
-        setActivityOnClick();
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
+        fabRecenterUser.show();
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setPeekHeight(130);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -151,9 +150,16 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
             @Override
             public void onStateChanged(@NonNull View view, int i) {
                 if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                    enableFabs();
+                    fab.show();
+                    fab.setClickable(true);
+                    fabRecenterUser.show();
+                    fabRecenterUser.setClickable(true);
                 } else {
                     fab.hide();
+                    fab.startAnimation(rotateBackward);
+                    fab.setClickable(false);
+                    fabRecenterUser.hide();
+                    fabRecenterUser.setClickable(false);
                     if (isFabOpen) {
                         disableFabs();
                         isFabOpen = false;
@@ -164,6 +170,8 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
             @Override
             public void onSlide(@NonNull View view, float v) {
                 fab.hide();
+                fabRecenterUser.hide();
+                fabRecenterUser.setClickable(false);
                 if (isFabOpen) {
                     disableFabs();
                     isFabOpen = false;
@@ -177,15 +185,18 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
 
     private void onFabClick(View v) {
         animateFAB();
-        Log.d(TAG, "setOnClick: " + v.getId() + " " + R.id.fab1);
+        Log.d(TAG, "setOnClick: " + v.getId() + " " + R.id.fabStartGroup);
         switch (v.getId()) {
-            case R.id.fab1:
+            case R.id.fabStartGroup:
+                fabRecenterUser.hide();
                 listener.inflateStartGroupFragment();
                 break;
-            case R.id.fab2:
+            case R.id.fabFindGroup:
+                fabRecenterUser.hide();
                 listener.inflateExploreGroupsFragment();
                 break;
             case R.id.fab_profile:
+                fabRecenterUser.hide();
                 listener.inflateProfileFragment(true);
                 break;
         }
@@ -195,11 +206,6 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     public void onDestroy() {
         disposables.dispose();
         super.onDestroy();
-    }
-
-    private void setActivityOnClick() {
-
-
     }
 
     private void getGroup() {
@@ -288,10 +294,10 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     @NotNull
     private CameraPosition getCameraPosition() {
         return new CameraPosition.Builder()
-                          .target(new LatLng(Objects.requireNonNull(locationComponent.getLastKnownLocation())))
-                            .zoom(13)
-                            .tilt(30)
-                            .build();
+          .target(new LatLng(Objects.requireNonNull(locationComponent.getLastKnownLocation())))
+          .zoom(13)
+          .tilt(30)
+          .build();
     }
 
 
@@ -386,6 +392,8 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
             fab1.startAnimation(fabClose);
             fab2.startAnimation(fabClose);
             fabProfile.startAnimation(fabClose);
+            fabRecenterUser.show();
+            fabRecenterUser.setClickable(true);
             fab1.setClickable(false);
             fab2.setClickable(false);
             fabProfile.setClickable(false);
@@ -395,6 +403,8 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
             fab1.startAnimation(fabOpen);
             fab2.startAnimation(fabOpen);
             fabProfile.startAnimation(fabOpen);
+            fabRecenterUser.hide();
+            fabRecenterUser.setClickable(false);
             fab1.setClickable(true);
             fab2.setClickable(true);
             fabProfile.setClickable(true);
@@ -414,6 +424,8 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
 
     private void enableFabs() {
         fab.show();
+        fabRecenterUser.show();
+        fabRecenterUser.setClickable(true);
         fab.setClickable(true);
         fab1.setClickable(true);
         fab2.setClickable(true);
