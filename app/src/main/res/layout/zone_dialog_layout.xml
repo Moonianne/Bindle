@@ -23,7 +23,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="169dp"
+                android:layout_height="190dp"
                 android:layout_marginTop="25dp"
                 android:layout_marginBottom="25dp"
                 android:orientation="vertical">
@@ -36,21 +36,28 @@
                     android:layout_marginRight="20dp"
                     android:fontFamily="@font/maven_pro_medium"
                     android:textAlignment="center"
-                    android:textColor="@color/cDark"
+                    android:textColor="@color/cPrimaryDark"
                     android:textSize="25sp"
                     android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/bindle_logo" />
 
                 <Button
                     android:id="@+id/view_zone_button"
                     android:layout_width="200dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="70dp"
-                    android:background="@drawable/rectangle_round_yellow"
+                    android:layout_marginTop="40dp"
+                    android:background="@drawable/yellow_outline_round"
                     android:fontFamily="@font/maven_pro_bold"
                     android:text="View forum"
                     android:textAlignment="center"
-                    android:textColor="@color/cDark" />
+                    android:textColor="@color/cPrimaryDark" />
             </LinearLayout>
 
         </LinearLayout>

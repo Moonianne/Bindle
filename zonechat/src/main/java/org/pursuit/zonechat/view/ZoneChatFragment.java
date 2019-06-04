@@ -136,8 +136,10 @@ public final class ZoneChatFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (viewModel.hasText(charSequence)) {
+                    sendButton.setBackgroundResource(R.drawable.ic_send_blue_light_24dp);
                     sendButton.setEnabled(true);
                 } else {
+                    sendButton.setBackgroundResource(R.drawable.ic_send_white_24dp);
                     sendButton.setEnabled(false);
                 }
             }

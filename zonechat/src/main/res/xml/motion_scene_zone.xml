@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<MotionScene
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
-        motion:constraintSetEnd="@layout/"
-        motion:constraintSetStart="@layout/group_chat_view_start"
+        motion:constraintSetEnd="@layout/zonechat_end_layout"
+        motion:constraintSetStart="@layout/zonechat_start_layout"
         motion:duration="1000">
 
         <OnSwipe
