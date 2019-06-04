@@ -32,6 +32,7 @@ dependencies {
     api 'io.reactivex.rxjava2:rxandroid:2.1.1'
     api 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2'
     implementation 'com.google.firebase:firebase-database:17.0.0'
+    implementation 'com.google.firebase:firebase-storage:17.0.0'
     implementation 'com.google.firebase:firebase-auth:17.0.0'
     implementation 'com.firebaseui:firebase-ui-database:4.3.2'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.2'

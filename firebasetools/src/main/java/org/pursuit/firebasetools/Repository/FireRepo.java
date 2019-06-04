@@ -1,9 +1,15 @@
 package org.pursuit.firebasetools.Repository;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -14,6 +20,9 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.annotations.Nullable;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Message;
@@ -22,6 +31,7 @@ import org.pursuit.firebasetools.model.Zone;
 import org.pursuit.sqldelight.db.model.BindleDatabase;
 import org.pursuit.usolo.ZoneModelQueries;
 
+import java.io.File;
 import java.util.List;
 
 import durdinapps.rxfirebase2.RxFirebaseChildEvent;
@@ -41,6 +51,7 @@ public final class FireRepo {
     private final DatabaseReference zoneChatDataBaseReference;
     private final DatabaseReference groupDataBaseReference;
     private final DatabaseReference groupChatDataBaseReference;
+    private final FirebaseStorage firebaseStorage;
 
     private FireRepo() {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
@@ -49,6 +60,7 @@ public final class FireRepo {
         groupDataBaseReference = FirebaseDatabase.getInstance().getReference(GROUPS_PATH);
         groupDataBaseReference.keepSynced(true);
         groupChatDataBaseReference = FirebaseDatabase.getInstance().getReference(GROUPCHATS_PATH);
+        firebaseStorage = FirebaseStorage.getInstance();
     }
 
     public void addZone(@NonNull final Zone zone) {
@@ -227,6 +239,30 @@ public final class FireRepo {
 
     public final Query getGroupMessageDatabaseReference(@NonNull final String chatName) {
         return groupChatDataBaseReference.child(chatName);
+    }
+
+    public void uploadFile(@NonNull final File file) {
+        Log.d("jimenez", "uploadFile: method called!");
+        Uri uri = Uri.fromFile(file);
+        StorageReference uploadRef = firebaseStorage.getReference()
+          .child(FirebaseAuth.getInstance().getUid() + "/" + uri.getLastPathSegment());
+        UploadTask uploadTask = uploadRef.putFile(uri);
+        uploadTask
+          .addOnFailureListener(exception ->
+            Log.d(TAG, "onFailure: " + exception.getMessage()))
+          .addOnSuccessListener(taskSnapshot ->
+            Log.d(TAG, "onSuccess: " + taskSnapshot.getBytesTransferred()));
+//        Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
+//            if (!task.isSuccessful()) {
+//                throw task.getException();
+//            }
+//            // Continue with the task to get the download URL
+//            return uploadRef.getDownloadUrl();
+//        }).addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                Uri downloadUri = task.getResult();
+//            }
+//        });
     }
 
     public void loginToFireBase(@NonNull final String email,

@@ -105,6 +105,7 @@ public class ProfileView extends Fragment {
                 if (requestCode == REQUEST_GET_SINGLE_FILE) {
                     Uri selectedImageUri = data.getData();
                     final String path = getPathFromURI(selectedImageUri);
+                    profileViewModel.pushPhoto(new File(profileViewModel.getUriRealPath(getActivity(), selectedImageUri)));
                     if (path != null) {
                         File f = new File(path);
                         selectedImageUri = Uri.fromFile(f);
@@ -148,7 +149,6 @@ public class ProfileView extends Fragment {
     }
 
     private void setAboutMeVisibility(boolean visibility) {
-
         if (visibility) {
             aboutMeView.setVisibility(View.INVISIBLE);
             editAboutMeButton.setVisibility(View.INVISIBLE);
@@ -160,11 +160,9 @@ public class ProfileView extends Fragment {
             aboutMeView.setVisibility(View.VISIBLE);
             editAboutMeButton.setVisibility(View.VISIBLE);
         }
-
     }
 
     private void setInterestsVisibility(boolean visibility) {
-
         if (visibility) {
             interestsView.setVisibility(View.INVISIBLE);
             editInterestsButton.setVisibility(View.INVISIBLE);
@@ -176,7 +174,6 @@ public class ProfileView extends Fragment {
             interestsView.setVisibility(View.VISIBLE);
             editInterestsButton.setVisibility(View.VISIBLE);
         }
-
     }
 
     private void findViews(@NonNull View view) {
