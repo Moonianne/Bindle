@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -24,25 +25,32 @@ import org.pursuit.firebasetools.model.Message;
 import org.pursuit.zonechat.R;
 import org.pursuit.zonechat.viewmodel.ChatViewModel;
 
-public final class ZoneChatView extends Fragment {
+import java.util.Objects;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+
+public final class ZoneChatFragment extends Fragment {
+
+    private static final String ZONE_CHAT_KEY = "ZONE_CHAT_KEY";
     private static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
 
-    private ChatViewModel viewModel;
-    private EditText messageEditText;
-    private Button sendButton;
-    private RecyclerView chatRecycler;
-    private LinearLayoutManager layoutManager;
-    private FirebaseRecyclerAdapter<Message, MessageViewHolder> fireBaseAdapter;
 
-    public static ZoneChatView newInstance() {
-        return new ZoneChatView();
+    private FirebaseRecyclerAdapter<Message, MessageViewHolder> fireBaseAdapter;
+    private ChatViewModel viewModel;
+    private Disposable disposable;
+
+    public static ZoneChatFragment newInstance(@NonNull final String zoneKey) {
+        ZoneChatFragment zoneChatFragment = new ZoneChatFragment();
+        Bundle args = new Bundle();
+        args.putString(ZONE_CHAT_KEY, zoneKey);
+        zoneChatFragment.setArguments(args);
+        return zoneChatFragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         viewModel = ViewModelProviders.of(this).get(ChatViewModel.class);
     }
 
@@ -56,18 +64,25 @@ public final class ZoneChatView extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        chatRecycler = view.findViewById(R.id.chat_rv);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            disposable = viewModel
+              .setCurrentZoneKey(Objects.requireNonNull(bundle.getString(ZONE_CHAT_KEY)))
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribe(zone -> {
+                  view.<TextView>findViewById(R.id.zone_title).setText(zone.getName());
+                  view.<TextView>findViewById(R.id.location).setText(zone.getName());
+              });
+        }
+        RecyclerView chatRecycler = view.findViewById(R.id.chat_rv);
         chatRecycler.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         chatRecycler.setLayoutManager(layoutManager);
-        messageEditText = view.findViewById(R.id.messageEditText);
-        sendButton = view.findViewById(R.id.sendButton);
-
+        setupMessageBox(view.findViewById(R.id.messageEditText),
+          view.findViewById(R.id.sendButton));
         viewModel.parseMessage();
         updateMessageList(viewModel.getMessageDatabaseReference());
-        editTextListener();
-        sendMessageOnClick();
-        registerAdapter();
+        setupFireAdapter(chatRecycler, layoutManager);
         chatRecycler.setAdapter(fireBaseAdapter);
     }
 
@@ -90,7 +105,7 @@ public final class ZoneChatView extends Fragment {
         fireBaseAdapter.notifyDataSetChanged();
     }
 
-    private void editTextListener() {
+    public void setupMessageBox(EditText messageEditText, Button sendButton) {
         messageEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -109,18 +124,16 @@ public final class ZoneChatView extends Fragment {
             public void afterTextChanged(Editable editable) {
             }
         });
-        messageEditText
-          .setFilters(new InputFilter[]{new InputFilter.LengthFilter(DEFAULT_MSG_LENGTH_LIMIT)});
-    }
 
-    private void sendMessageOnClick() {
-        sendButton.setOnClickListener(view -> {
+        messageEditText.setFilters(new InputFilter[]{new InputFilter
+          .LengthFilter(DEFAULT_MSG_LENGTH_LIMIT)});
+        sendButton.setOnClickListener(v -> {
             viewModel.pushMessage(messageEditText.getText().toString());
             messageEditText.setText("");
         });
     }
 
-    private void registerAdapter() {
+    public void setupFireAdapter(RecyclerView chatRecycler, LinearLayoutManager layoutManager) {
         fireBaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
