@@ -67,14 +67,13 @@
                 android:id="@+id/add_location_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="5dp"
                 android:padding="10dp"
                 android:fontFamily="@font/maven_pro_bold"
                 android:text="Add Location"
                 android:textColor="@color/colorWhite"
-                android:textSize="18sp" />
+                android:textSize="18sp"/>
 
         </LinearLayout>
 

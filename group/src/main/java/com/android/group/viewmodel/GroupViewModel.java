@@ -30,11 +30,13 @@ public final class GroupViewModel extends ViewModel {
         List<User> userList = new LinkedList<>();
         User user = new User("Eric", "ericdiazjr21@gmail.com", "I like to code and dance bachata.", "Nightlife", "pursuit", null, null, null);
         userList.add(user);
+        String[] formattedAddress = bindleBusiness.getVenue().getLocation().getFormattedAddress();
         currentGroup = new Group(userList, groupDescription,
                 bindleBusiness.getVenue().getCategories()[0].getPluralName(),
                 new LatLng(bindleBusiness.getVenue().getLocation().getLat(),
                         bindleBusiness.getVenue().getLocation().getLng()), groupName.toLowerCase() + "Chat",
-                groupName.toLowerCase(), 1, bindleBusiness.getVenue().getLocation().getAddress(), bindleBusiness.getBusiness().getImage_url(), bindleBusiness.getVenue().getName());
+                groupName.toLowerCase(), 1, formattedAddress[0] + "\n" + formattedAddress[1],
+                bindleBusiness.getBusiness().getImage_url(), bindleBusiness.getVenue().getName());
         Log.d(TAG, "createGroup: " + currentGroup.toString());
     }
 

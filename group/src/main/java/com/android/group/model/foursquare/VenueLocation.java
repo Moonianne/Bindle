@@ -12,7 +12,7 @@ public class VenueLocation {
     private String city;
     private String state;
     private String country;
-    private List formattedAddress;
+    private String[] formattedAddress;
 
     public VenueLocation(final String address,
                          final String crossStreet,
@@ -21,7 +21,7 @@ public class VenueLocation {
                          final String postalCode,
                          final String city, String state,
                          final String country,
-                         final List formattedAddress) {
+                         final String[] formattedAddress) {
         this.address = address;
         this.crossStreet = crossStreet;
         this.lat = lat;
@@ -66,7 +66,7 @@ public class VenueLocation {
         return country;
     }
 
-    public List getFormattedAddress() {
+    public String[] getFormattedAddress() {
         return formattedAddress;
     }
 }
