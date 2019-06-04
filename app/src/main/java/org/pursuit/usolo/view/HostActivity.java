@@ -6,13 +6,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import com.android.authentication.view.AuthenticationFragment;
@@ -26,10 +24,11 @@ import com.example.exploregroup.view.ExploreGroupsFragment;
 import com.example.exploregroup.view.ViewGroupFragment;
 
 import org.pursuit.firebasetools.model.Group;
+import org.pursuit.firebasetools.model.Zone;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
-import org.pursuit.zonechat.view.ZoneChatView;
+import org.pursuit.zonechat.view.ZoneChatFragment;
 import org.pursuit.userprofile.view.ProfileView;
 
 import java.util.List;
@@ -85,8 +84,8 @@ public final class HostActivity extends AppCompatActivity
     }
 
     @Override
-    public void inflateZoneChatFragment() {
-        inflateFragment(ZoneChatView.newInstance(), true);
+    public void inflateZoneChatFragment(@NonNull final Zone zone) {
+        inflateFragment(ZoneChatFragment.newInstance(zone), true);
     }
 
     @Override

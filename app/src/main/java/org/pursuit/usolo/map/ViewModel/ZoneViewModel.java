@@ -34,16 +34,15 @@ public final class ZoneViewModel extends ViewModel {
     private List<String> zoneNames = new ArrayList<>();
     private List<Group> groups = new ArrayList<>();
 
-
-    public Maybe<Zone> getZone() {
+    public Maybe<Zone> getZone(@NonNull final String zoneKey) {
         return fireRepo
-          .getZone()
+          .getZone(zoneKey)
           .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Maybe<LatLng> getZoneLocation() {
         return fireRepo
-          .getZone()
+          .getZone("pursuit")
           .map(Zone::getLocation)
           .observeOn(AndroidSchedulers.mainThread());
     }
