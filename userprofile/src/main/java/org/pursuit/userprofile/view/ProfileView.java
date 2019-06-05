@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.jakewharton.rxbinding3.view.RxView;
 import com.squareup.picasso.Picasso;
 
@@ -49,7 +51,7 @@ public final class ProfileView extends Fragment {
     private EditText aboutMeEditText, interestsEditText;
     private ImageView editAboutMeButton, editInterestsButton, finishInterestsButton, finishAboutMeButton, profilePhoto;
     private TextView displayNameView, aboutMeView, interestsView, locationView;
-    private Button logOutButton, uploadPhotoButton;
+    private Button logOutButton, uploadPhotoButton, editDisplayName;
 
     public static ProfileView newInstance(boolean bool) {
         isCurrentUserProfile = bool;
@@ -81,28 +83,46 @@ public final class ProfileView extends Fragment {
         if (isCurrentUserProfile) {
             if (sharedPreferences.contains(PROFILE_PHOTO)) {
                 Picasso.get()
-                  .load(sharedPreferences.getString(PROFILE_PHOTO, ""))
-                  .rotate(-90f)
-                  .into(profilePhoto);
+                        .load(sharedPreferences.getString(PROFILE_PHOTO, ""))
+                        .rotate(-90f)
+                        .into(profilePhoto);
             }
             displayNameView.setText(profileViewModel.getUsername());
             locationView.setText(profileViewModel.getLocation(getContext()));
             compositeDisposable.add(RxView.clicks(editAboutMeButton)
-              .subscribe(unit -> setAboutMeVisibility(true)));
+                    .subscribe(unit -> setAboutMeVisibility(true)));
             compositeDisposable.add(RxView.clicks(finishAboutMeButton)
-              .subscribe(unit -> {
-                  //TODO send data to firebase
-                  setAboutMeVisibility(false);
-              }));
+                    .subscribe(unit -> {
+                        //TODO send data to firebase
+                        setAboutMeVisibility(false);
+                    }));
             compositeDisposable.add(RxView.clicks(editInterestsButton)
-              .subscribe(unit1 -> {
-                  setInterestsVisibility(true);
-                  finishInterestsButton.setOnClickListener(v1 -> setInterestsVisibility(false));
-              }));
+                    .subscribe(unit1 -> {
+                        setInterestsVisibility(true);
+                        finishInterestsButton.setOnClickListener(v1 -> setInterestsVisibility(false));
+                    }));
             compositeDisposable.add(RxView.clicks(uploadPhotoButton)
-              .subscribe(unit -> startActivityForResult(Intent
-                .createChooser(profileViewModel.getPhotoIntent(),
-                  "Select Picture"), REQUEST_GET_SINGLE_FILE)));
+                    .subscribe(unit -> startActivityForResult(Intent
+                            .createChooser(profileViewModel.getPhotoIntent(),
+                                    "Select Picture"), REQUEST_GET_SINGLE_FILE)));
+            compositeDisposable.add(RxView.clicks(editDisplayName).
+                    subscribe(unit -> {
+                                View dialogView = LayoutInflater.from(getContext())
+                                        .inflate(R.layout.edit_display_name_layout, null);
+                                EditText editDisplayNameEditText = dialogView.findViewById(R.id.edit_display_name_edit_text);
+                                new AlertDialog.Builder(getContext())
+                                        .setView(dialogView)
+                                        .setTitle("Enter Display Name")
+                                        .setPositiveButton("Submit", (dialog, which) -> {
+                                            if (editDisplayNameEditText.getText() != null &&
+                                                    !editDisplayNameEditText.getText().equals("")) {
+                                                profileViewModel.updateDisplayName(editDisplayNameEditText.getText().toString())
+                                                .addOnSuccessListener(aVoid -> displayNameView.setText(profileViewModel.getUsername()));
+                                                dialog.dismiss();
+                                            }
+                                        }).show();
+                            }
+                    ));
 
             logOutButton.setOnClickListener(v -> {
                 //TODO firebase needed for the user log out
@@ -147,7 +167,7 @@ public final class ProfileView extends Fragment {
         String res = null;
         String[] proj = {MediaStore.Images.Media.DATA};
         Cursor cursor = Objects.requireNonNull(getContext()).getContentResolver()
-          .query(contentUri, proj, null, null, null);
+                .query(contentUri, proj, null, null, null);
         if (cursor.moveToFirst()) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             res = cursor.getString(column_index);
@@ -209,5 +229,6 @@ public final class ProfileView extends Fragment {
         finishAboutMeButton = view.findViewById(R.id.finishEdit_aboutMe_button);
         logOutButton = view.findViewById(R.id.logOut_button);
         uploadPhotoButton = view.findViewById(R.id.upload_profile_photoButton);
+        editDisplayName = view.findViewById(R.id.edit_display_name_button);
     }
 }
