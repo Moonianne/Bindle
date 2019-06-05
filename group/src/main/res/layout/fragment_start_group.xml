@@ -60,6 +60,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginStart="8dp"
                 android:background="@drawable/ic_pin_drop_white_24dp"
                 android:padding="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
