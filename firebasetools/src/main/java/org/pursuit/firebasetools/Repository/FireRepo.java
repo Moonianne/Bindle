@@ -6,13 +6,10 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,7 +29,6 @@ import org.pursuit.firebasetools.model.Zone;
 import org.pursuit.sqldelight.db.model.BindleDatabase;
 import org.pursuit.usolo.ZoneModelQueries;
 
-import java.io.File;
 import java.util.List;
 
 import durdinapps.rxfirebase2.RxFirebaseChildEvent;
@@ -267,6 +263,13 @@ public final class FireRepo {
                 Log.d(TAG, "uploadFile: " + downloadUri);
             }
         });
+    }
+
+    public Task<Void> updateDisplayName(String displayName){
+        return FirebaseAuth.getInstance().getCurrentUser()
+                .updateProfile(new UserProfileChangeRequest.Builder()
+                        .setDisplayName(displayName)
+                        .build());
     }
 
     public void loginToFireBase(@NonNull final String email,

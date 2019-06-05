@@ -76,6 +76,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/edit_display_name_button"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:background="@drawable/rectangle_round_outline_purple"
+        android:fontFamily="@font/maven_pro_bold"
+        android:text="Edit Display Name"
+        android:textColor="@color/cPrimaryDark"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/profile_display_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/profilephoto_border"
+/>
+
     <TextView
         android:id="@+id/interest_header"
         android:layout_width="match_parent"
@@ -138,7 +153,6 @@
         app:layout_constraintHorizontal_bias="0.086"
         app:layout_constraintStart_toEndOf="@+id/interests_textview"
         app:layout_constraintTop_toBottomOf="@+id/interest_header" />
-
 
     <TextView
         android:id="@+id/aboutMe_header"
