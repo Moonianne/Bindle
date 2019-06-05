@@ -51,7 +51,8 @@
             android:layout_height="70dp"
             android:layout_gravity="center"
             android:background="@drawable/purple_rect_round"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="25dp">
 
             <ImageView
                 android:id="@+id/add_location_icon_button"
@@ -60,12 +61,11 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginStart="8dp"
                 android:background="@drawable/ic_pin_drop_white_24dp"
                 android:padding="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/add_location_text_view"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/add_location_text_view"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -73,7 +73,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/maven_pro_bold"
                 android:padding="10dp"
@@ -81,7 +83,8 @@
                 android:textColor="@color/colorWhite"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/add_location_icon_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </android.support.constraint.ConstraintLayout>

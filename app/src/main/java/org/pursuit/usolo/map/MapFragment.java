@@ -54,6 +54,7 @@ import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
 import org.pursuit.usolo.map.nearbygroups.NearbyGroupAdapter;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
+import org.pursuit.usolo.model.MapFeature;
 
 import java.util.Collections;
 import java.util.List;
@@ -61,6 +62,8 @@ import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
 
@@ -302,13 +305,21 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
                 });
                 setZoneStyle(style);
                 disposables.add(zoneViewModel.getAllZones(Objects.requireNonNull(getContext()))
-                  .map(zone -> zoneViewModel.getMapFeature(zone))
-                  .subscribe(mapFeature -> {
-                      showZone(mapFeature.location);
-                      String sourceId = mapFeature.name + "_source";
-                      style.addSource(new GeoJsonSource(sourceId, zoneViewModel.getGeometry(mapFeature)));
-                      style.addLayer(new FillLayer(mapFeature.name, sourceId).withProperties(
-                        fillColor(Color.parseColor(getString(R.string.zone_colour)))));
+                  .map(new Function<Zone, MapFeature>() {
+                      @Override
+                      public MapFeature apply(Zone zone) throws Exception {
+                          return zoneViewModel.getMapFeature(zone);
+                      }
+                  })
+                  .subscribe(new Consumer<MapFeature>() {
+                      @Override
+                      public void accept(MapFeature mapFeature) throws Exception {
+                          MapFragment.this.showZone(mapFeature.location);
+                          String sourceId = mapFeature.name + "_source";
+                          style.addSource(new GeoJsonSource(sourceId, zoneViewModel.getGeometry(mapFeature)));
+                          style.addLayer(new FillLayer(mapFeature.name, sourceId).withProperties(
+                            fillColor(Color.parseColor(MapFragment.this.getString(R.string.zone_colour)))));
+                      }
                   }, throwable -> Log.d(TAG, "findViews: " + throwable.getMessage())));
                 mapboxMap.addOnMapClickListener(point -> {
                     PointF pointf = mapboxMap.getProjection().toScreenLocation(point);
