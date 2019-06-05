@@ -28,7 +28,7 @@
         android:layout_height="72dp"
         android:layout_gravity="center"
         android:elevation="8dp"
-        app:cardBackgroundColor="@color/cPrimary"
+        app:cardBackgroundColor="@color/cPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -62,8 +62,7 @@
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/ic_send_white_24dp"
                 android:enabled="false"
-                android:fontFamily="@font/maven_pro_medium"
-                android:textColor="@color/cDark" />
+                android:fontFamily="@font/maven_pro_medium" />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

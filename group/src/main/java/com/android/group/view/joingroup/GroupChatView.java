@@ -169,7 +169,7 @@ public class GroupChatView extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (viewModel.hasText(charSequence)) {
-                    groupSendButton.setBackgroundResource(R.drawable.ic_send_purple_24dp);
+                    groupSendButton.setBackgroundResource(R.drawable.ic_send_blue_light_24dp);
                     groupSendButton.setEnabled(true);
                 } else {
                     groupSendButton.setBackgroundResource(R.drawable.ic_send_white_24dp);

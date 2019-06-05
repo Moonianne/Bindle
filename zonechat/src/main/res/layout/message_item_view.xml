@@ -14,7 +14,7 @@
         android:layout_weight="0"
         android:fontFamily="@font/maven_pro_bold"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/cDark"
+        android:textColor="@color/cPrimary"
         tools:text="Name" />
 
     <TextView
@@ -24,7 +24,7 @@
         android:layout_weight="0"
         android:fontFamily="@font/maven_pro_medium"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/cDark"
+        android:textColor="@color/cPrimary"
         tools:text="Message" />
 
     <TextView
@@ -35,7 +35,7 @@
         android:layout_weight="0"
         android:fontFamily="@font/maven_pro"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/cDark"
+        android:textColor="@color/cPrimary"
         tools:text="time" />
 
 </LinearLayout>
