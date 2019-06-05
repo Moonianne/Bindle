@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorWhiteTrans">#CEFFFFFF</color>
     <color name="colorTrans">#00FFFFFF</color>
     <color name="colorTransPrimaryDark">#A17755CC</color>
     <color name="colorTransPrimaryLight">#A8A3E7FC</color>

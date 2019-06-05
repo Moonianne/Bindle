@@ -9,7 +9,11 @@
     <string name="current_activity_none">This is where you would see your current group, you are not in one yet. Explore some groups and join!</string>
     <string name="happening_now_nearby">Happening now nearby</string>
     <string name="search_for_groups_by_category">Search for groups by category</string>
-    <string name="nightlife">NIGHTLIFE</string>
-    <string name="sightseeing">SIGHTSEEING</string>
-    <string name="eat_and_drink">EAT AND DRINK</string>
+
+    <string-array name="categoryNames">
+        <item name="nightlife">NIGHTLIFE</item>
+        <item name="sightseeing">SIGHTSEEING</item>
+        <item name="eat_and_drink">EAT AND DRINK</item>
+    </string-array>
+
 </resources>

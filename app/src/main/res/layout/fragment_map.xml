@@ -7,11 +7,35 @@
     android:layout_height="match_parent"
     tools:context=".map.MapFragment">
 
+
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         mapbox:mapbox_cameraZoom="12" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/colorTrans"
+        android:gravity="left"
+        android:foregroundGravity="left"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/category_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="@color/colorTrans"
+            android:layout_gravity="end"
+            android:layout_marginTop="20dp"
+            android:foregroundGravity="left">
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/main_content"
@@ -156,110 +180,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/nearby_recycler"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp">
-
-
-                </android.support.v7.widget.RecyclerView>
-                <!--<android.support.v7.widget.CardView-->
-                    <!--android:layout_width="350dp"-->
-                    <!--android:layout_height="150dp"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--mapbox:cardCornerRadius="4dp"-->
-                    <!--mapbox:cardElevation="4dp"-->
-                    <!--mapbox:cardUseCompatPadding="true" />-->
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/maven_pro_bold"
-                    android:text="@string/search_for_groups_by_category"
-                    android:textColor="@color/cPrimaryDark"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/maven_pro_bold"
-                    android:gravity="center"
-                    android:text="@string/nightlife"
-                    android:textColor="@color/cPrimaryDark"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <android.support.v7.widget.CardView
-                    android:layout_width="350dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    mapbox:cardCornerRadius="4dp"
-                    mapbox:cardElevation="4dp"
-                    mapbox:cardUseCompatPadding="true">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/icon_nighltlife_purple_grad" />
-                </android.support.v7.widget.CardView>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/maven_pro_bold"
-                    android:gravity="center"
-                    android:text="@string/sightseeing"
-                    android:textColor="@color/cPrimaryDark"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <android.support.v7.widget.CardView
-                    android:layout_width="350dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    mapbox:cardCornerRadius="4dp"
-                    mapbox:cardElevation="4dp"
-                    mapbox:cardUseCompatPadding="true">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/icon_sightseeing_purple_grad" />
-                </android.support.v7.widget.CardView>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="8dp"
-                    android:fontFamily="@font/maven_pro_bold"
-                    android:gravity="center"
-                    android:text="@string/eat_and_drink"
-                    android:textColor="@color/cPrimaryDark"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <android.support.v7.widget.CardView
-                    android:layout_width="350dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    mapbox:cardCornerRadius="4dp"
-                    mapbox:cardElevation="4dp"
-                    mapbox:cardUseCompatPadding="true">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/icon_eatdrink_purple_grad" />
-                </android.support.v7.widget.CardView>
+                    android:layout_height="250dp" />
 
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
@@ -272,10 +193,11 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="160dp"
+        android:background="@color/cPrimaryLight"
         android:src="@drawable/ic_my_location_black_24dp"
+        android:visibility="gone"
         app:elevation="6dp"
         app:fabSize="mini"
-        android:visibility="gone"
         app:pressedTranslationZ="12dp" />
 
     <android.support.design.widget.FloatingActionButton
