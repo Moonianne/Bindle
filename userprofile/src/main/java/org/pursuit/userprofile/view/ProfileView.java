@@ -34,14 +34,15 @@ import org.pursuit.userprofile.viewmodel.ProfileViewModel;
 import java.io.File;
 import java.util.Objects;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 public final class ProfileView extends Fragment {
 
     private static final int REQUEST_GET_SINGLE_FILE = 314;
     private static final String PROFILE_PREFS = "PROFILE";
-    private static final String PROFILE_PHOTO = "PROFILE_PHOTO_URL";
 
     private static boolean isCurrentUserProfile = true;
 
@@ -81,30 +82,63 @@ public final class ProfileView extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
         if (isCurrentUserProfile) {
-            if (sharedPreferences.contains(PROFILE_PHOTO)) {
-                Picasso.get()
-                        .load(sharedPreferences.getString(PROFILE_PHOTO, ""))
-                        .rotate(-90f)
-                        .into(profilePhoto);
-            }
+            compositeDisposable.add(profileViewModel.getCurrentUserInfo()
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribe(user -> {
+                  if (user != null) {
+                      profileViewModel.setCurrentUser(user);
+                      if (user.getInterests() != null) {
+                          interestsView.setText(user.getInterests());
+                      }
+                      if (user.getAboutMe() != null) {
+                          aboutMeView.setText(user.getAboutMe());
+                      }
+                      if (user.getUserProfilePhotoURL() != null) {
+                          Picasso.get()
+                            .load(user.getUserProfilePhotoURL())
+                            .rotate(-90f)
+                            .into(profilePhoto);
+                      }
+                      locationView.setText(profileViewModel.getLocation(getContext()));
+                  }
+              }));
             displayNameView.setText(profileViewModel.getUsername());
-            locationView.setText(profileViewModel.getLocation(getContext()));
             compositeDisposable.add(RxView.clicks(editAboutMeButton)
-                    .subscribe(unit -> setAboutMeVisibility(true)));
+              .subscribe(unit -> setAboutMeVisibility(true)));
             compositeDisposable.add(RxView.clicks(finishAboutMeButton)
-                    .subscribe(unit -> {
-                        //TODO send data to firebase
-                        setAboutMeVisibility(false);
-                    }));
+              .observeOn(Schedulers.io())
+              .doOnNext(click ->
+                profileViewModel
+                  .setUserAboutMe(
+                    aboutMeEditText
+                      .getText().toString()))
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribe(unit -> {
+                  aboutMeView
+                    .setText(aboutMeEditText.getText().toString());
+                  setAboutMeVisibility(false);
+              }));
             compositeDisposable.add(RxView.clicks(editInterestsButton)
-                    .subscribe(unit1 -> {
-                        setInterestsVisibility(true);
-                        finishInterestsButton.setOnClickListener(v1 -> setInterestsVisibility(false));
+              .subscribe(unit1 -> {
+                  setInterestsVisibility(true);
+                  compositeDisposable.add(RxView.clicks(finishInterestsButton)
+                    .observeOn(Schedulers.io())
+                    .doOnNext(click ->
+                      profileViewModel
+                        .setUserInterests(
+                          interestsEditText
+                            .getText().toString()))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(click -> {
+                        interestsView
+                          .setText(interestsEditText.getText().toString());
+                        setInterestsVisibility(false);
                     }));
+              }));
             compositeDisposable.add(RxView.clicks(uploadPhotoButton)
-                    .subscribe(unit -> startActivityForResult(Intent
-                            .createChooser(profileViewModel.getPhotoIntent(),
-                                    "Select Picture"), REQUEST_GET_SINGLE_FILE)));
+              .subscribe(unit -> startActivityForResult(Intent
+                .createChooser(profileViewModel.getPhotoIntent(),
+                  "Select Picture"), REQUEST_GET_SINGLE_FILE)));
             compositeDisposable.add(RxView.clicks(editDisplayName).
                     subscribe(unit -> {
                                 View dialogView = LayoutInflater.from(getContext())
@@ -167,7 +201,7 @@ public final class ProfileView extends Fragment {
         String res = null;
         String[] proj = {MediaStore.Images.Media.DATA};
         Cursor cursor = Objects.requireNonNull(getContext()).getContentResolver()
-                .query(contentUri, proj, null, null, null);
+          .query(contentUri, proj, null, null, null);
         if (cursor.moveToFirst()) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             res = cursor.getString(column_index);

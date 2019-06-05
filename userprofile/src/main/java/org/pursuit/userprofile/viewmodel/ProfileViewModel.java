@@ -19,19 +19,29 @@ import android.util.Log;
 import com.google.android.gms.tasks.Task;
 
 import org.pursuit.firebasetools.Repository.FireRepo;
+import org.pursuit.firebasetools.model.User;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import io.reactivex.Completable;
+import io.reactivex.Maybe;
+import io.reactivex.schedulers.Schedulers;
+
 
 public class ProfileViewModel extends ViewModel {
 
     private final FireRepo fireRepo = FireRepo.getInstance();
+    private User user;
+
+    public ProfileViewModel() {
+        user = new User();
+        user.setUserId(fireRepo.getCurrentUser().getUid());
+    }
 
     public String getUsername() {
-        Log.d("profileViewModel - ", "email: " + fireRepo.getUser().getEmail());
-        return fireRepo.getUser().getDisplayName();
+        return fireRepo.getCurrentUser().getDisplayName();
     }
 
     public String getLocation(Context context) {
@@ -54,7 +64,9 @@ public class ProfileViewModel extends ViewModel {
         String cityName = addresses.get(0).getSubLocality();
         String stateName = addresses.get(0).getAdminArea();
         String countryName = addresses.get(0).getCountryCode();
-        return cityName + ", " + stateName + ", " + countryName;
+        String currentLocation = cityName + ", " + stateName + ", " + countryName;
+        setUserLocation(currentLocation);
+        return currentLocation;
     }
 
     public Intent getPhotoIntent() {
@@ -64,8 +76,46 @@ public class ProfileViewModel extends ViewModel {
         return intent;
     }
 
-    public void pushPhoto(@NonNull final Uri uri, SharedPreferences.Editor editor) {
-        fireRepo.uploadFile(uri, editor);
+    public Maybe<User> getCurrentUserInfo() {
+        return fireRepo
+          .getUserInfo(fireRepo.getCurrentUser().getUid());
+    }
+
+    private void pushUser() {
+        fireRepo.pushUser(user);
+    }
+
+    public void pushPhoto(@NonNull final Uri uri,
+                          @NonNull final SharedPreferences.Editor editor) {
+        Completable.fromAction(() ->
+          fireRepo.uploadFile(uri, editor,
+            uri1 -> setUserPhoto(uri1.toString()))
+        ).subscribeOn(Schedulers.io())
+          .subscribe();
+    }
+
+    private void setUserPhoto(@NonNull final String url) {
+        user.setUserProfilePhotoURL(url);
+        pushUser();
+    }
+
+    public void setUserAboutMe(@NonNull final String text) {
+        user.setAboutMe(text);
+        pushUser();
+    }
+
+    public void setUserInterests(@NonNull final String text) {
+        user.setInterests(text);
+        pushUser();
+    }
+
+    private void setUserLocation(@NonNull final String text) {
+        user.setCurrentLocation(text);
+        pushUser();
+    }
+
+    public void setCurrentUser(@NonNull final User user) {
+        this.user = user;
     }
 
     public Task<Void> updateDisplayName(String displayName){
