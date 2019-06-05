@@ -5,6 +5,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="provide_a_description_for_this_group">Provide a description for this group</string>
     <string name="rating">Rating:</string>
+    <string name="form_your_group">Form Your Group</string>
+    <string name="group_name">Group Name</string>
+    <string name="add_location">Add Location</string>
+    <string name="start_group">Start Group</string>
 
     <string-array name="category_array">
         <item>Arts and Entertainment</item>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,7 +19,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
         android:fontFamily="@font/maven_pro_bold"
-        android:text="Form Your Group"
+        android:text="@string/form_your_group"
         android:textColor="@color/cPrimaryDark"
         android:textSize="28sp" />
 
@@ -27,13 +27,13 @@
         android:id="@+id/group_name_edit_text"
         android:layout_width="327dp"
         android:layout_height="50dp"
-        android:layout_marginTop="40dp"
         android:layout_gravity="center"
-        android:padding="10dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/rectangle_round_light_gray"
+        android:hint="@string/group_name"
         android:inputType="text"
         android:maxLines="1"
-        android:hint="Group Name"
+        android:padding="10dp"
         android:textSize="18sp" />
 
     <LinearLayout
@@ -46,7 +46,7 @@
         android:focusable="true"
         android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="330dp"
             android:layout_height="70dp"
             android:layout_gravity="center"
@@ -58,24 +58,32 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
-                android:padding="10dp"
-                android:layout_marginBottom="10dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/ic_pin_drop_white_24dp" />
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/ic_pin_drop_white_24dp"
+                android:padding="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/add_location_text_view"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/add_location_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
                 android:layout_marginTop="5dp"
-                android:padding="10dp"
+                android:layout_marginBottom="10dp"
                 android:fontFamily="@font/maven_pro_bold"
-                android:text="Add Location"
+                android:padding="10dp"
+                android:text="@string/add_location"
                 android:textColor="@color/colorWhite"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/add_location_icon_button"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
 
     </LinearLayout>
 
@@ -83,10 +91,10 @@
         android:id="@+id/group_description_edit_text"
         android:layout_width="327dp"
         android:layout_height="272dp"
+        android:layout_gravity="center"
         android:layout_marginBottom="8dp"
         android:background="@drawable/rectangle_round_light_gray"
         android:gravity="top|start"
-        android:layout_gravity="center"
         android:hint="@string/provide_a_description_for_this_group"
         android:inputType="textLongMessage|textMultiLine|textCapSentences"
         android:padding="10dp"
@@ -94,7 +102,7 @@
 
     <Button
         android:id="@+id/start_group_button"
-        android:layout_width="320dp"
+        android:layout_width="330dp"
         android:layout_height="60dp"
         android:layout_gravity="center"
         android:background="@drawable/purple_rect_round"
@@ -102,9 +110,8 @@
         android:fontFamily="@font/maven_pro_bold"
         android:gravity="center"
         android:padding="4dp"
-        android:text="Start Group"
+        android:text="@string/start_group"
         android:textColor="@color/colorWhite"
         android:textSize="16sp" />
-
 
 </android.support.v7.widget.LinearLayoutCompat>
