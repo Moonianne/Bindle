@@ -5,18 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    app:layoutDescription="@layout/view_group_motion_scene"
+    app:layoutDescription="@xml/view_group_motion_scene"
     app:showPaths="true">
 
     <ImageView
         android:id="@+id/view_group_location_image_view"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@id/view_group_name_text_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:scaleType="centerCrop"/>
+        <!--app:layout_constraintBottom_toTopOf="@id/view_group_name_text_view"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent" />-->
 
     <TextView
         android:id="@+id/view_group_name_text_view"
