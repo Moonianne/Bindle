@@ -3,41 +3,75 @@
     xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
-        motion:constraintSetStart="@+id/start"
-        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetEnd="@+id/end_layout_container"
+        motion:constraintSetStart="@+id/start_layout_container"
         motion:duration="1000">
 
         <OnSwipe
-            motion:dragDirection="dragRight"
-            motion:touchAnchorId="@+id/view_group_location_image_view"
-            motion:touchAnchorSide="right" />
+            motion:dragDirection="dragUp"
+            motion:touchAnchorId="@+id/view_group_body_container"
+            motion:touchAnchorSide="top" />
     </Transition>
 
-    <ConstraintSet android:id="@+id/start">
+    <ConstraintSet android:id="@+id/start_layout_container">
+
+        <Constraint
+            android:id="@+id/view_group_body_container"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="128dp"
+            android:elevation="2dp"
+            motion:layout_constraintBottom_toTopOf="@id/join_group_button_container"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@+id/image_guide_line" />
 
         <Constraint
             android:id="@+id/view_group_location_image_view"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginStart="8dp"
-            motion:layout_constraintBottom_toTopOf="@id/view_group_name_text_view"
+            motion:layout_constraintBottom_toTopOf="@+id/body_guide_line"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toTopOf="parent"  />
+            motion:layout_constraintTop_toTopOf="parent" />
+
+        <Constraint
+            android:id="@+id/join_group_button_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="2dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@+id/view_group_body_container"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
 
     </ConstraintSet>
 
-    <ConstraintSet android:id="@+id/end">
+    <ConstraintSet android:id="@+id/end_layout_container">
+
+        <Constraint
+            android:id="@+id/view_group_body_container"
+            motion:layout_constraintBottom_toTopOf="@id/join_group_button_container"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@+id/image_guide_line" />
 
         <Constraint
             android:id="@+id/view_group_location_image_view"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginEnd="8dp"
-            motion:layout_constraintBottom_toTopOf="parent"
+            motion:layout_constraintBottom_toTopOf="@+id/image_guide_line"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toTopOf="parent"  />
+            motion:layout_constraintTop_toTopOf="parent" />
+
+        <Constraint
+            android:id="@+id/join_group_button_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@+id/view_group_body_container"/>
+
     </ConstraintSet>
 
 </MotionScene>
