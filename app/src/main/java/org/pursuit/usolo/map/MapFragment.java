@@ -305,21 +305,13 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
                 });
                 setZoneStyle(style);
                 disposables.add(zoneViewModel.getAllZones(Objects.requireNonNull(getContext()))
-                  .map(new Function<Zone, MapFeature>() {
-                      @Override
-                      public MapFeature apply(Zone zone) throws Exception {
-                          return zoneViewModel.getMapFeature(zone);
-                      }
-                  })
-                  .subscribe(new Consumer<MapFeature>() {
-                      @Override
-                      public void accept(MapFeature mapFeature) throws Exception {
-                          MapFragment.this.showZone(mapFeature.location);
-                          String sourceId = mapFeature.name + "_source";
-                          style.addSource(new GeoJsonSource(sourceId, zoneViewModel.getGeometry(mapFeature)));
-                          style.addLayer(new FillLayer(mapFeature.name, sourceId).withProperties(
-                            fillColor(Color.parseColor(MapFragment.this.getString(R.string.zone_colour)))));
-                      }
+                  .map(zone -> zoneViewModel.getMapFeature(zone))
+                  .subscribe(mapFeature -> {
+                      MapFragment.this.showZone(mapFeature.location);
+                      String sourceId = mapFeature.name + "_source";
+                      style.addSource(new GeoJsonSource(sourceId, zoneViewModel.getGeometry(mapFeature)));
+                      style.addLayer(new FillLayer(mapFeature.name, sourceId).withProperties(
+                        fillColor(Color.parseColor(MapFragment.this.getString(R.string.zone_colour)))));
                   }, throwable -> Log.d(TAG, "findViews: " + throwable.getMessage())));
                 mapboxMap.addOnMapClickListener(point -> {
                     PointF pointf = mapboxMap.getProjection().toScreenLocation(point);
