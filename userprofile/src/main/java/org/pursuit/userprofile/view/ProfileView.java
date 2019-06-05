@@ -3,7 +3,9 @@ package org.pursuit.userprofile.view;
 
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding3.view.RxView;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 import org.pursuit.userprofile.R;
@@ -32,13 +35,16 @@ import java.util.Objects;
 import io.reactivex.disposables.CompositeDisposable;
 
 
-public class ProfileView extends Fragment {
+public final class ProfileView extends Fragment {
 
     private static final int REQUEST_GET_SINGLE_FILE = 314;
+    private static final String PROFILE_PREFS = "PROFILE";
+    private static final String PROFILE_PHOTO = "PROFILE_PHOTO_URL";
 
     private static boolean isCurrentUserProfile = true;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private SharedPreferences sharedPreferences;
     private ProfileViewModel profileViewModel;
     private EditText aboutMeEditText, interestsEditText;
     private ImageView editAboutMeButton, editInterestsButton, finishInterestsButton, finishAboutMeButton, profilePhoto;
@@ -48,6 +54,12 @@ public class ProfileView extends Fragment {
     public static ProfileView newInstance(boolean bool) {
         isCurrentUserProfile = bool;
         return new ProfileView();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        sharedPreferences = context.getSharedPreferences(PROFILE_PREFS, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -67,7 +79,12 @@ public class ProfileView extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
         if (isCurrentUserProfile) {
-
+            if (sharedPreferences.contains(PROFILE_PHOTO)) {
+                Picasso.get()
+                  .load(sharedPreferences.getString(PROFILE_PHOTO, ""))
+                  .rotate(-90f)
+                  .into(profilePhoto);
+            }
             displayNameView.setText(profileViewModel.getUsername());
             locationView.setText(profileViewModel.getLocation(getContext()));
             compositeDisposable.add(RxView.clicks(editAboutMeButton)
@@ -105,10 +122,12 @@ public class ProfileView extends Fragment {
                 if (requestCode == REQUEST_GET_SINGLE_FILE) {
                     Uri selectedImageUri = data.getData();
                     final String path = getPathFromURI(selectedImageUri);
-                    profileViewModel.pushPhoto(new File(profileViewModel.getUriRealPath(getActivity(), selectedImageUri)));
                     if (path != null) {
                         File f = new File(path);
                         selectedImageUri = Uri.fromFile(f);
+                    }
+                    if (selectedImageUri != null) {
+                        profileViewModel.pushPhoto(selectedImageUri, sharedPreferences.edit());
                     }
                     profilePhoto.setImageURI(selectedImageUri);
                 }

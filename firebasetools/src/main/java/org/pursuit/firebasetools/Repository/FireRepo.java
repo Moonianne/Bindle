@@ -1,6 +1,7 @@
 package org.pursuit.firebasetools.Repository;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -241,9 +242,7 @@ public final class FireRepo {
         return groupChatDataBaseReference.child(chatName);
     }
 
-    public void uploadFile(@NonNull final File file) {
-        Log.d("jimenez", "uploadFile: method called!");
-        Uri uri = Uri.fromFile(file);
+    public void uploadFile(@NonNull final Uri uri, SharedPreferences.Editor editor) {
         StorageReference uploadRef = firebaseStorage.getReference()
           .child(FirebaseAuth.getInstance().getUid() + "/" + uri.getLastPathSegment());
         UploadTask uploadTask = uploadRef.putFile(uri);
@@ -252,17 +251,22 @@ public final class FireRepo {
             Log.d(TAG, "onFailure: " + exception.getMessage()))
           .addOnSuccessListener(taskSnapshot ->
             Log.d(TAG, "onSuccess: " + taskSnapshot.getBytesTransferred()));
-//        Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
-//            if (!task.isSuccessful()) {
-//                throw task.getException();
-//            }
-//            // Continue with the task to get the download URL
-//            return uploadRef.getDownloadUrl();
-//        }).addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                Uri downloadUri = task.getResult();
-//            }
-//        });
+        Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                throw task.getException();
+            }
+            // Continue with the task to get the download URL
+            return uploadRef.getDownloadUrl();
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Uri downloadUri = task.getResult();
+                if (downloadUri != null) {
+                    editor.putString("PROFILE_PHOTO_URL", downloadUri.toString());
+                    editor.apply();
+                }
+                Log.d(TAG, "uploadFile: " + downloadUri);
+            }
+        });
     }
 
     public void loginToFireBase(@NonNull final String email,
