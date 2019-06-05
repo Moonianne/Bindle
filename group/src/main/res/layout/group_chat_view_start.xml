@@ -67,20 +67,20 @@
         app:layout_constraintTop_toBottomOf="@id/groupChat_title"
         app:layout_constraintVertical_bias="0.0" />
 
-    <TextView
-        android:id="@+id/groupChat_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="4dp"
-        android:fontFamily="@font/maven_pro_medium"
-        android:text="description"
-        android:textColor="@color/cPrimaryDark"
-        app:layout_constraintBottom_toTopOf="@id/guideline2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/groupChat_title"
-        app:layout_constraintVertical_bias="0.203" />
+    <!--<TextView-->
+        <!--android:id="@+id/groupChat_description"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginTop="4dp"-->
+        <!--android:fontFamily="@font/maven_pro_medium"-->
+        <!--android:text="description"-->
+        <!--android:textColor="@color/cPrimaryDark"-->
+        <!--app:layout_constraintBottom_toTopOf="@id/guideline2"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/groupChat_title"-->
+        <!--app:layout_constraintVertical_bias="0.203" />-->
 
     <TextView
         android:id="@+id/groupChat_category"
@@ -131,6 +131,17 @@
             android:background="@drawable/rectangle_round_white"
             android:fontFamily="@font/maven_pro_bold"
             android:text="Bindlers"
+            android:textColor="@color/cPrimaryDark"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/group_chat_view_details_button"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:background="@drawable/rectangle_round_white"
+            android:fontFamily="@font/maven_pro_bold"
+            android:text="Details"
             android:textColor="@color/cPrimaryDark"
             android:textSize="12sp" />
     </LinearLayout>
