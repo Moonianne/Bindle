@@ -4,7 +4,7 @@
     android:id="@+id/motion_layout_start_zone"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
+    android:background="@color/cPrimaryDark"
     android:orientation="vertical"
     app:layoutDescription="@xml/motion_scene_zone">
 
@@ -13,7 +13,7 @@
         android:id="@+id/coverImage_zone"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/background_yellow_white_grad"
+        android:background="@drawable/gradient_warm"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@id/guideline2_zone"
         app:layout_constraintEnd_toEndOf="parent"
