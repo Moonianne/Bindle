@@ -48,6 +48,7 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.7'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.0-beta1'
     implementation project(path: ':group')
     implementation project(path: ':firebasetools')
     implementation project(path: ':interactionlistener')
