@@ -1,11 +1,13 @@
 package com.android.group.view.joingroup;
 
 
+import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.group.R;
@@ -28,11 +31,10 @@ import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.Query;
+import com.squareup.picasso.Picasso;
 
-import org.pursuit.firebasetools.Repository.FireRepo;
 import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Message;
-
 
 
 public class GroupChatView extends Fragment {
@@ -45,14 +47,15 @@ public class GroupChatView extends Fragment {
     private static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
 
     private GroupChatViewModel viewModel;
-    private TextView groupTitle, groupLocation, groupCategory, groupDescription;
+    private TextView groupTitle, groupLocation, groupCategory;
     private EditText groupMessageEditText;
-    private Button groupSendButton, groupLeaveButton, groupBindlersButton;
+    private Button groupSendButton, groupLeaveButton, groupBindlersButton, groupDetailsButton;
     private RecyclerView groupChatRecycler;
     private LinearLayoutManager layoutManager;
     private FirebaseRecyclerAdapter<Message, GroupMessageViewHolder> fireBaseAdapter;
     private SharedPreferences sharedPreferences;
     private OnFragmentInteractionCompleteListener listener;
+    private OnFragmentInteractionListener interactionListener;
 
     public GroupChatView() {
     }
@@ -65,15 +68,20 @@ public class GroupChatView extends Fragment {
         return fragment;
     }
 
-       @Override
-        public void onAttach(Context context) {
-            super.onAttach(context);
-            if (context instanceof OnFragmentInteractionListener) {
-                listener = (OnFragmentInteractionCompleteListener) context;
-            } else {
-                throw new RuntimeException();
-            }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionCompleteListener) {
+            listener = (OnFragmentInteractionCompleteListener) context;
+        } else {
+            throw new RuntimeException();
         }
+        if (context instanceof OnFragmentInteractionListener) {
+            interactionListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException("Does not implement OnFragmentInteractionListener");
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,14 +113,11 @@ public class GroupChatView extends Fragment {
         sendMessageOnClick();
         registerAdapter();
         groupChatRecycler.setAdapter(fireBaseAdapter);
-
-        groupLeaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sharedPreferences = getActivity().getSharedPreferences(GROUP_PREFS, Context.MODE_PRIVATE);
-                sharedPreferences.edit().clear().apply();
-                listener.closeFragment();
-            }
+        groupDetailsButton.setOnClickListener(v -> inflateDialogImageBox());
+        groupLeaveButton.setOnClickListener(v -> {
+            sharedPreferences = getActivity().getSharedPreferences(GROUP_PREFS, Context.MODE_PRIVATE);
+            sharedPreferences.edit().clear().apply();
+            listener.closeFragment();
         });
 
     }
@@ -121,7 +126,6 @@ public class GroupChatView extends Fragment {
         groupTitle.setText(group.getTitle());
         groupLocation.setText(group.getAddress());
         groupCategory.setText(group.getCategory());
-        groupDescription.setText(group.getDescription());
     }
 
     private void findViews(@NonNull View view) {
@@ -129,11 +133,11 @@ public class GroupChatView extends Fragment {
         groupTitle = view.findViewById(R.id.groupChat_title);
         groupLocation = view.findViewById(R.id.groupChat_location);
         groupCategory = view.findViewById(R.id.groupChat_category);
-        groupDescription = view.findViewById(R.id.groupChat_description);
         groupSendButton = view.findViewById(R.id.groupChat_sendButton);
         groupLeaveButton = view.findViewById(R.id.leave_group_button);
         groupBindlersButton = view.findViewById(R.id.groupChat_viewMembers_button);
         groupMessageEditText = view.findViewById(R.id.groupChat_messageEditText);
+        groupDetailsButton = view.findViewById(R.id.group_chat_view_details_button);
     }
 
 
@@ -151,8 +155,8 @@ public class GroupChatView extends Fragment {
 
     private void updateMessageList(Query query) {
         fireBaseAdapter = new GroupMessageAdapter(new FirebaseRecyclerOptions.Builder<Message>()
-          .setQuery(query, viewModel.getParser())
-          .build(), viewModel);
+                .setQuery(query, viewModel.getParser())
+                .build(), viewModel);
         fireBaseAdapter.notifyDataSetChanged();
     }
 
@@ -178,7 +182,7 @@ public class GroupChatView extends Fragment {
             }
         });
         groupMessageEditText
-          .setFilters(new InputFilter[]{new InputFilter.LengthFilter(DEFAULT_MSG_LENGTH_LIMIT)});
+                .setFilters(new InputFilter[]{new InputFilter.LengthFilter(DEFAULT_MSG_LENGTH_LIMIT)});
     }
 
     private void sendMessageOnClick() {
@@ -195,11 +199,39 @@ public class GroupChatView extends Fragment {
                 super.onItemRangeInserted(positionStart, itemCount);
                 int lastVisiblePosition = layoutManager.findLastCompletelyVisibleItemPosition();
                 if (lastVisiblePosition == -1 ||
-                  (positionStart >= (fireBaseAdapter.getItemCount() - 1) &&
-                    lastVisiblePosition == (positionStart - 1))) {
+                        (positionStart >= (fireBaseAdapter.getItemCount() - 1) &&
+                                lastVisiblePosition == (positionStart - 1))) {
                     groupChatRecycler.scrollToPosition(positionStart);
                 }
             }
         });
+    }
+
+    private void inflateDialogImageBox() {
+        View view = LayoutInflater.from(getContext())
+                .inflate(R.layout.group_details_dialog, null);
+        setViews(view);
+        setAlertDialog(view);
+    }
+
+    private void setAlertDialog(View view) {
+        Dialog venueDialog = new Dialog(view.getContext());
+        venueDialog.setContentView(R.layout.venue_info_dialog);
+        venueDialog.setContentView(view);
+        venueDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        venueDialog.show();
+    }
+
+    private void setViews(View view) {
+        Picasso.get().load(group.getImage_url())
+                .into(view.<ImageView>findViewById(R.id.group_details_business_image_view));
+        view.<TextView>findViewById(R.id.group_details_business_name_text_view)
+                .setText(group.getBuiness_name());
+        view.<TextView>findViewById(R.id.group_details_business_address_text_view)
+                .setText(group.getAddress());
+        view.<TextView>findViewById(R.id.group_details_description_text_view)
+                .setText(group.getDescription());
+        view.<Button>findViewById(R.id.group_details_button_directions)
+                .setOnClickListener(v -> interactionListener.openDirections(group.getAddress()));
     }
 }
