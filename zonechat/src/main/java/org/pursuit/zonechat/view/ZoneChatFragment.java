@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.motion.MotionLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.interactionlistener.OnBackPressedInteraction;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.Query;
@@ -32,7 +34,7 @@ import java.util.Objects;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
-public final class ZoneChatFragment extends Fragment {
+public final class ZoneChatFragment extends Fragment implements OnBackPressedInteraction {
     private static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
     private static final String ZONE_NAME_KEY = "ZONE_KEY";
     private static final String ZONE_CHAT_KEY = "ZONE_CHAT_KEY";
@@ -172,5 +174,16 @@ public final class ZoneChatFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        MotionLayout motionLayout = getView().findViewById(R.id.start_layout_zone);
+        if (motionLayout.getProgress() != 0){
+            motionLayout.setProgress(0);
+            return true;
+        }else {
+            return false;
+        }
     }
 }

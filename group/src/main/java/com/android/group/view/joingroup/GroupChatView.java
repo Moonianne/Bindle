@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.motion.MotionLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import com.android.group.R;
 import com.android.group.view.OnFragmentInteractionCompleteListener;
 import com.android.group.viewmodel.GroupChatViewModel;
+import com.android.interactionlistener.OnBackPressedInteraction;
 import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -37,7 +39,7 @@ import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Message;
 
 
-public class GroupChatView extends Fragment {
+public class GroupChatView extends Fragment implements OnBackPressedInteraction {
 
     private static final String GROUP_OBJECT = "group_chat";
     public static final String GROUP_PREFS = "GROUP";
@@ -233,5 +235,16 @@ public class GroupChatView extends Fragment {
                 .setText(group.getDescription());
         view.<Button>findViewById(R.id.group_details_button_directions)
                 .setOnClickListener(v -> interactionListener.openDirections(group.getAddress()));
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        MotionLayout motionLayout = getView().findViewById(R.id.start_layout);
+        if (motionLayout.getProgress() != 0){
+            motionLayout.setProgress(0);
+            return true;
+        }else {
+            return false;
+        }
     }
 }

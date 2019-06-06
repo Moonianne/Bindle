@@ -43,4 +43,5 @@ dependencies {
     implementation "android.arch.lifecycle:viewmodel:1.1.1"
     implementation project(path: ':firebasetools')
     implementation project(path: ':baseresources')
+    implementation project(path: ':interactionlistener')
 }
