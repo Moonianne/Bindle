@@ -20,5 +20,10 @@ final class MessageViewHolder extends RecyclerView.ViewHolder {
         itemView.<TextView>findViewById(R.id.nameTextView).setText(message.getUserName());
         itemView.<TextView>findViewById(R.id.messageTextView).setText(message.getMessageText());
         itemView.<TextView>findViewById(R.id.timeTV).setText(viewModel.convertToReadableTime(message));
+
+        Picasso.get()
+          .load(user.getUserProfilePhotoURL())
+          .rotate(-90f)
+          .into(profilePhoto);
     }
 }
