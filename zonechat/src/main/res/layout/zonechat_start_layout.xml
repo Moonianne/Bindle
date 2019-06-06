@@ -36,6 +36,13 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.60" />
 
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline3_zone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.7" />
+
     <TextView
         android:id="@+id/zone_title"
         android:layout_width="match_parent"
@@ -84,13 +91,16 @@
         android:id="@+id/chat_rv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="10dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="100dp"
         android:background="@android:color/transparent"
+        app:layout_constraintBottom_toTopOf="@id/guideline3_zone"
         app:layout_constraintEnd_toEndOf="@id/bgView"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/bgView"
-        app:layout_constraintTop_toBottomOf="@id/guideline1_zone" />
+        app:layout_constraintTop_toBottomOf="@id/guideline1_zone"
+        app:layout_constraintVertical_bias="0.052" />
 
 
 </android.support.constraint.motion.MotionLayout>

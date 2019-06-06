@@ -2,30 +2,54 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     android:background="@color/colorTrans"
     android:orientation="vertical">
 
-
-    <TextView
-        android:id="@+id/nameTextView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:fontFamily="@font/maven_pro_bold"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/cPrimary"
-        tools:text="Name" />
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/messageTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:fontFamily="@font/maven_pro_medium"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/cPrimary"
-        tools:text="Message" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/sightseeing_image"
+            app:civ_border_color="@color/cPrimary"
+            app:civ_border_width="2dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/nameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:fontFamily="@font/maven_pro_bold"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/cPrimary"
+                tools:text="Name" />
+
+            <TextView
+                android:id="@+id/messageTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:fontFamily="@font/maven_pro_medium"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/cPrimary"
+                tools:text="Message" />
+        </LinearLayout>
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/timeTV"

@@ -35,7 +35,7 @@ public class GroupChatViewModel extends ViewModel {
     }
 
     public void pushMessage(String message) {
-        fireRepo.pushGroupChatMessage(dBRef, new Message(System.currentTimeMillis(), username, message));
+        fireRepo.pushGroupChatMessage(dBRef,new Message(System.currentTimeMillis(), username, message, null));
     }
 
     public SnapshotParser<Message> getParser() {

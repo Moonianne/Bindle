@@ -10,6 +10,7 @@ import com.google.firebase.database.Query;
 
 import org.pursuit.firebasetools.Repository.FireRepo;
 import org.pursuit.firebasetools.model.Message;
+import org.pursuit.firebasetools.model.User;
 import org.pursuit.firebasetools.model.Zone;
 
 import java.text.DateFormat;
@@ -25,6 +26,7 @@ public final class ChatViewModel extends ViewModel {
     private String currentZoneChat;
     private Zone currentZone = null;
     private String username = "anonymous";
+    private User user;
 
     public boolean hasText(CharSequence charSequence) {
         return charSequence.toString().trim().length() > 0;
@@ -36,7 +38,7 @@ public final class ChatViewModel extends ViewModel {
     }
 
     public void pushMessage(String message) {
-        fireRepo.pushZoneChatMessage(currentZoneChat, new Message(System.currentTimeMillis(), username, message));
+        fireRepo.pushZoneChatMessage(currentZoneChat, new Message(System.currentTimeMillis(), username, message, ""));
     }
 
     public SnapshotParser<Message> getParser() {

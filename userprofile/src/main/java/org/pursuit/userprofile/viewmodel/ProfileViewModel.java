@@ -13,10 +13,12 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
 
 import org.pursuit.firebasetools.Repository.FireRepo;
+import org.pursuit.firebasetools.model.Message;
 import org.pursuit.firebasetools.model.User;
 
 import java.io.IOException;
@@ -100,6 +102,8 @@ public final class ProfileViewModel extends ViewModel {
     }
 
     private void setUserPhoto(@NonNull final String url) {
+        Log.d("numnmy - ProfileView: ", " " + url);
+
         user.setUserProfilePhotoURL(url);
         pushUser();
     }
