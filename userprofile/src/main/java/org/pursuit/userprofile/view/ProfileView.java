@@ -23,7 +23,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.jakewharton.rxbinding3.view.RxView;
 import com.squareup.picasso.Picasso;
 

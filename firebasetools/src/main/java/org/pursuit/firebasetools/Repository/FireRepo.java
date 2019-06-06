@@ -283,7 +283,7 @@ public final class FireRepo {
         });
     }
 
-    public Task<Void> updateDisplayName(String displayName){
+    public Task<Void> updateDisplayName(@NonNull final String displayName){
         return FirebaseAuth.getInstance().getCurrentUser()
                 .updateProfile(new UserProfileChangeRequest.Builder()
                         .setDisplayName(displayName)

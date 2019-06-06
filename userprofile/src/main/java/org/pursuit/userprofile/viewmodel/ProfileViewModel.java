@@ -13,8 +13,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
-
 
 import com.google.android.gms.tasks.Task;
 
@@ -118,7 +116,9 @@ public class ProfileViewModel extends ViewModel {
         this.user = user;
     }
 
-    public Task<Void> updateDisplayName(String displayName){
+    public Task<Void> updateDisplayName(@NonNull final String displayName) {
+        user.setDisplayName(displayName);
+        pushUser();
         return fireRepo.updateDisplayName(displayName);
     }
 }
