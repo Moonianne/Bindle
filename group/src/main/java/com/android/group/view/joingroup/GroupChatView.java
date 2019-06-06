@@ -119,6 +119,7 @@ public class GroupChatView extends Fragment implements OnBackPressedInteraction 
         groupLeaveButton.setOnClickListener(v -> {
             sharedPreferences = getActivity().getSharedPreferences(GROUP_PREFS, Context.MODE_PRIVATE);
             sharedPreferences.edit().clear().apply();
+            viewModel.removeUserFromGroup(group.getTitle());
             listener.closeFragment();
         });
 

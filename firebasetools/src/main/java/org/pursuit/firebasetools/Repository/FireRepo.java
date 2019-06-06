@@ -29,13 +29,14 @@ import org.pursuit.firebasetools.model.Zone;
 import org.pursuit.sqldelight.db.model.BindleDatabase;
 import org.pursuit.usolo.ZoneModelQueries;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import durdinapps.rxfirebase2.RxFirebaseChildEvent;
 import durdinapps.rxfirebase2.RxFirebaseDatabase;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
-import io.reactivex.functions.Predicate;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public final class FireRepo {
@@ -162,52 +163,69 @@ public final class FireRepo {
           .map(RxFirebaseChildEvent::getValue);
     }
 
-    public void addUserToGroup(@NonNull final String groupKey) {
-        zoneDataBaseReference.child(groupKey).runTransaction(new Transaction.Handler() {
-            @NonNull
-            @Override
-            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
-                Group group = mutableData.getValue(Group.class);
-                if (group == null) {
+    public Disposable addUserToGroup(@NonNull final String groupKey) {
+        Log.d(TAG, "addUserToGroup: " + groupKey);
+        return getUserInfo(getCurrentUser().getUid())
+          .subscribeOn(Schedulers.io())
+          .subscribe(user ->
+            groupDataBaseReference.child(groupKey).runTransaction(new Transaction.Handler() {
+                @NonNull
+                @Override
+                public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                    Group group = mutableData.getValue(Group.class);
+                    if (group == null) {
+                        return Transaction.success(mutableData);
+                    }
+                    Log.d(TAG, "doTransaction: this ran");
+                    group.setUserCount(group.getUserCount() + 1);
+                    List<User> users = group.getUserList();
+                    if (users == null) {
+                        users = new LinkedList<>();
+                    }
+                    users.add(user);
+                    group.setUserList(users);
+                    mutableData.setValue(group);
                     return Transaction.success(mutableData);
                 }
-                group.setUserCount(group.getUserCount() + 1);
-                List<User> users = group.getUserList();
-                users.add(new User()); //TODO: Add logic for adding self to a group.
-                group.setUserList(users);
-                mutableData.setValue(group);
-                return Transaction.success(mutableData);
-            }
 
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onComplete: " + databaseError);
-            }
-        });
+                @Override
+                public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+                    Log.d(TAG, "onComplete: " + databaseError);
+                }
+            }));
+
     }
 
-    public void removeUserFromGroup(@NonNull final String groupKey) {
-        zoneDataBaseReference.child(groupKey).runTransaction(new Transaction.Handler() {
-            @NonNull
-            @Override
-            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
-                Group group = mutableData.getValue(Group.class);
-                if (group == null) {
-                    return Transaction.success(mutableData);
-                }
-                group.setUserCount(group.getUserCount() + 1);
-                List<User> users = group.getUserList();
-                users.remove(new User()); //TODO: Add logic for removing oneself from a group.
-                group.setUserList(users);
-                mutableData.setValue(group);
-                return Transaction.success(mutableData);
-            }
+    public Disposable removeUserFromGroup(@NonNull final String groupKey) {
+        return getUserInfo(getCurrentUser().getUid())
+          .subscribe(user -> groupDataBaseReference.child(groupKey).runTransaction(new Transaction.Handler() {
+              @NonNull
+              @Override
+              public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                  Group group = mutableData.getValue(Group.class);
+                  if (group == null) {
+                      return Transaction.success(mutableData);
+                  }
+                  group.setUserCount(group.getUserCount() - 1);
+                  List<User> currentUsers = group.getUserList();
+                  List<User> newList = new LinkedList<>();
+                  for (User u : currentUsers) {
+                      if (u.getUserId() == null || !u.getUserId().equals(getCurrentUser().getUid())) {
+                          newList.add(u);
+                      }
+                  }
+                  group.setUserList(newList);
+                  mutableData.setValue(group);
+                  return Transaction.success(mutableData);
+              }
 
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
-                Log.d(TAG, "onComplete: " + databaseError);
-            }
-        });
+              @Override
+              public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+                  Log.d(TAG, "onComplete: " + databaseError);
+              }
+          }));
+
+
     }
 
     public String pushGroupChatMessage(@NonNull final String chatName,
@@ -283,11 +301,11 @@ public final class FireRepo {
         });
     }
 
-    public Task<Void> updateDisplayName(@NonNull final String displayName){
+    public Task<Void> updateDisplayName(@NonNull final String displayName) {
         return FirebaseAuth.getInstance().getCurrentUser()
-                .updateProfile(new UserProfileChangeRequest.Builder()
-                        .setDisplayName(displayName)
-                        .build());
+          .updateProfile(new UserProfileChangeRequest.Builder()
+            .setDisplayName(displayName)
+            .build());
     }
 
     public void loginToFireBase(@NonNull final String email,

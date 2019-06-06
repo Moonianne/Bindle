@@ -5,7 +5,7 @@
     <Transition
         motion:constraintSetEnd="@+id/end_layout_container"
         motion:constraintSetStart="@+id/start_layout_container"
-        motion:duration="1000">
+        motion:duration="500">
 
         <OnSwipe
             motion:dragDirection="dragUp"
