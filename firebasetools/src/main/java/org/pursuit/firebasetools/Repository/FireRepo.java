@@ -50,12 +50,14 @@ public final class FireRepo {
     private final DatabaseReference groupDataBaseReference;
     private final DatabaseReference groupChatDataBaseReference;
     private final FirebaseStorage firebaseStorage;
+    private DatabaseReference userDatabaseReference;
 
     private FireRepo() {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         zoneDataBaseReference = FirebaseDatabase.getInstance().getReference(ZONES_PATH);
         zoneChatDataBaseReference = FirebaseDatabase.getInstance().getReference(ZONECHATS_PATH);
         groupDataBaseReference = FirebaseDatabase.getInstance().getReference(GROUPS_PATH);
+        userDatabaseReference = FirebaseDatabase.getInstance().getReference("users");
         groupDataBaseReference.keepSynced(true);
         groupChatDataBaseReference = FirebaseDatabase.getInstance().getReference(GROUPCHATS_PATH);
         firebaseStorage = FirebaseStorage.getInstance();
@@ -227,8 +229,22 @@ public final class FireRepo {
         ));
     }
 
-    public final FirebaseUser getUser() {
+    public final FirebaseUser getCurrentUser() {
         return FirebaseAuth.getInstance().getCurrentUser();
+    }
+
+    public Maybe<User> getUserInfo(@NonNull final String key) {
+        Log.d(TAG, "getUserInfo: " + key);
+        return RxFirebaseDatabase
+          .observeSingleValueEvent(
+            userDatabaseReference.child(key), User.class)
+          .subscribeOn(Schedulers.io());
+    }
+
+    public void pushUser(@NonNull final User user) {
+        userDatabaseReference
+          .child(getCurrentUser().getUid())
+          .setValue(user);
     }
 
     public final Query getZoneMessageDatabaseReference(@NonNull final String chatName) {
@@ -239,7 +255,9 @@ public final class FireRepo {
         return groupChatDataBaseReference.child(chatName);
     }
 
-    public void uploadFile(@NonNull final Uri uri, SharedPreferences.Editor editor) {
+    public void uploadFile(@NonNull final Uri uri,
+                           @NonNull final SharedPreferences.Editor editor,
+                           @NonNull final OnUriReturnListener listener) {
         StorageReference uploadRef = firebaseStorage.getReference()
           .child(FirebaseAuth.getInstance().getUid() + "/" + uri.getLastPathSegment());
         UploadTask uploadTask = uploadRef.putFile(uri);
@@ -248,11 +266,10 @@ public final class FireRepo {
             Log.d(TAG, "onFailure: " + exception.getMessage()))
           .addOnSuccessListener(taskSnapshot ->
             Log.d(TAG, "onSuccess: " + taskSnapshot.getBytesTransferred()));
-        Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
+        uploadTask.continueWithTask(task -> {
             if (!task.isSuccessful()) {
                 throw task.getException();
             }
-            // Continue with the task to get the download URL
             return uploadRef.getDownloadUrl();
         }).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -260,13 +277,13 @@ public final class FireRepo {
                 if (downloadUri != null) {
                     editor.putString("PROFILE_PHOTO_URL", downloadUri.toString());
                     editor.apply();
+                    listener.onUriReturn(downloadUri);
                 }
-                Log.d(TAG, "uploadFile: " + downloadUri);
             }
         });
     }
 
-    public Task<Void> updateDisplayName(String displayName){
+    public Task<Void> updateDisplayName(@NonNull final String displayName){
         return FirebaseAuth.getInstance().getCurrentUser()
                 .updateProfile(new UserProfileChangeRequest.Builder()
                         .setDisplayName(displayName)
@@ -292,6 +309,10 @@ public final class FireRepo {
             instance = new FireRepo();
         }
         return instance;
+    }
+
+    public interface OnUriReturnListener {
+        void onUriReturn(@NonNull final Uri uri);
     }
 
 }
