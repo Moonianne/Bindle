@@ -6,6 +6,9 @@ import com.android.group.model.yelp.Business;
 import io.reactivex.annotations.NonNull;
 
 public final class BindleBusiness {
+    public static final String NIGHTLIFE = "Nightlife";
+    public static final String EAT_AND_DRINK = "Eat & Drink";
+    public static final String SIGHTSEEING = "Sight-Seeing";
 
     private final Venue venue;
     private final Business business;

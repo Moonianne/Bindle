@@ -10,7 +10,7 @@
     <string name="start_group">Start Group</string>
     <string name="form_your_group">Form Your Group</string>
 
-    <string-array name="category_array">
+    <string-array name="foursquare_category_array">
         <item>Arts and Entertainment</item>
         <item>Arcade</item>
         <item>Comedy Club</item>

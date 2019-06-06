@@ -10,14 +10,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.group.R;
 import com.android.group.model.bindle.BindleBusiness;
-import com.android.group.model.foursquare.Venue;
 import com.android.group.viewmodel.GroupViewModel;
 import com.android.group.viewmodel.NetworkViewModel;
 
@@ -30,6 +32,7 @@ public final class StartGroupFragment extends Fragment
     private OnFragmentInteractionCompleteListener interactionCompleteListener;
     private TextView locationTextView;
     private BindleBusiness userSelectedBindleBusiness;
+    private String currentCategory;
 
     public static StartGroupFragment newInstance() {
         return new StartGroupFragment();
@@ -72,6 +75,31 @@ public final class StartGroupFragment extends Fragment
           .setOnClickListener(v -> interactionListener.inflateAddLocationFragment());
         locationTextView = view.findViewById(R.id.add_location_text_view);
         setStartButtonOnClickListener(view);
+
+        Spinner categorySpinner = view.findViewById(R.id.category_spinner);
+        categorySpinner.setAdapter(ArrayAdapter.createFromResource(
+          getContext(), R.array.category_array, android.R.layout.simple_dropdown_item_1line));
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 1:
+                        currentCategory = BindleBusiness.NIGHTLIFE;
+                        break;
+                    case 2:
+                        currentCategory = BindleBusiness.EAT_AND_DRINK;
+                        break;
+                    case 3:
+                        currentCategory = BindleBusiness.SIGHTSEEING;
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //No-op
+            }
+        });
     }
 
     @Override
@@ -90,12 +118,19 @@ public final class StartGroupFragment extends Fragment
                 .getText().toString();
             if (!groupName.equals("")) {
                 if (!groupDescription.equals("")) {
-                    if (userSelectedBindleBusiness != null) {
-                        groupViewModel.createGroup(groupName, userSelectedBindleBusiness, groupDescription);
-                        groupViewModel.pushGroup();
-                        interactionCompleteListener.closeFragment();
+                    if (currentCategory != null) {
+                        if (userSelectedBindleBusiness != null) {
+                            groupViewModel.createGroup(groupName,
+                              userSelectedBindleBusiness,
+                              groupDescription,
+                              currentCategory);
+                            groupViewModel.pushGroup();
+                            interactionCompleteListener.closeFragment();
+                        } else {
+                            makeToast("Select a Location");
+                        }
                     } else {
-                        makeToast("Select a Location");
+                        makeToast("Please select a category.");
                     }
                 } else {
                     makeToast("Provide a Group Description");
