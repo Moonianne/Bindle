@@ -7,10 +7,13 @@ import com.firebase.ui.database.SnapshotParser;
 import com.google.firebase.database.Query;
 
 import org.pursuit.firebasetools.Repository.FireRepo;
+import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Message;
 
 import java.text.DateFormat;
 import java.util.Date;
+
+import io.reactivex.disposables.Disposable;
 
 public class GroupChatViewModel extends ViewModel {
 
@@ -32,7 +35,7 @@ public class GroupChatViewModel extends ViewModel {
     }
 
     public void pushMessage(String message) {
-        fireRepo.pushGroupChatMessage(dBRef,new Message(System.currentTimeMillis(), username, message));
+        fireRepo.pushGroupChatMessage(dBRef, new Message(System.currentTimeMillis(), username, message));
     }
 
     public SnapshotParser<Message> getParser() {
@@ -53,6 +56,10 @@ public class GroupChatViewModel extends ViewModel {
     public String convertToReadableTime(@NonNull final Message message) {
         DateFormat formatter = DateFormat.getDateTimeInstance();
         return formatter.format(new Date(message.getTimeStamp()));
+    }
+
+    public Disposable removeUserFromGroup(String groupKey) {
+        return fireRepo.removeUserFromGroup(groupKey);
     }
 
 }

@@ -28,14 +28,21 @@ import io.reactivex.Maybe;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class ProfileViewModel extends ViewModel {
+public final class ProfileViewModel extends ViewModel {
 
     private final FireRepo fireRepo = FireRepo.getInstance();
     private User user;
 
     public ProfileViewModel() {
         user = new User();
+        setUserId(false);
+    }
+
+    public void setUserId(boolean pushable) {
         user.setUserId(fireRepo.getCurrentUser().getUid());
+        if (pushable) {
+            pushUser();
+        }
     }
 
     public String getUsername() {

@@ -4,8 +4,8 @@ package com.example.exploregroup.view;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.constraint.motion.MotionLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.interactionlistener.OnBackPressedInteraction;
 import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.example.exploregroup.R;
 import com.squareup.picasso.Picasso;
@@ -21,8 +22,10 @@ import com.squareup.picasso.Picasso;
 import org.pursuit.firebasetools.Repository.FireRepo;
 import org.pursuit.firebasetools.model.Group;
 
+import io.reactivex.disposables.Disposable;
 
-public class ViewGroupFragment extends Fragment {
+
+public class ViewGroupFragment extends Fragment implements OnBackPressedInteraction {
 
     public static final String GROUP_KEY = "VIEW_GROUP_KEY";
     public static final String GROUP_PREFS = "GROUP";
@@ -30,6 +33,7 @@ public class ViewGroupFragment extends Fragment {
     private OnFragmentInteractionListener listener;
     private Group group;
     private SharedPreferences sharedPrefs;
+    private Disposable disposable;
 
     public static ViewGroupFragment newInstance(Group group) {
         Bundle bundle = new Bundle();
@@ -76,6 +80,7 @@ public class ViewGroupFragment extends Fragment {
         rootView.findViewById(R.id.join_group_button).setOnClickListener(v -> {
             if (!sharedPrefs.contains(CURRENT_GROUP_KEY)) {
                 sharedPrefs.edit().putString(CURRENT_GROUP_KEY, group.getTitle()).apply();
+                disposable = FireRepo.getInstance().addUserToGroup(group.getTitle());
                 listener.inflateGroupChatFragment(group);
             } else {
                 Toast.makeText(getContext(), "Already in Group", Toast.LENGTH_SHORT).show();
@@ -83,4 +88,18 @@ public class ViewGroupFragment extends Fragment {
         });
     }
 
+    @Override
+    public boolean onBackPressed() {
+        MotionLayout motionLayout = getView().findViewById(R.id.view_group_motion_layout);
+        if (motionLayout.getProgress() != 0) {
+            motionLayout.transitionToStart();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }

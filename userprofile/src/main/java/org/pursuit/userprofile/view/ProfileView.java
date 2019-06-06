@@ -85,6 +85,7 @@ public final class ProfileView extends Fragment {
               .observeOn(AndroidSchedulers.mainThread())
               .subscribe(user -> {
                   if (user != null) {
+                      profileViewModel.setUserId(true);
                       profileViewModel.setCurrentUser(user);
                       if (user.getInterests() != null) {
                           interestsView.setText(user.getInterests());
@@ -139,23 +140,23 @@ public final class ProfileView extends Fragment {
                 .createChooser(profileViewModel.getPhotoIntent(),
                   "Select Picture"), REQUEST_GET_SINGLE_FILE)));
             compositeDisposable.add(RxView.clicks(editDisplayName).
-                    subscribe(unit -> {
-                                View dialogView = LayoutInflater.from(getContext())
-                                        .inflate(R.layout.edit_display_name_layout, null);
-                                EditText editDisplayNameEditText = dialogView.findViewById(R.id.edit_display_name_edit_text);
-                                new AlertDialog.Builder(getContext())
-                                        .setView(dialogView)
-                                        .setTitle("Enter Display Name")
-                                        .setPositiveButton("Submit", (dialog, which) -> {
-                                            if (editDisplayNameEditText.getText() != null &&
-                                                    !editDisplayNameEditText.getText().equals("")) {
-                                                profileViewModel.updateDisplayName(editDisplayNameEditText.getText().toString())
-                                                .addOnSuccessListener(aVoid -> displayNameView.setText(profileViewModel.getUsername()));
-                                                dialog.dismiss();
-                                            }
-                                        }).show();
-                            }
-                    ));
+              subscribe(unit -> {
+                    View dialogView = LayoutInflater.from(getContext())
+                      .inflate(R.layout.edit_display_name_layout, null);
+                    EditText editDisplayNameEditText = dialogView.findViewById(R.id.edit_display_name_edit_text);
+                    new AlertDialog.Builder(getContext())
+                      .setView(dialogView)
+                      .setTitle("Enter Display Name")
+                      .setPositiveButton("Submit", (dialog, which) -> {
+                          if (editDisplayNameEditText.getText() != null &&
+                            !editDisplayNameEditText.getText().equals("")) {
+                              profileViewModel.updateDisplayName(editDisplayNameEditText.getText().toString())
+                                .addOnSuccessListener(aVoid -> displayNameView.setText(profileViewModel.getUsername()));
+                              dialog.dismiss();
+                          }
+                      }).show();
+                }
+              ));
 
             logOutButton.setOnClickListener(v -> {
                 //TODO firebase needed for the user log out
