@@ -1,6 +1,7 @@
 package org.pursuit.zonechat.view;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -42,6 +43,7 @@ public final class ZoneChatFragment extends Fragment implements OnBackPressedInt
     private ChatViewModel viewModel;
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> fireBaseAdapter;
     private Disposable disposable;
+    RecyclerView chatRecycler;
 
     public static ZoneChatFragment newInstance(@NonNull final Zone zone) {
         ZoneChatFragment fragment = new ZoneChatFragment();
@@ -81,7 +83,7 @@ public final class ZoneChatFragment extends Fragment implements OnBackPressedInt
                   "Connection Failed, please try again later.", Toast.LENGTH_SHORT).show());
         }
 
-        RecyclerView chatRecycler = view.findViewById(R.id.chat_rv);
+        chatRecycler = view.findViewById(R.id.chat_rv);
         chatRecycler.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         chatRecycler.setLayoutManager(layoutManager);
@@ -95,6 +97,8 @@ public final class ZoneChatFragment extends Fragment implements OnBackPressedInt
         sendMessageOnClick(messageEditText, sendButton);
         registerAdapter(chatRecycler, layoutManager);
         chatRecycler.setAdapter(fireBaseAdapter);
+        //chatRecycler.smoothScrollToPosition(chatRecycler.getAdapter().getItemCount());
+        setScroll();
     }
 
     public void setZoneTitle(@NonNull View view, Zone zone) {
@@ -156,7 +160,8 @@ public final class ZoneChatFragment extends Fragment implements OnBackPressedInt
 
     private void sendMessageOnClick(EditText messageEditText, Button sendButton) {
         sendButton.setOnClickListener(view -> {
-            viewModel.pushMessage(messageEditText.getText().toString());
+            viewModel.pushMessage(messageEditText.getText().toString(), getContext());
+            chatRecycler.smoothScrollToPosition(chatRecycler.getAdapter().getItemCount());
             messageEditText.setText("");
         });
     }
@@ -166,6 +171,7 @@ public final class ZoneChatFragment extends Fragment implements OnBackPressedInt
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
+
                 int lastVisiblePosition = layoutManager.findLastCompletelyVisibleItemPosition();
                 if (lastVisiblePosition == -1 ||
                   (positionStart >= (fireBaseAdapter.getItemCount() - 1) &&
@@ -176,13 +182,21 @@ public final class ZoneChatFragment extends Fragment implements OnBackPressedInt
         });
     }
 
+    private void setScroll(){
+        MotionLayout motionLayout = getView().findViewById(R.id.start_layout_zone);
+        if (motionLayout.getProgress() == 0) {
+            chatRecycler.smoothScrollToPosition(chatRecycler.getAdapter().getItemCount());
+        }
+    }
+
     @Override
     public boolean onBackPressed() {
         MotionLayout motionLayout = getView().findViewById(R.id.start_layout_zone);
-        if (motionLayout.getProgress() != 0){
+        if (motionLayout.getProgress() != 0) {
             motionLayout.transitionToStart();
+            chatRecycler.smoothScrollToPosition(chatRecycler.getAdapter().getItemCount());
             return true;
-        }else {
+        } else {
             return false;
         }
     }

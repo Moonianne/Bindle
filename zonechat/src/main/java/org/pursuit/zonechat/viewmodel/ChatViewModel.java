@@ -1,6 +1,8 @@
 package org.pursuit.zonechat.viewmodel;
 
 import android.arch.lifecycle.ViewModel;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -10,6 +12,7 @@ import com.google.firebase.database.Query;
 
 import org.pursuit.firebasetools.Repository.FireRepo;
 import org.pursuit.firebasetools.model.Message;
+import org.pursuit.firebasetools.model.User;
 import org.pursuit.firebasetools.model.Zone;
 
 import java.text.DateFormat;
@@ -25,6 +28,8 @@ public final class ChatViewModel extends ViewModel {
     private String currentZoneChat;
     private Zone currentZone = null;
     private String username = "anonymous";
+    private User user;
+    private static final String PROFILE_PREFS = "PROFILE";
 
     public boolean hasText(CharSequence charSequence) {
         return charSequence.toString().trim().length() > 0;
@@ -35,8 +40,14 @@ public final class ChatViewModel extends ViewModel {
         return fireRepo.getZoneMessageDatabaseReference(currentZoneChat);
     }
 
-    public void pushMessage(String message) {
-        fireRepo.pushZoneChatMessage(currentZoneChat, new Message(System.currentTimeMillis(), username, message));
+    private String getPhotoUrl(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PROFILE_PREFS, Context.MODE_PRIVATE);
+        Log.d("sharedPrefs: ", sharedPreferences.getString("PROFILE_PHOTO_URL", ""));
+        return sharedPreferences.getString("PROFILE_PHOTO_URL", "");
+    }
+
+    public void pushMessage(String message, Context context) {
+        fireRepo.pushZoneChatMessage(currentZoneChat, new Message(System.currentTimeMillis(), username, message, getPhotoUrl(context)));
     }
 
     public SnapshotParser<Message> getParser() {

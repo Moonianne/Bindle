@@ -17,6 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -142,7 +143,7 @@ public final class FireRepo {
         zoneChatDataBaseReference.child(chatName).push().setValue(new Message(
           System.currentTimeMillis(),
           "Bindle",
-          "This is the start of your chat room."
+          "This is the start of your chat room.", null
         ));
     }
 
@@ -243,7 +244,7 @@ public final class FireRepo {
         groupChatDataBaseReference.child(chatName).push().setValue(new Message(
           System.currentTimeMillis(),
           "Bindle",
-          "This is the start of your chat room."
+          "This is the start of your chat room.", null
         ));
     }
 
