@@ -52,10 +52,14 @@ import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Zone;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
+import org.pursuit.usolo.map.categories.CategoryAdapter;
 import org.pursuit.usolo.map.nearbygroups.NearbyGroupAdapter;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
+import org.pursuit.usolo.model.Category;
 import org.pursuit.usolo.model.MapFeature;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -96,7 +100,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     private String currentGroupSharedPref;
     private LocationComponent locationComponent;
 
-    RecyclerView recyclerView;
+    RecyclerView recyclerViewNearby, recyclerViewCategories;
     NearbyGroupAdapter nearbyGroupAdapter;
 
 
@@ -140,6 +144,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
+        setUpCatogoryRV();
         setCurrentActivityView();
         nearbyGroupAdapter = new NearbyGroupAdapter(listener, Collections.emptyList());
         setGroups();
@@ -197,6 +202,23 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
           this.mapboxMap = mapboxMap);
     }
 
+    private void setUpCatogoryRV() {
+        List<Category> categories = new ArrayList<>();
+        List<String> categoryNames = Arrays.asList(getResources().getStringArray(R.array.categoryNames));
+        int[] iconId = {R.drawable.icon_nighltlife_purple_grad, R.drawable.icon_sightseeing_purple_grad, R.drawable.icon_eatdrink_purple_grad};
+
+        int count = 0;
+        for(String title : categoryNames){
+            categories.add(new Category(title, iconId[count]));
+            count++;
+        }
+
+        CategoryAdapter categoryAdapter = new CategoryAdapter(categories);
+        recyclerViewCategories.setAdapter(categoryAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewCategories.setLayoutManager(layoutManager);
+    }
+
     private void onFabClick(View v) {
         animateFAB();
         Log.d(TAG, "setOnClick: " + v.getId() + " " + R.id.fabStartGroup);
@@ -247,9 +269,9 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
 
     private void setUpRV(List<Group> groupList) {
         nearbyGroupAdapter.updateList(groupList);
-        recyclerView.setAdapter(nearbyGroupAdapter);
+        recyclerViewNearby.setAdapter(nearbyGroupAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerViewNearby.setLayoutManager(layoutManager);
     }
 
     private void setCurrentActivityView(Group group) {
@@ -274,7 +296,8 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     }
 
     private void findViews(@NonNull View view) {
-        recyclerView = view.findViewById(R.id.nearby_recycler);
+        recyclerViewCategories = view.findViewById(R.id.category_recycler);
+        recyclerViewNearby = view.findViewById(R.id.nearby_recycler);
         nearbyActivityHeader = view.findViewById(R.id.happening_header);
         nearbyActivityHeader.setVisibility(View.INVISIBLE);
         currentActivityCard = view.findViewById(R.id.current_activity_card);

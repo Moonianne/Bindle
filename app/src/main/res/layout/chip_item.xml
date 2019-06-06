@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="180dp"
+    android:layout_height="100dp"
+    android:layout_marginStart="40dp"
+    android:layout_gravity="center_horizontal"
+    android:background="@color/colorTrans"
+    android:padding="10dp"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/chip_cardview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:padding="10dp"
+        app:cardBackgroundColor="@color/colorWhite"
+        app:cardCornerRadius="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:background="@color/colorTrans">
+            <TextView
+                android:id="@+id/chip_category_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorTrans"
+                android:fontFamily="@font/maven_pro_bold"
+                android:gravity="center"
+                android:text="category"
+                android:textColor="@color/cPrimaryDark"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/chip_icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorTrans"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:src="@drawable/icon_nighltlife_purple_grad" />
+
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>
