@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -27,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 
 public final class AddLocationFragment extends Fragment {
 
@@ -85,7 +83,7 @@ public final class AddLocationFragment extends Fragment {
     private void initCategorySpinner() {
         Spinner categorySpinner = rootView.findViewById(R.id.category_spinner);
         categorySpinner.setAdapter(ArrayAdapter.createFromResource(
-                getContext(), R.array.category_array, android.R.layout.simple_dropdown_item_1line));
+                getContext(), R.array.foursquare_category_array, android.R.layout.simple_dropdown_item_1line));
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

@@ -26,7 +26,8 @@ public final class GroupViewModel extends ViewModel {
 
     public void createGroup(String groupName,
                             BindleBusiness bindleBusiness,
-                            String groupDescription) {
+                            String groupDescription,
+                            String category) {
         List<User> userList = new LinkedList<>();
         User user =
           new User("Eric",
@@ -40,8 +41,7 @@ public final class GroupViewModel extends ViewModel {
             fireRepo.getCurrentUser().getUid());
         userList.add(user);
         String[] formattedAddress = bindleBusiness.getVenue().getLocation().getFormattedAddress();
-        currentGroup = new Group(userList, groupDescription,
-          bindleBusiness.getVenue().getCategories()[0].getPluralName(),
+        currentGroup = new Group(userList, groupDescription, category,
           new LatLng(bindleBusiness.getVenue().getLocation().getLat(),
             bindleBusiness.getVenue().getLocation().getLng()), groupName.toLowerCase() + "Chat",
           groupName.toLowerCase(), 1, formattedAddress[0] + "\n" + formattedAddress[1],

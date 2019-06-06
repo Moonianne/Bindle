@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="category_array" >
+        <item>Nightlife</item>
+        <item>Eat &amp; Drink</item>
+        <item>Sight-Seeing</item>
+    </string-array>
+</resources>
