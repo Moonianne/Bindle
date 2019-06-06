@@ -132,19 +132,6 @@ public final class FireRepo {
                                       @NonNull final Message message) {
         //TODO: During authentication user should set a display name so we can pass that for usename.
         message.setUserName(FirebaseAuth.getInstance().getCurrentUser().getEmail());
-//        userDatabaseReference.child(getCurrentUser().getUid()).child("userProfilePhotoURL").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                Log.d("numnmy - repophoto: ", " " + dataSnapshot.getValue().toString());
-//
-//                message.setPhotoUrl(dataSnapshot.getValue().toString());
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
         DatabaseReference reference = zoneChatDataBaseReference.child(chatName).push();
         String key = reference.getKey();
         message.setiD(key);
