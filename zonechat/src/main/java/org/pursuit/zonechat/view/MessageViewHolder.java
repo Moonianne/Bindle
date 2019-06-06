@@ -27,13 +27,16 @@ final class MessageViewHolder extends RecyclerView.ViewHolder {
         itemView.<TextView>findViewById(R.id.nameTextView).setText(message.getUserName());
         itemView.<TextView>findViewById(R.id.messageTextView).setText(message.getMessageText());
         itemView.<TextView>findViewById(R.id.timeTV).setText(viewModel.convertToReadableTime(message));
-        if (message.getPhotoUrl() == null) {
+
+        Log.d("numnmy - viewholder: ", " " + message.getPhotoUrl());
+
+        if ( message.getPhotoUrl() == null || message.getPhotoUrl().equals("")) {
             profilePhoto.setImageResource(R.drawable.ic_account_circle_blue_24dp);
             Log.d("numnmy - MessageView: ", " " + message.getPhotoUrl());
         } else {
-//            Picasso.get()
-//              .load(message.getPhotoUrl())
-//              .into(profilePhoto);
+            Picasso.get()
+              .load(message.getPhotoUrl())
+              .into(profilePhoto);
             Log.d("numnmy - Picasso: ", message.getUserName() + " " + message.getPhotoUrl());
 
         }

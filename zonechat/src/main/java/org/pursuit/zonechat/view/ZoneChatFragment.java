@@ -1,6 +1,7 @@
 package org.pursuit.zonechat.view;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -159,7 +160,7 @@ public final class ZoneChatFragment extends Fragment implements OnBackPressedInt
 
     private void sendMessageOnClick(EditText messageEditText, Button sendButton) {
         sendButton.setOnClickListener(view -> {
-            viewModel.pushMessage(messageEditText.getText().toString());
+            viewModel.pushMessage(messageEditText.getText().toString(), getContext());
             chatRecycler.smoothScrollToPosition(chatRecycler.getAdapter().getItemCount());
             messageEditText.setText("");
         });
