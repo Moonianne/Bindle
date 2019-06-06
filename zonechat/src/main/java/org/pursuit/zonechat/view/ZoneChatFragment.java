@@ -180,7 +180,7 @@ public final class ZoneChatFragment extends Fragment implements OnBackPressedInt
     public boolean onBackPressed() {
         MotionLayout motionLayout = getView().findViewById(R.id.start_layout_zone);
         if (motionLayout.getProgress() != 0){
-            motionLayout.setProgress(0);
+            motionLayout.transitionToStart();
             return true;
         }else {
             return false;
