@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:gravity="center">
@@ -10,59 +10,50 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="15dp"
-        app:cardBackgroundColor="@color/colorWhite"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentTop="true"
+        app:cardBackgroundColor="@color/colorWhite"
+        app:cardCornerRadius="15dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
             android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/zone_dialog_name"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="25dp"
-                android:layout_marginBottom="25dp"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:fontFamily="@font/maven_pro_medium"
+                android:textAlignment="center"
+                android:textColor="@color/cPrimaryDark"
+                android:textSize="25sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/zone_dialog_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:fontFamily="@font/maven_pro_medium"
-                    android:textAlignment="center"
-                    android:textColor="@color/cPrimaryDark"
-                    android:textSize="25sp"
-                    android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/imageView_zone_group"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/bindle_logo" />
 
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:src="@drawable/bindle_logo" />
-
-                <Button
-                    android:id="@+id/view_zone_button"
-                    android:layout_width="200dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="40dp"
-                    android:background="@drawable/yellow_outline_round"
-                    android:fontFamily="@font/maven_pro_bold"
-                    android:text="View forum"
-                    android:textAlignment="center"
-                    android:textColor="@color/cPrimaryDark" />
-            </LinearLayout>
-
+            <Button
+                android:id="@+id/view_zone_button"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/yellow_outline_round"
+                android:fontFamily="@font/maven_pro_bold"
+                android:text="View forum"
+                android:textAlignment="center"
+                android:textColor="@color/cPrimaryDark" />
         </LinearLayout>
-
     </android.support.v7.widget.CardView>
-
-
 </RelativeLayout>

@@ -327,26 +327,19 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
                 });
                 setZoneStyle(style);
                 disposables.add(zoneViewModel.getAllGroups()
-                  .subscribe(new Consumer<Group>() {
-                      @Override
-                      public void accept(Group group) throws Exception {
-                          MapFragment.this.showZone(group.getLocation());
-                          setSightSeeingStyle(group.getLocation());
+                  .subscribe(group -> {
+                      seGroupStyle(group);
 
-                          Log.d(TAG, "accept: " + group.getCategory());
-                      }
+                      Log.d(TAG, "accept: " + group.getCategory());
                   }));
                 disposables.add(zoneViewModel.getAllZones(Objects.requireNonNull(getContext()))
                   .map(zone -> zoneViewModel.getMapFeature(zone))
-                  .subscribe(new Consumer<MapFeature>() {
-                      @Override
-                      public void accept(MapFeature mapFeature) throws Exception {
-                          MapFragment.this.showZone(mapFeature.location);
-                          String sourceId = mapFeature.name + "_source";
-                          style.addSource(new GeoJsonSource(sourceId, zoneViewModel.getGeometry(mapFeature)));
-                          style.addLayer(new FillLayer(mapFeature.name, sourceId).withProperties(
-                            fillColor(Color.parseColor(MapFragment.this.getString(R.string.zone_colour)))));
-                      }
+                  .subscribe(mapFeature -> {
+                      showZone(mapFeature.location);
+                      String sourceId = mapFeature.name + "_source";
+                      style.addSource(new GeoJsonSource(sourceId, zoneViewModel.getGeometry(mapFeature)));
+                      style.addLayer(new FillLayer(mapFeature.name, sourceId).withProperties(
+                        fillColor(Color.parseColor(MapFragment.this.getString(R.string.zone_colour)))));
                   }, throwable -> Log.d(TAG, "findViews: " + throwable.getMessage())));
                 mapboxMap.addOnMapClickListener(point -> {
                     PointF pointf = mapboxMap.getProjection().toScreenLocation(point);
@@ -382,17 +375,20 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         symbolManager.setTextAllowOverlap(true);
     }
 
-    private void setSightSeeingStyle(LatLng groupLocation) {
-        Bitmap sightSeeingImage = BitmapFactory.decodeResource(getResources(), R.drawable.binocular);
-        Objects.requireNonNull(mapboxMap.getStyle()).addImage("group-Markers", sightSeeingImage);
-        List<SymbolOptions> options = new ArrayList<>();
-        options.add(new SymbolOptions()
-          .withLatLng(groupLocation)
-          .withIconImage("group-Markers")
-          .withIconSize(1.5f)
-        );
-        symbolManager.create(options);
+    private void seGroupStyle(Group group) {
+        if (group.getCategory().equals("Bars")) {
+            Bitmap sightSeeingImage = BitmapFactory.decodeResource(getResources(), R.drawable.binocular);
+            Objects.requireNonNull(mapboxMap.getStyle()).addImage("group-Markers", sightSeeingImage);
+            List<SymbolOptions> options = new ArrayList<>();
+            options.add(new SymbolOptions()
+              .withLatLng(group.getLocation())
+              .withIconImage("group-Markers")
+              .withIconSize(1.5f)
+            );
+            symbolManager.create(options);
+        }
     }
+
 
     private void showZone(@NonNull final LatLng location) {
         SymbolOptions symbolOptions = new SymbolOptions();
