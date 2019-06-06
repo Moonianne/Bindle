@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:mapbox="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,41 +7,25 @@
     android:layout_height="match_parent"
     tools:context=".map.MapFragment">
 
-
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         mapbox:mapbox_cameraZoom="12" />
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/colorTrans"
-        android:gravity="left"
-        android:foregroundGravity="left"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/category_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:background="@color/colorTrans"
-            android:layout_gravity="end"
-            android:layout_marginTop="20dp"
-            android:foregroundGravity="left">
-        </android.support.v7.widget.RecyclerView>
-    </LinearLayout>
-
-
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/category_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_marginHorizontal="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/colorTrans" />
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/bottom_sheet"
@@ -191,13 +175,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="160dp"
         android:background="@color/cPrimaryLight"
         android:src="@drawable/ic_my_location_black_24dp"
         android:visibility="gone"
         app:elevation="6dp"
         app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="@+id/fabStartGroup"
+        app:layout_constraintEnd_toEndOf="@+id/fabStartGroup"
+        app:layout_constraintStart_toStartOf="@+id/fabStartGroup"
+        app:layout_constraintTop_toTopOf="@+id/fabStartGroup"
         app:pressedTranslationZ="12dp" />
 
     <android.support.design.widget.FloatingActionButton
@@ -206,11 +192,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="290dp"
+        android:layout_marginBottom="32dp"
         android:src="@drawable/ic_person_outline_black_24dp"
         android:visibility="invisible"
         app:backgroundTint="@color/cPrimary"
         app:elevation="6dp"
+        app:layout_constraintBottom_toTopOf="@id/fabFindGroup"
+        app:layout_constraintRight_toRightOf="parent"
         app:pressedTranslationZ="12dp" />
 
     <android.support.design.widget.FloatingActionButton
@@ -219,11 +207,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="220dp"
+        android:layout_marginBottom="32dp"
         android:src="@drawable/ic_search_black_24dp"
         android:visibility="invisible"
         app:backgroundTint="@color/cPrimary"
         app:elevation="6dp"
+        app:layout_constraintBottom_toTopOf="@id/fabStartGroup"
+        app:layout_constraintRight_toRightOf="parent"
         app:pressedTranslationZ="12dp" />
 
     <android.support.design.widget.FloatingActionButton
@@ -232,11 +222,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="154dp"
+        android:layout_marginBottom="32dp"
         android:src="@drawable/ic_add_location_black_24dp"
         android:visibility="invisible"
         app:backgroundTint="@color/cPrimaryDark"
         app:elevation="6dp"
+        app:layout_constraintBottom_toTopOf="@id/fab"
+        app:layout_constraintRight_toRightOf="parent"
         app:pressedTranslationZ="12dp" />
 
     <android.support.design.widget.FloatingActionButton
@@ -249,6 +241,8 @@
         android:src="@drawable/ic_star_border_black_24dp"
         app:backgroundTint="@color/cPrimaryLight"
         app:elevation="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:pressedTranslationZ="12dp" />
 
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>
