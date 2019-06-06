@@ -42,6 +42,7 @@ import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.style.layers.FillLayer;
@@ -57,7 +58,6 @@ import org.pursuit.usolo.map.categories.CategoryAdapter;
 import org.pursuit.usolo.map.nearbygroups.NearbyGroupAdapter;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
 import org.pursuit.usolo.model.Category;
-import org.pursuit.usolo.model.MapFeature;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,7 +67,6 @@ import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
 
@@ -319,39 +318,42 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         mapView = view.findViewById(R.id.mapView);
         mapView.getMapAsync(mapboxMap -> {
             MapFragment.this.mapboxMap = mapboxMap;
-            mapboxMap.setStyle(new Style.Builder().fromUrl(MAPBOX_STYLE_URL), style -> {
-                enableLocationComponent(style);
-                fabRecenterUser.setOnClickListener(v -> {
-                    CameraPosition position = getCameraPosition();
-                    mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position), 2000);
-                });
-                setZoneStyle(style);
-                disposables.add(zoneViewModel.getAllGroups()
-                  .subscribe(group -> {
-                      seGroupStyle(group);
+            mapboxMap.setStyle(new Style.Builder().fromUrl(MAPBOX_STYLE_URL), new Style.OnStyleLoaded() {
+                @Override
+                public void onStyleLoaded(@NonNull Style style) {
+                    MapFragment.this.enableLocationComponent(style);
+                    fabRecenterUser.setOnClickListener(v -> {
+                        CameraPosition position = MapFragment.this.getCameraPosition();
+                        mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position), 2000);
+                    });
+                    MapFragment.this.setZoneStyle(style);
+                    disposables.add(zoneViewModel.getAllGroups()
+                      .subscribe(group -> {
+                          MapFragment.this.setGroupStyle(group);
 
-                      Log.d(TAG, "accept: " + group.getCategory());
-                  }));
-                disposables.add(zoneViewModel.getAllZones(Objects.requireNonNull(getContext()))
-                  .map(zone -> zoneViewModel.getMapFeature(zone))
-                  .subscribe(mapFeature -> {
-                      showZone(mapFeature.location);
-                      String sourceId = mapFeature.name + "_source";
-                      style.addSource(new GeoJsonSource(sourceId, zoneViewModel.getGeometry(mapFeature)));
-                      style.addLayer(new FillLayer(mapFeature.name, sourceId).withProperties(
-                        fillColor(Color.parseColor(MapFragment.this.getString(R.string.zone_colour)))));
-                  }, throwable -> Log.d(TAG, "findViews: " + throwable.getMessage())));
-                mapboxMap.addOnMapClickListener(point -> {
-                    PointF pointf = mapboxMap.getProjection().toScreenLocation(point);
-                    RectF rectF = zoneViewModel.getRectF(pointf);
-                    for (String name : zoneViewModel.getZoneNames()) {
-                        if (mapboxMap.queryRenderedFeatures(rectF, name).size() > 0) {
-                            showZoneDialog(name);
-                            return true;
+                          Log.d(TAG, "accept: " + group.getCategory());
+                      }));
+                    disposables.add(zoneViewModel.getAllZones(Objects.requireNonNull(MapFragment.this.getContext()))
+                      .map(zone -> zoneViewModel.getMapFeature(zone))
+                      .subscribe(mapFeature -> {
+                          MapFragment.this.showZone(mapFeature.location);
+                          String sourceId = mapFeature.name + "_source";
+                          style.addSource(new GeoJsonSource(sourceId, zoneViewModel.getGeometry(mapFeature)));
+                          style.addLayer(new FillLayer(mapFeature.name, sourceId).withProperties(
+                            fillColor(Color.parseColor(MapFragment.this.getString(R.string.zone_colour)))));
+                      }, throwable -> Log.d(TAG, "findViews: " + throwable.getMessage())));
+                    mapboxMap.addOnMapClickListener(point -> {
+                        PointF pointf = mapboxMap.getProjection().toScreenLocation(point);
+                        RectF rectF = zoneViewModel.getRectF(pointf);
+                        for (String name : zoneViewModel.getZoneNames()) {
+                            if (mapboxMap.queryRenderedFeatures(rectF, name).size() > 0) {
+                                MapFragment.this.showZoneDialog(name);
+                                return true;
+                            }
                         }
-                    }
-                    return false;
-                });
+                        return false;
+                    });
+                }
             });
         });
     }
@@ -375,7 +377,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         symbolManager.setTextAllowOverlap(true);
     }
 
-    private void seGroupStyle(Group group) {
+    private void setGroupStyle(Group group) {
         if (group.getCategory().equals("Bars")) {
             Bitmap sightSeeingImage = BitmapFactory.decodeResource(getResources(), R.drawable.binocular);
             Objects.requireNonNull(mapboxMap.getStyle()).addImage("group-Markers", sightSeeingImage);
@@ -387,6 +389,19 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
             );
             symbolManager.create(options);
         }
+    }
+
+    private void showGroupDialog(Symbol symbol) {
+
+        zoneDialog.setContentView(R.layout.zone_dialog_layout);
+        zoneDialog.<TextView>findViewById(R.id.zone_dialog_name)
+          .setText(zoneViewModel.getGroupName((int) symbol.getId()));
+        zoneDialog.<Button>findViewById(R.id.view_zone_button).setOnClickListener(v -> {
+
+        });
+        Objects.requireNonNull(
+          zoneDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        zoneDialog.show();
     }
 
 

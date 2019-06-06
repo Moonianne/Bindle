@@ -136,4 +136,8 @@ public final class ZoneViewModel extends ViewModel {
     public List<Group> getRecentGroupList() {
         return this.groups;
     }
+
+    public String getGroupName(int id) {
+        return null;
+    }
 }
