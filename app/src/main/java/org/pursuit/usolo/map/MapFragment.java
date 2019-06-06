@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PointF;
@@ -67,7 +68,6 @@ import java.util.Objects;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
 
@@ -102,7 +102,6 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
 
     RecyclerView recyclerViewNearby, recyclerViewCategories;
     NearbyGroupAdapter nearbyGroupAdapter;
-
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -208,7 +207,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         int[] iconId = {R.drawable.icon_nighltlife_purple_grad, R.drawable.icon_sightseeing_purple_grad, R.drawable.icon_eatdrink_purple_grad};
 
         int count = 0;
-        for(String title : categoryNames){
+        for (String title : categoryNames) {
             categories.add(new Category(title, iconId[count]));
             count++;
         }
@@ -327,14 +326,27 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
                     mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position), 2000);
                 });
                 setZoneStyle(style);
+                disposables.add(zoneViewModel.getAllGroups()
+                  .subscribe(new Consumer<Group>() {
+                      @Override
+                      public void accept(Group group) throws Exception {
+                          MapFragment.this.showZone(group.getLocation());
+                          setSightSeeingStyle(group.getLocation());
+
+                          Log.d(TAG, "accept: " + group.getCategory());
+                      }
+                  }));
                 disposables.add(zoneViewModel.getAllZones(Objects.requireNonNull(getContext()))
                   .map(zone -> zoneViewModel.getMapFeature(zone))
-                  .subscribe(mapFeature -> {
-                      MapFragment.this.showZone(mapFeature.location);
-                      String sourceId = mapFeature.name + "_source";
-                      style.addSource(new GeoJsonSource(sourceId, zoneViewModel.getGeometry(mapFeature)));
-                      style.addLayer(new FillLayer(mapFeature.name, sourceId).withProperties(
-                        fillColor(Color.parseColor(MapFragment.this.getString(R.string.zone_colour)))));
+                  .subscribe(new Consumer<MapFeature>() {
+                      @Override
+                      public void accept(MapFeature mapFeature) throws Exception {
+                          MapFragment.this.showZone(mapFeature.location);
+                          String sourceId = mapFeature.name + "_source";
+                          style.addSource(new GeoJsonSource(sourceId, zoneViewModel.getGeometry(mapFeature)));
+                          style.addLayer(new FillLayer(mapFeature.name, sourceId).withProperties(
+                            fillColor(Color.parseColor(MapFragment.this.getString(R.string.zone_colour)))));
+                      }
                   }, throwable -> Log.d(TAG, "findViews: " + throwable.getMessage())));
                 mapboxMap.addOnMapClickListener(point -> {
                     PointF pointf = mapboxMap.getProjection().toScreenLocation(point);
@@ -360,7 +372,6 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
           .build();
     }
 
-
     private void setZoneStyle(Style style) {
         style.addImage(MapFragment.MARKER_IMAGE,
           BitmapFactory.decodeResource(MapFragment.this.getResources(),
@@ -371,9 +382,22 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         symbolManager.setTextAllowOverlap(true);
     }
 
-    private void showZone(@NonNull final LatLng zone) {
-        symbolManager.create(new SymbolOptions()
-          .withLatLng(zone)
+    private void setSightSeeingStyle(LatLng groupLocation) {
+        Bitmap sightSeeingImage = BitmapFactory.decodeResource(getResources(), R.drawable.binocular);
+        Objects.requireNonNull(mapboxMap.getStyle()).addImage("group-Markers", sightSeeingImage);
+        List<SymbolOptions> options = new ArrayList<>();
+        options.add(new SymbolOptions()
+          .withLatLng(groupLocation)
+          .withIconImage("group-Markers")
+          .withIconSize(1.5f)
+        );
+        symbolManager.create(options);
+    }
+
+    private void showZone(@NonNull final LatLng location) {
+        SymbolOptions symbolOptions = new SymbolOptions();
+        symbolManager.create(symbolOptions
+          .withLatLng(location)
           .withIconImage(MARKER_IMAGE)
           .withIconSize(.5f));
     }

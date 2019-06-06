@@ -102,7 +102,7 @@
     <EditText
         android:id="@+id/group_description_edit_text"
         android:layout_width="327dp"
-        android:layout_height="272dp"
+        android:layout_height="240dp"
         android:layout_gravity="center"
         android:layout_marginBottom="8dp"
         android:background="@drawable/rectangle_round_light_gray"

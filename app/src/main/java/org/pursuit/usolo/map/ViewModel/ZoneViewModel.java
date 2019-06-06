@@ -129,6 +129,10 @@ public final class ZoneViewModel extends ViewModel {
           .toList();
     }
 
+    public Flowable<Group> getAllGroups(){
+        return fireRepo.getGroups();
+    }
+
     public List<Group> getRecentGroupList() {
         return this.groups;
     }
