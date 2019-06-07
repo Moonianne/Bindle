@@ -8,9 +8,11 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.authentication.view.AuthenticationFragment;
@@ -91,7 +93,7 @@ public final class HostActivity extends AppCompatActivity
 
     @Override
     public void inflateProfileFragment(boolean bool, String userID) {
-        inflateFragment(ProfileView.newInstance(bool, userID), true);
+            inflateFragment(ProfileView.newInstance(bool, userID), true);
     }
 
     @Override
@@ -128,10 +130,12 @@ public final class HostActivity extends AppCompatActivity
     }
 
     @Override
-    public void clearSharedPreferences() {
+    public void logoutUser() {
         SharedPreferences.Editor preferencesEditor = preferences.edit();
         preferencesEditor.clear();
         preferencesEditor.apply();
+        viewModel.logoutFireBase();
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     @Override

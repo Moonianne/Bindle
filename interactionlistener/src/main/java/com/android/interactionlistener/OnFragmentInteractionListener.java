@@ -19,7 +19,7 @@ public interface OnFragmentInteractionListener {
 
     void inflateAuthenticationFragment();
 
-    void clearSharedPreferences();
+    void logoutUser();
 
     void openDirections(String VenueAddress);
 

@@ -169,7 +169,7 @@ public final class ProfileView extends Fragment {
               ));
 
             logOutButton.setOnClickListener(v -> {
-                listener.clearSharedPreferences();
+                listener.logoutUser();
                 listener.inflateAuthenticationFragment();
             });
         } else {
