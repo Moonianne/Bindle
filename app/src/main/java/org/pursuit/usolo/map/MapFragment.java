@@ -42,6 +42,7 @@ import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolClickListener;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
@@ -388,11 +389,16 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
               .withIconSize(1.5f)
             );
             symbolManager.create(options);
+            symbolManager.addClickListener(new OnSymbolClickListener() {
+                @Override
+                public void onAnnotationClick(Symbol symbol) {
+                    showGroupDialog(symbol);
+                }
+            });
         }
     }
 
     private void showGroupDialog(Symbol symbol) {
-
         zoneDialog.setContentView(R.layout.zone_dialog_layout);
         zoneDialog.<TextView>findViewById(R.id.zone_dialog_name)
           .setText(zoneViewModel.getGroupName((int) symbol.getId()));
