@@ -87,15 +87,19 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/chat_rv"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="100dp"
-        android:background="@android:color/transparent"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/guideline4_zone"
         app:layout_constraintEnd_toEndOf="@id/bgView"
         app:layout_constraintStart_toStartOf="@id/bgView"
-        app:layout_constraintTop_toBottomOf="@id/guideline1_zone"
-        app:layout_constraintBottom_toTopOf="@id/guideline3_zone"/>
+        app:layout_constraintTop_toBottomOf="@id/guideline1_zone"/>
 
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline4_zone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="1" />
 
 </android.support.constraint.motion.MotionLayout>

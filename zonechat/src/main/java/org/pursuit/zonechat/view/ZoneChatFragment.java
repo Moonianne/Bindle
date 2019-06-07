@@ -98,7 +98,6 @@ public final class ZoneChatFragment extends Fragment implements OnBackPressedInt
         }
 
         chatRecycler = view.findViewById(R.id.chat_rv);
-        chatRecycler.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         chatRecycler.setLayoutManager(layoutManager);
         EditText messageEditText = view.findViewById(R.id.messageEditText);
@@ -111,7 +110,6 @@ public final class ZoneChatFragment extends Fragment implements OnBackPressedInt
         sendMessageOnClick(messageEditText, sendButton);
         registerAdapter(chatRecycler, layoutManager);
         chatRecycler.setAdapter(fireBaseAdapter);
-        //chatRecycler.smoothScrollToPosition(chatRecycler.getAdapter().getItemCount());
         setScroll();
     }
 
@@ -187,16 +185,15 @@ public final class ZoneChatFragment extends Fragment implements OnBackPressedInt
                 super.onItemRangeInserted(positionStart, itemCount);
 
                 int lastVisiblePosition = layoutManager.findLastCompletelyVisibleItemPosition();
-                if (lastVisiblePosition == -1 ||
-                  (positionStart >= (fireBaseAdapter.getItemCount() - 1) &&
-                    lastVisiblePosition == (positionStart - 1))) {
+                if (lastVisiblePosition == -1 || (positionStart >= (fireBaseAdapter.getItemCount() - 1) &&
+                  lastVisiblePosition == (positionStart - 1))) {
                     chatRecycler.scrollToPosition(positionStart);
                 }
             }
         });
     }
 
-    private void setScroll(){
+    private void setScroll() {
         MotionLayout motionLayout = getView().findViewById(R.id.start_layout_zone);
         if (motionLayout.getProgress() == 0) {
             chatRecycler.smoothScrollToPosition(chatRecycler.getAdapter().getItemCount());

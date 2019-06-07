@@ -10,7 +10,8 @@
         <OnSwipe
             motion:dragDirection="dragUp"
             motion:touchAnchorId="@id/bgView"
-            motion:touchAnchorSide="top" />
+            motion:touchAnchorSide="top"
+            motion:dragScale="@integer/google_play_services_version"/>
 
     </Transition>
 
