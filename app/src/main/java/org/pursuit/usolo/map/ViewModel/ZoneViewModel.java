@@ -5,7 +5,9 @@ import android.content.Context;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.android.group.model.bindle.BindleBusiness;
 import com.mapbox.geojson.Point;
 import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -19,6 +21,7 @@ import org.pursuit.firebasetools.model.Zone;
 import org.pursuit.usolo.model.MapFeature;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,12 +29,17 @@ import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 
 public final class ZoneViewModel extends ViewModel {
     public static final double METER_RADIUS = 300d;
 
     private FireRepo fireRepo = FireRepo.getInstance();
     private List<String> zoneNames = new ArrayList<>();
+    private List<String> groupNames = new ArrayList<>();
+    private List<String> nightLifeGroups = new ArrayList<>();
+    private List<String> sightSeeingGroups = new ArrayList<>();
+    private List<String> eatAndDrinkGroups = new ArrayList<>();
     private List<Group> groups = new ArrayList<>();
 
     public Maybe<Zone> getZone(@NonNull final String zoneKey) {
@@ -68,6 +76,14 @@ public final class ZoneViewModel extends ViewModel {
 
     public List<String> getZoneNames() {
         return zoneNames;
+    }
+
+    public String getGroupName(int id) {
+        return groupNames.get(id);
+    }
+
+    public String getNightLifeGroupName(int id) {
+        return nightLifeGroups.get(id);
     }
 
     @NotNull
@@ -111,6 +127,7 @@ public final class ZoneViewModel extends ViewModel {
         }
         List<List<Point>> points = new ArrayList<>();
         points.add(coordinates);
+        Log.d("joes", "getAllGroups: " + Arrays.deepToString(groupNames.toArray()));
         return points;
     }
 
@@ -129,15 +146,35 @@ public final class ZoneViewModel extends ViewModel {
           .toList();
     }
 
-    public Flowable<Group> getAllGroups(){
+    public Flowable<Group> getAllGroups() {
         return fireRepo.getGroups();
+    }
+
+    public Flowable<Group> getNightLifeGroups() {
+        return getAllGroups()
+          .filter(group -> group.getCategory().equals(BindleBusiness.NIGHTLIFE))
+          .doOnNext(group -> {
+              nightLifeGroups.addAll(Collections.singleton(group.getTitle()));
+          });
+    }
+
+    public Flowable<Group> getEatAndDrinkGroups() {
+        return getAllGroups()
+          .filter(group -> group.getCategory().equals(BindleBusiness.EAT_AND_DRINK))
+          .doOnNext(group -> {
+              eatAndDrinkGroups.addAll(Collections.singleton(group.getTitle()));
+          });
+    }
+
+    public Flowable<Group> getSightSeeingGroups() {
+        return getAllGroups()
+          .filter(group -> group.getCategory().equals(BindleBusiness.SIGHTSEEING))
+          .doOnNext(group -> {
+              sightSeeingGroups.addAll(Collections.singleton(group.getTitle()));
+          });
     }
 
     public List<Group> getRecentGroupList() {
         return this.groups;
-    }
-
-    public String getGroupName(int id) {
-        return null;
     }
 }
