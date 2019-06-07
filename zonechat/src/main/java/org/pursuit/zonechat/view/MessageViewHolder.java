@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.squareup.picasso.Picasso;
 
 import org.pursuit.firebasetools.model.Message;
@@ -21,7 +22,7 @@ final class MessageViewHolder extends RecyclerView.ViewHolder {
     }
 
     final void onBind(@NonNull final Message message,
-                      @NonNull final ChatViewModel viewModel) {
+                      @NonNull final ChatViewModel viewModel, OnFragmentInteractionListener listener) {
         CircleImageView profilePhoto;
         profilePhoto = itemView.findViewById(R.id.profile_image);
         itemView.<TextView>findViewById(R.id.nameTextView).setText(message.getUserName());
@@ -35,5 +36,13 @@ final class MessageViewHolder extends RecyclerView.ViewHolder {
               .load(message.getPhotoUrl())
               .into(profilePhoto);
         }
+
+        profilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.inflateProfileFragment(false, );
+            }
+        });
     }
+
 }

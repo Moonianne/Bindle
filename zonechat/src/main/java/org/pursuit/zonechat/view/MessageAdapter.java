@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
@@ -13,17 +14,19 @@ import org.pursuit.zonechat.viewmodel.ChatViewModel;
 
 public final class MessageAdapter extends FirebaseRecyclerAdapter<Message, MessageViewHolder> {
     private final ChatViewModel chatViewModel;
+    OnFragmentInteractionListener listener;
 
     MessageAdapter(@NonNull FirebaseRecyclerOptions<Message> options,
-                   @NonNull final ChatViewModel chatViewModel) {
+                   @NonNull final ChatViewModel chatViewModel, OnFragmentInteractionListener listener) {
         super(options);
         this.chatViewModel = chatViewModel;
+        this.listener = listener;
     }
 
     @Override
     protected void onBindViewHolder(@NonNull MessageViewHolder holder,
                                     int position, @NonNull Message model) {
-        holder.onBind(model, chatViewModel);
+        holder.onBind(model, chatViewModel, listener);
     }
 
     @NonNull
