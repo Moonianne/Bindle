@@ -132,8 +132,11 @@ public final class FireRepo {
 
     public String pushZoneChatMessage(@NonNull final String chatName,
                                       @NonNull final Message message) {
-        //TODO: During authentication user should set a display name so we can pass that for usename.
-        message.setUserName(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        if (FirebaseAuth.getInstance().getCurrentUser().getDisplayName() != null) {
+            message.setUserName(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        } else {
+            message.setUserName("Bindler");
+        }
         DatabaseReference reference = zoneChatDataBaseReference.child(chatName).push();
         String key = reference.getKey();
         message.setiD(key);
@@ -233,8 +236,11 @@ public final class FireRepo {
 
     public String pushGroupChatMessage(@NonNull final String chatName,
                                        @NonNull final Message message) {
-        //TODO: During authentication user should set a display name so we can pass that for usename.
-        message.setUserName(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        if (FirebaseAuth.getInstance().getCurrentUser().getDisplayName() != null) {
+            message.setUserName(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        } else {
+            message.setUserName("Bindler");
+        }
         DatabaseReference reference = groupChatDataBaseReference.child(chatName).push();
         String key = reference.getKey();
         message.setiD(key);
