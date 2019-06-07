@@ -190,7 +190,7 @@ public class GroupChatView extends Fragment implements OnBackPressedInteraction 
 
     private void sendMessageOnClick() {
         groupSendButton.setOnClickListener(view -> {
-            viewModel.pushMessage(groupMessageEditText.getText().toString());
+            viewModel.pushMessage(groupMessageEditText.getText().toString(), getContext());
             groupMessageEditText.setText("");
         });
     }

@@ -1,7 +1,10 @@
 package com.android.group.viewmodel;
 
 import android.arch.lifecycle.ViewModel;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.firebase.ui.database.SnapshotParser;
 import com.google.firebase.database.Query;
@@ -23,6 +26,9 @@ public class GroupChatViewModel extends ViewModel {
     private SnapshotParser<Message> parser;
     //TODO: Use FireBaseAuth to give viewmodel UserName.
     private String username = "anonymous";
+    private static final String PROFILE_PREFS = "PROFILE";
+    private static final String PROFILE_PREFS_PHOTO_URL = "PROFILE_PHOTO_URL";
+
 
     public boolean hasText(CharSequence charSequence) {
         return charSequence.toString().trim().length() > 0;
@@ -34,8 +40,13 @@ public class GroupChatViewModel extends ViewModel {
         return fireRepo.getGroupMessageDatabaseReference(dBRef);
     }
 
-    public void pushMessage(String message) {
-        fireRepo.pushGroupChatMessage(dBRef,new Message(System.currentTimeMillis(), username, message, null));
+    private String getPhotoUrl(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PROFILE_PREFS, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(PROFILE_PREFS_PHOTO_URL, "");
+    }
+
+    public void pushMessage(String message, Context context) {
+        fireRepo.pushGroupChatMessage(dBRef,new Message(System.currentTimeMillis(), username, message, getPhotoUrl(context)));
     }
 
     public SnapshotParser<Message> getParser() {
