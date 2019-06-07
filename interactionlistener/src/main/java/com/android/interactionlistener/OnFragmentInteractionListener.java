@@ -13,7 +13,7 @@ public interface OnFragmentInteractionListener {
 
     void inflateZoneChatFragment(@NonNull final Zone zone);
 
-    void inflateProfileFragment(boolean bool);
+    void inflateProfileFragment(boolean bool, String userID);
 
     void onLoginSuccess();
 

@@ -1,6 +1,7 @@
 package org.pursuit.zonechat.view;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.interactionlistener.OnBackPressedInteraction;
+import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.Query;
@@ -44,6 +46,8 @@ public final class ZoneChatFragment extends Fragment implements OnBackPressedInt
     private FirebaseRecyclerAdapter<Message, MessageViewHolder> fireBaseAdapter;
     private Disposable disposable;
     RecyclerView chatRecycler;
+    private OnFragmentInteractionListener listener;
+
 
     public static ZoneChatFragment newInstance(@NonNull final Zone zone) {
         ZoneChatFragment fragment = new ZoneChatFragment();
@@ -52,6 +56,16 @@ public final class ZoneChatFragment extends Fragment implements OnBackPressedInt
         args.putString(ZONE_CHAT_KEY, zone.getChatName());
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            listener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException();
+        }
     }
 
     @Override
@@ -129,7 +143,7 @@ public final class ZoneChatFragment extends Fragment implements OnBackPressedInt
     private void updateMessageList(Query query) {
         fireBaseAdapter = new MessageAdapter(new FirebaseRecyclerOptions.Builder<Message>()
           .setQuery(query, viewModel.getParser())
-          .build(), viewModel);
+          .build(), viewModel, listener);
         fireBaseAdapter.notifyDataSetChanged();
     }
 

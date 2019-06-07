@@ -47,8 +47,12 @@ public final class ChatViewModel extends ViewModel {
         return sharedPreferences.getString(PROFILE_PREFS_PHOTO_URL, "");
     }
 
+    private String getUserID(){
+        return fireRepo.getCurrentUser().getUid();
+    }
+
     public void pushMessage(String message, Context context) {
-        fireRepo.pushZoneChatMessage(currentZoneChat, new Message(System.currentTimeMillis(), username, message, getPhotoUrl(context)));
+        fireRepo.pushZoneChatMessage(currentZoneChat, new Message(System.currentTimeMillis(), username, message, getPhotoUrl(context), getUserID()));
     }
 
     public SnapshotParser<Message> getParser() {

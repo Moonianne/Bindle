@@ -44,6 +44,7 @@ public final class ProfileView extends Fragment {
     private static final String PROFILE_PREFS = "PROFILE";
 
     private static boolean isCurrentUserProfile = true;
+    private static String profileUserID;
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private SharedPreferences sharedPreferences;
@@ -53,8 +54,9 @@ public final class ProfileView extends Fragment {
     private TextView displayNameView, aboutMeView, interestsView, locationView;
     private Button logOutButton, uploadPhotoButton, editDisplayName;
 
-    public static ProfileView newInstance(boolean bool) {
+    public static ProfileView newInstance(boolean bool, String userID) {
         isCurrentUserProfile = bool;
+        profileUserID = userID;
         return new ProfileView();
     }
 
@@ -163,8 +165,19 @@ public final class ProfileView extends Fragment {
             });
         } else {
             setExtraViewsVisibility();
-            displayNameView.setText(profileViewModel.getUsername());
-            locationView.setText(profileViewModel.getLocation(getContext()));
+            //TODO add logic for viewing another user's profile using the string userID
+            compositeDisposable.add(profileViewModel.getUserInfo(profileUserID).observeOn(AndroidSchedulers.mainThread()).subscribe(user -> {
+                displayNameView.setText(user.getDisplayName());
+                locationView.setText(user.getCurrentLocation());
+                aboutMeView.setText(user.getAboutMe());
+                interestsView.setText(user.getInterests());
+
+                if (user.getUserProfilePhotoURL() == null || user.getUserProfilePhotoURL().equals("")) {
+                    profilePhoto.setImageResource(R.drawable.ic_account_circle_blue_24dp);
+                } else {
+                    Picasso.get().load(user.getUserProfilePhotoURL()).into(profilePhoto);
+                }
+            }));
         }
     }
 
@@ -219,6 +232,7 @@ public final class ProfileView extends Fragment {
         editInterestsButton.setVisibility(View.INVISIBLE);
         logOutButton.setVisibility(View.INVISIBLE);
         uploadPhotoButton.setVisibility(View.INVISIBLE);
+        editDisplayName.setVisibility(View.INVISIBLE);
     }
 
     private void setAboutMeVisibility(boolean visibility) {
