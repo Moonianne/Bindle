@@ -88,7 +88,7 @@ public final class ProfileViewModel extends ViewModel {
           .getUserInfo(fireRepo.getCurrentUser().getUid());
     }
 
-    public Maybe<User> getUserInfo(String userID){
+    public Maybe<User> getUserInfo(String userID) {
         return fireRepo.getUserInfo(userID);
     }
 

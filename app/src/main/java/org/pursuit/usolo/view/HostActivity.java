@@ -35,7 +35,7 @@ import java.util.List;
 
 public final class HostActivity extends AppCompatActivity
   implements OnFragmentInteractionListener, StartGroupFragment.OnFragmentInteractionListener,
-  OnFragmentInteractionCompleteListener{
+  OnFragmentInteractionCompleteListener {
 
     private static final String LOGIN_PREFS = "USER_LOGIN";
     private static final String EMAIL_PREFS = "EMAIL_PREFS";
