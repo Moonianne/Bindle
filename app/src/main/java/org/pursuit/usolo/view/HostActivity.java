@@ -89,8 +89,8 @@ public final class HostActivity extends AppCompatActivity
     }
 
     @Override
-    public void inflateProfileFragment(boolean bool) {
-        inflateFragment(ProfileView.newInstance(true), true);
+    public void inflateProfileFragment(boolean bool, String userID) {
+        inflateFragment(ProfileView.newInstance(bool, userID), true);
     }
 
     @Override

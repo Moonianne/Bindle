@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 import com.android.group.R;
 import com.android.group.viewmodel.GroupChatViewModel;
+import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 
@@ -14,15 +15,20 @@ import org.pursuit.firebasetools.model.Message;
 public class GroupMessageAdapter extends FirebaseRecyclerAdapter<Message, GroupMessageViewHolder> {
 
     GroupChatViewModel viewModel;
+    private OnFragmentInteractionListener listener;
 
-    public GroupMessageAdapter(@NonNull FirebaseRecyclerOptions<Message> options, @NonNull final GroupChatViewModel viewModel) {
+
+    public GroupMessageAdapter(@NonNull FirebaseRecyclerOptions<Message> options,
+                               @NonNull final GroupChatViewModel viewModel,
+                               OnFragmentInteractionListener listener) {
         super(options);
         this.viewModel = viewModel;
+        this.listener = listener;
     }
 
     @Override
     protected void onBindViewHolder(@NonNull GroupMessageViewHolder holder, int position, @NonNull Message model) {
-        holder.onBind(model, viewModel);
+        holder.onBind(model, viewModel, listener);
     }
 
     @NonNull

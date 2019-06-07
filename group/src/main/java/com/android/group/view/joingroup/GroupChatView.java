@@ -159,7 +159,7 @@ public class GroupChatView extends Fragment implements OnBackPressedInteraction 
     private void updateMessageList(Query query) {
         fireBaseAdapter = new GroupMessageAdapter(new FirebaseRecyclerOptions.Builder<Message>()
                 .setQuery(query, viewModel.getParser())
-                .build(), viewModel);
+                .build(), viewModel, interactionListener);
         fireBaseAdapter.notifyDataSetChanged();
     }
 

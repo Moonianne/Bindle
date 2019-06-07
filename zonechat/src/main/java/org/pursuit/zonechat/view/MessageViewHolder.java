@@ -22,7 +22,9 @@ final class MessageViewHolder extends RecyclerView.ViewHolder {
     }
 
     final void onBind(@NonNull final Message message,
-                      @NonNull final ChatViewModel viewModel, OnFragmentInteractionListener listener) {
+                      @NonNull final ChatViewModel viewModel,
+                      OnFragmentInteractionListener listener) {
+
         CircleImageView profilePhoto;
         profilePhoto = itemView.findViewById(R.id.profile_image);
         itemView.<TextView>findViewById(R.id.nameTextView).setText(message.getUserName());
@@ -40,7 +42,7 @@ final class MessageViewHolder extends RecyclerView.ViewHolder {
         profilePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.inflateProfileFragment(false, );
+                listener.inflateProfileFragment(false, message.getUserID());
             }
         });
     }

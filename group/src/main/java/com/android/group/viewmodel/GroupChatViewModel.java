@@ -29,7 +29,6 @@ public class GroupChatViewModel extends ViewModel {
     private static final String PROFILE_PREFS = "PROFILE";
     private static final String PROFILE_PREFS_PHOTO_URL = "PROFILE_PHOTO_URL";
 
-
     public boolean hasText(CharSequence charSequence) {
         return charSequence.toString().trim().length() > 0;
     }
@@ -40,13 +39,13 @@ public class GroupChatViewModel extends ViewModel {
         return fireRepo.getGroupMessageDatabaseReference(dBRef);
     }
 
-    private String getPhotoUrl(Context context){
+    private String getPhotoUrl(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PROFILE_PREFS, Context.MODE_PRIVATE);
         return sharedPreferences.getString(PROFILE_PREFS_PHOTO_URL, "");
     }
 
     public void pushMessage(String message, Context context) {
-        fireRepo.pushGroupChatMessage(dBRef,new Message(System.currentTimeMillis(), username, message, getPhotoUrl(context)));
+        fireRepo.pushGroupChatMessage(dBRef, new Message(System.currentTimeMillis(), username, message, getPhotoUrl(context), fireRepo.getCurrentUser().getUid()));
     }
 
     public SnapshotParser<Message> getParser() {

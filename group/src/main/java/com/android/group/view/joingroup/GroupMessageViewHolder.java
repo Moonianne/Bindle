@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.android.group.R;
 import com.android.group.viewmodel.GroupChatViewModel;
+import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.squareup.picasso.Picasso;
 
 import org.pursuit.firebasetools.model.Message;
@@ -19,7 +20,9 @@ public class GroupMessageViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
     }
 
-    final void onBind(@NonNull final Message message, @NonNull final GroupChatViewModel viewModel) {
+    final void onBind(@NonNull final Message message,
+                      @NonNull final GroupChatViewModel viewModel,
+                      OnFragmentInteractionListener listener) {
 
         CircleImageView profilePhoto;
         profilePhoto = itemView.findViewById(R.id.group_photImage);
@@ -35,6 +38,13 @@ public class GroupMessageViewHolder extends RecyclerView.ViewHolder {
               .load(message.getPhotoUrl())
               .into(profilePhoto);
         }
+
+        profilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.inflateProfileFragment(false, message.getUserID());
+            }
+        });
 
     }
 }

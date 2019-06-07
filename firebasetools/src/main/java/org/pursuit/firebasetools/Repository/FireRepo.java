@@ -143,7 +143,7 @@ public final class FireRepo {
         zoneChatDataBaseReference.child(chatName).push().setValue(new Message(
           System.currentTimeMillis(),
           "Bindle",
-          "This is the start of your chat room.", null
+          "This is the start of your chat room.", null, null
         ));
     }
 
@@ -244,7 +244,7 @@ public final class FireRepo {
         groupChatDataBaseReference.child(chatName).push().setValue(new Message(
           System.currentTimeMillis(),
           "Bindle",
-          "This is the start of your chat room.", null
+          "This is the start of your chat room.", null, null
         ));
     }
 

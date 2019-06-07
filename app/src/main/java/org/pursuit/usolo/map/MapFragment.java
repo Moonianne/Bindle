@@ -233,7 +233,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
                 break;
             case R.id.fab_profile:
                 fabRecenterUser.hide();
-                listener.inflateProfileFragment(true);
+                listener.inflateProfileFragment(true, "currentUserID");
                 break;
         }
     }

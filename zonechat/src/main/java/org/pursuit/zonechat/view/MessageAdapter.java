@@ -14,10 +14,11 @@ import org.pursuit.zonechat.viewmodel.ChatViewModel;
 
 public final class MessageAdapter extends FirebaseRecyclerAdapter<Message, MessageViewHolder> {
     private final ChatViewModel chatViewModel;
-    OnFragmentInteractionListener listener;
+    private OnFragmentInteractionListener listener;
 
     MessageAdapter(@NonNull FirebaseRecyclerOptions<Message> options,
-                   @NonNull final ChatViewModel chatViewModel, OnFragmentInteractionListener listener) {
+                   @NonNull final ChatViewModel chatViewModel,
+                   OnFragmentInteractionListener listener) {
         super(options);
         this.chatViewModel = chatViewModel;
         this.listener = listener;

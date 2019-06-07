@@ -58,7 +58,6 @@ public final class ZoneChatFragment extends Fragment implements OnBackPressedInt
         return fragment;
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

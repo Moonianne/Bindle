@@ -88,6 +88,10 @@ public final class ProfileViewModel extends ViewModel {
           .getUserInfo(fireRepo.getCurrentUser().getUid());
     }
 
+    public Maybe<User> getUserInfo(String userID){
+        return fireRepo.getUserInfo(userID);
+    }
+
     private void pushUser() {
         fireRepo.pushUser(user);
     }
@@ -102,8 +106,6 @@ public final class ProfileViewModel extends ViewModel {
     }
 
     private void setUserPhoto(@NonNull final String url) {
-        Log.d("numnmy - ProfileView: ", " " + url);
-
         user.setUserProfilePhotoURL(url);
         pushUser();
     }
