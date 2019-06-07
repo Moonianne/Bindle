@@ -35,7 +35,7 @@ import java.util.List;
 
 public final class HostActivity extends AppCompatActivity
   implements OnFragmentInteractionListener, StartGroupFragment.OnFragmentInteractionListener,
-  OnFragmentInteractionCompleteListener {
+  OnFragmentInteractionCompleteListener{
 
     private static final String LOGIN_PREFS = "USER_LOGIN";
     private static final String EMAIL_PREFS = "EMAIL_PREFS";
@@ -44,6 +44,7 @@ public final class HostActivity extends AppCompatActivity
     private static final String TAG = "HostActivity";
     private ZoneViewModel viewModel;
     public static boolean granted;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +52,13 @@ public final class HostActivity extends AppCompatActivity
         setContentView(R.layout.activity_host);
 
         viewModel = ViewModelProviders.of(this).get(ZoneViewModel.class);
-        SharedPreferences preferences = getSharedPreferences(LOGIN_PREFS, MODE_PRIVATE);
+        preferences = getSharedPreferences(LOGIN_PREFS, MODE_PRIVATE);
         if (preferences.contains(EMAIL_PREFS) && preferences.contains(PASS_PREFS)) {
             viewModel.loginToFireBase(preferences.getString(EMAIL_PREFS, "metalraidernt@gmail.com"),
               preferences.getString(PASS_PREFS, "password123"));
             requestUserLocationPermission();
         } else {
-            inflateFragment(AuthenticationFragment.getInstance());
+            inflateAuthenticationFragment();
         }
     }
 
@@ -122,6 +123,18 @@ public final class HostActivity extends AppCompatActivity
     }
 
     @Override
+    public void inflateAuthenticationFragment() {
+        inflateFragment(AuthenticationFragment.getInstance(), false);
+    }
+
+    @Override
+    public void clearSharedPreferences() {
+        SharedPreferences.Editor preferencesEditor = preferences.edit();
+        preferencesEditor.clear();
+        preferencesEditor.apply();
+    }
+
+    @Override
     public void closeFragment() {
         getSupportFragmentManager().popBackStackImmediate();
     }
@@ -170,5 +183,4 @@ public final class HostActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
 }

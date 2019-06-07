@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.jakewharton.rxbinding3.view.RxView;
 import com.squareup.picasso.Picasso;
 
@@ -53,6 +54,7 @@ public final class ProfileView extends Fragment {
     private ImageView editAboutMeButton, editInterestsButton, finishInterestsButton, finishAboutMeButton, profilePhoto;
     private TextView displayNameView, aboutMeView, interestsView, locationView;
     private Button logOutButton, uploadPhotoButton, editDisplayName;
+    private OnFragmentInteractionListener listener;
 
     public static ProfileView newInstance(boolean bool, String userID) {
         isCurrentUserProfile = bool;
@@ -63,6 +65,12 @@ public final class ProfileView extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            listener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+              + " must implement OnInteractionListener");
+        }
         sharedPreferences = context.getSharedPreferences(PROFILE_PREFS, Context.MODE_PRIVATE);
     }
 
@@ -161,7 +169,8 @@ public final class ProfileView extends Fragment {
               ));
 
             logOutButton.setOnClickListener(v -> {
-                //TODO firebase needed for the user log out
+                listener.clearSharedPreferences();
+                listener.inflateAuthenticationFragment();
             });
         } else {
             setExtraViewsVisibility();
