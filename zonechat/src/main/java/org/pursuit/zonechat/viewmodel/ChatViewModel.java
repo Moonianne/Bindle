@@ -30,6 +30,8 @@ public final class ChatViewModel extends ViewModel {
     private String username = "anonymous";
     private User user;
     private static final String PROFILE_PREFS = "PROFILE";
+    private static final String PROFILE_PREFS_PHOTO_URL = "PROFILE_PHOTO_URL";
+
 
     public boolean hasText(CharSequence charSequence) {
         return charSequence.toString().trim().length() > 0;
@@ -42,8 +44,7 @@ public final class ChatViewModel extends ViewModel {
 
     private String getPhotoUrl(Context context){
         SharedPreferences sharedPreferences = context.getSharedPreferences(PROFILE_PREFS, Context.MODE_PRIVATE);
-        Log.d("sharedPrefs: ", sharedPreferences.getString("PROFILE_PHOTO_URL", ""));
-        return sharedPreferences.getString("PROFILE_PHOTO_URL", "");
+        return sharedPreferences.getString(PROFILE_PREFS_PHOTO_URL, "");
     }
 
     public void pushMessage(String message, Context context) {
