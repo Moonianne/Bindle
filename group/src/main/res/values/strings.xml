@@ -11,8 +11,10 @@
     <string name="form_your_group">Form Your Group</string>
 
     <string-array name="foursquare_category_array">
-        <item>Arts and Entertainment</item>
-        <item>Arcade</item>
-        <item>Comedy Club</item>
+        <item>Nightlife</item>
+        <item>Eat &amp; Drink</item>
+        <item>Sight-Seeing</item>
+        <item>Outdoors &amp; Recreation</item>
     </string-array>
+
 </resources>

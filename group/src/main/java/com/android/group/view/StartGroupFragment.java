@@ -24,7 +24,8 @@ import com.android.group.viewmodel.GroupViewModel;
 import com.android.group.viewmodel.NetworkViewModel;
 
 public final class StartGroupFragment extends Fragment
-  implements NetworkViewModel.OnVenueSelectedListener {
+  implements NetworkViewModel.OnVenueSelectedListener,
+  NetworkViewModel.OnCategorySelectedListener{
 
     private NetworkViewModel networkViewModel;
     private GroupViewModel groupViewModel;
@@ -65,6 +66,7 @@ public final class StartGroupFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         networkViewModel.setVenueSelectedListener(this);
+        networkViewModel.setCategorySelectedListener(this);
         return inflater.inflate(R.layout.fragment_start_group, container, false);
     }
 
@@ -75,37 +77,17 @@ public final class StartGroupFragment extends Fragment
           .setOnClickListener(v -> interactionListener.inflateAddLocationFragment());
         locationTextView = view.findViewById(R.id.add_location_text_view);
         setStartButtonOnClickListener(view);
-
-        Spinner categorySpinner = view.findViewById(R.id.category_spinner);
-        categorySpinner.setAdapter(ArrayAdapter.createFromResource(
-          getContext(), R.array.category_array, android.R.layout.simple_dropdown_item_1line));
-        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 1:
-                        currentCategory = BindleBusiness.NIGHTLIFE;
-                        break;
-                    case 2:
-                        currentCategory = BindleBusiness.EAT_AND_DRINK;
-                        break;
-                    case 3:
-                        currentCategory = BindleBusiness.SIGHTSEEING;
-                        break;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                //No-op
-            }
-        });
     }
 
     @Override
     public void bindleBusinessSelected(BindleBusiness bindleBusiness) {
         userSelectedBindleBusiness = bindleBusiness;
         locationTextView.setText(userSelectedBindleBusiness.getVenue().getLocation().getAddress());
+    }
+
+    @Override
+    public void categorySelected(String category) {
+        currentCategory = category;
     }
 
     private void setStartButtonOnClickListener(View view) {

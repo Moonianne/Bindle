@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.android.group.model.bindle.BindleBusiness;
+import com.android.group.network.constants.CategoryConstants;
 import com.mapbox.geojson.Point;
 import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -40,6 +41,7 @@ public final class ZoneViewModel extends ViewModel {
     private List<String> nightLifeGroups = new ArrayList<>();
     private List<String> sightSeeingGroups = new ArrayList<>();
     private List<String> eatAndDrinkGroups = new ArrayList<>();
+    private List<String> outDoorsAndRecGroups = new ArrayList<>();
     private List<Group> groups = new ArrayList<>();
 
     public Maybe<Zone> getZone(@NonNull final String zoneKey) {
@@ -152,7 +154,7 @@ public final class ZoneViewModel extends ViewModel {
 
     public Flowable<Group> getNightLifeGroups() {
         return getAllGroups()
-          .filter(group -> group.getCategory().equals(BindleBusiness.NIGHTLIFE))
+          .filter(group -> group.getCategory().equals(CategoryConstants.NIGHTLIFE))
           .doOnNext(group -> {
               nightLifeGroups.addAll(Collections.singleton(group.getTitle()));
           });
@@ -160,7 +162,7 @@ public final class ZoneViewModel extends ViewModel {
 
     public Flowable<Group> getEatAndDrinkGroups() {
         return getAllGroups()
-          .filter(group -> group.getCategory().equals(BindleBusiness.EAT_AND_DRINK))
+          .filter(group -> group.getCategory().equals(CategoryConstants.EAT_AND_DRINK))
           .doOnNext(group -> {
               eatAndDrinkGroups.addAll(Collections.singleton(group.getTitle()));
           });
@@ -168,9 +170,17 @@ public final class ZoneViewModel extends ViewModel {
 
     public Flowable<Group> getSightSeeingGroups() {
         return getAllGroups()
-          .filter(group -> group.getCategory().equals(BindleBusiness.SIGHTSEEING))
+          .filter(group -> group.getCategory().equals(CategoryConstants.SIGHTSEEING))
           .doOnNext(group -> {
               sightSeeingGroups.addAll(Collections.singleton(group.getTitle()));
+          });
+    }
+
+    public Flowable<Group> getOutDoorsAndRecGroups() {
+        return getAllGroups()
+          .filter(group -> group.getCategory().equals(CategoryConstants.OUTDOORS_AND_RECREATION))
+          .doOnNext(group -> {
+              outDoorsAndRecGroups.addAll(Collections.singleton(group.getTitle()));
           });
     }
 
