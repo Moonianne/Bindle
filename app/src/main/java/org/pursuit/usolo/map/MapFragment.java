@@ -29,10 +29,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.android.group.model.bindle.BindleBusiness;
 import com.android.interactionlistener.OnBackPressedInteraction;
 import com.android.interactionlistener.OnFragmentInteractionListener;
-import com.google.android.gms.maps.model.Marker;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -45,7 +43,6 @@ import com.mapbox.mapboxsdk.location.modes.CameraMode;
 import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
@@ -61,7 +58,6 @@ import org.pursuit.firebasetools.model.Zone;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
 import org.pursuit.usolo.map.categories.CategoryAdapter;
-import org.pursuit.usolo.map.categories.OnCategorySelectListener;
 import org.pursuit.usolo.map.nearbygroups.NearbyGroupAdapter;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
 import org.pursuit.usolo.model.Category;
@@ -142,10 +138,10 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         zoneDialog = new Dialog(Objects.requireNonNull(MapFragment.this.getContext()));
-        //TODO: Take a look at this
-        disposables.add(zoneViewModel.getAllZones(Objects.requireNonNull(getActivity()))
-          .map(Zone::getLocation)
-          .subscribe(this::makeGeoFence));
+//        //TODO: Take a look at this
+//        disposables.add(zoneViewModel.getAllZones(Objects.requireNonNull(getActivity()))
+//          .map(Zone::getLocation)
+//          .subscribe(this::makeGeoFence));
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 

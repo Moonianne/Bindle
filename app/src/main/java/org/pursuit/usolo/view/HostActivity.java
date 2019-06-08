@@ -1,17 +1,17 @@
 package org.pursuit.usolo.view;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.SharedPreferences;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,13 +27,19 @@ import com.example.exploregroup.view.ViewGroupFragment;
 
 import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Zone;
+import org.pursuit.userprofile.view.ProfileView;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
+import org.pursuit.usolo.map.utils.GeoFenceCreator;
+import org.pursuit.usolo.viewmodel.HostViewModel;
 import org.pursuit.zonechat.view.ZoneChatFragment;
-import org.pursuit.userprofile.view.ProfileView;
 
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
 
 public final class HostActivity extends AppCompatActivity
   implements OnFragmentInteractionListener, StartGroupFragment.OnFragmentInteractionListener,
@@ -44,15 +50,18 @@ public final class HostActivity extends AppCompatActivity
     private static final String PASS_PREFS = "PW_PREFS";
 
     private static final String TAG = "HostActivity";
-    private ZoneViewModel viewModel;
     public static boolean granted;
     private SharedPreferences preferences;
+    private ZoneViewModel viewModel;
+    private HostViewModel hostViewModel;
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host);
 
+        hostViewModel = ViewModelProviders.of(this).get(HostViewModel.class);
         viewModel = ViewModelProviders.of(this).get(ZoneViewModel.class);
         preferences = getSharedPreferences(LOGIN_PREFS, MODE_PRIVATE);
         if (preferences.contains(EMAIL_PREFS) && preferences.contains(PASS_PREFS)) {
@@ -69,6 +78,8 @@ public final class HostActivity extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             granted = true;
+            placeGeofences();
+            Log.d(TAG, "onRequestPermissionsResult: " + "thisran");
             inflateFragment(MapFragment.newInstance());
         } else {
             Toast.makeText(this, "Permission not granted", Toast.LENGTH_SHORT).show();
@@ -93,7 +104,7 @@ public final class HostActivity extends AppCompatActivity
 
     @Override
     public void inflateProfileFragment(boolean bool, String userID) {
-            inflateFragment(ProfileView.newInstance(bool, userID), true);
+        inflateFragment(ProfileView.newInstance(bool, userID), true);
     }
 
     @Override
@@ -149,6 +160,7 @@ public final class HostActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
         } else {
             granted = true;
+            placeGeofences();
             inflateFragment(MapFragment.newInstance());
         }
     }
@@ -165,6 +177,19 @@ public final class HostActivity extends AppCompatActivity
             fragmentTransaction.addToBackStack(null);
         }
         fragmentTransaction.commit();
+    }
+
+    private void placeGeofences() {
+        disposable.add(hostViewModel.getAllGroups().observeOn(AndroidSchedulers.mainThread())
+          .subscribe((Consumer<Group>) group -> {
+              Log.d(TAG, "placeGeofences: " + group.getTitle());
+              new GeoFenceCreator(HostActivity.this, group.getLocation()).createGeoFence();
+          }));
+        disposable.add(hostViewModel.getAllZones(this).observeOn(AndroidSchedulers.mainThread())
+          .subscribe((Consumer<Zone>) zone -> {
+              Log.d(TAG, "placeGeofences: " + zone.getName());
+              new GeoFenceCreator(HostActivity.this, zone.getLocation()).createGeoFence();
+          }));
     }
 
     @Override
