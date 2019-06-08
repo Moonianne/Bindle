@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.android.group.R;
 import com.android.group.view.OnFragmentInteractionCompleteListener;
+import com.android.group.view.recyclerview.BindlerAdapter;
 import com.android.group.viewmodel.GroupChatViewModel;
 import com.android.interactionlistener.OnBackPressedInteraction;
 import com.android.interactionlistener.OnFragmentInteractionListener;
@@ -37,6 +38,8 @@ import com.squareup.picasso.Picasso;
 
 import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Message;
+
+import java.util.Collections;
 
 
 public class GroupChatView extends Fragment implements OnBackPressedInteraction {
@@ -52,7 +55,8 @@ public class GroupChatView extends Fragment implements OnBackPressedInteraction 
     private TextView groupTitle, groupLocation, groupCategory;
     private EditText groupMessageEditText;
     private Button groupSendButton, groupLeaveButton, groupBindlersButton, groupDetailsButton;
-    private RecyclerView groupChatRecycler;
+    private RecyclerView groupChatRecycler, bindlerRecycler;
+    private BindlerAdapter bindlerAdapter;
     private LinearLayoutManager layoutManager;
     private FirebaseRecyclerAdapter<Message, GroupMessageViewHolder> fireBaseAdapter;
     private SharedPreferences sharedPreferences;
@@ -105,10 +109,10 @@ public class GroupChatView extends Fragment implements OnBackPressedInteraction 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
+        bindlerAdapter = new BindlerAdapter (interactionListener, group.getUserList());
         setUpGroupInfo();
-
-        layoutManager = new LinearLayoutManager(getContext());
-        groupChatRecycler.setLayoutManager(layoutManager);
+        setUpChatRV();
+        setUpBindlerRV();
         viewModel.parseMessage();
         updateMessageList(viewModel.getMessageDatabaseReference(group.getChatName()));
         editTextListener();
@@ -122,7 +126,18 @@ public class GroupChatView extends Fragment implements OnBackPressedInteraction 
             viewModel.removeUserFromGroup(group.getTitle());
             listener.closeFragment();
         });
+    }
 
+    private void setUpChatRV() {
+        layoutManager = new LinearLayoutManager(getContext());
+        groupChatRecycler.setLayoutManager(layoutManager);
+    }
+
+    private void setUpBindlerRV() {
+        LinearLayoutManager bindlerLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        bindlerRecycler.setLayoutManager(bindlerLayoutManager);
+        bindlerRecycler.setAdapter(bindlerAdapter);
+        bindlerAdapter.setDataChange(group.getUserList());
     }
 
     private void setUpGroupInfo() {
@@ -132,6 +147,7 @@ public class GroupChatView extends Fragment implements OnBackPressedInteraction 
     }
 
     private void findViews(@NonNull View view) {
+        bindlerRecycler = view.findViewById(R.id.groupChat_bindlers_rv);
         groupChatRecycler = view.findViewById(R.id.groupChat_rv);
         groupTitle = view.findViewById(R.id.groupChat_title);
         groupLocation = view.findViewById(R.id.groupChat_location);
@@ -142,7 +158,6 @@ public class GroupChatView extends Fragment implements OnBackPressedInteraction 
         groupMessageEditText = view.findViewById(R.id.groupChat_messageEditText);
         groupDetailsButton = view.findViewById(R.id.group_chat_view_details_button);
     }
-
 
     @Override
     public void onStart() {
