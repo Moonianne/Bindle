@@ -28,6 +28,7 @@ import com.jakewharton.rxbinding3.view.RxView;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
+import org.pursuit.firebasetools.Repository.FireRepo;
 import org.pursuit.userprofile.R;
 import org.pursuit.userprofile.viewmodel.ProfileViewModel;
 
@@ -95,6 +96,8 @@ public final class ProfileView extends Fragment {
               .observeOn(AndroidSchedulers.mainThread())
               .subscribe(user -> {
                   if (user != null) {
+                      FireRepo fireRepo = FireRepo.getInstance();
+                      Log.d("Naomy", "onViewCreated: " + fireRepo.getCurrentUser().getUid());
                       profileViewModel.setUserId(true);
                       profileViewModel.setCurrentUser(user);
                       if (user.getInterests() != null) {
