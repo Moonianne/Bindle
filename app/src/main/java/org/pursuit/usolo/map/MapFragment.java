@@ -54,12 +54,10 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import org.jetbrains.annotations.NotNull;
 import org.pursuit.firebasetools.model.Group;
-import org.pursuit.firebasetools.model.Zone;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
 import org.pursuit.usolo.map.categories.CategoryAdapter;
 import org.pursuit.usolo.map.nearbygroups.NearbyGroupAdapter;
-import org.pursuit.usolo.map.utils.GeoFenceCreator;
 import org.pursuit.usolo.model.Category;
 
 import java.util.ArrayList;
@@ -138,10 +136,6 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         zoneDialog = new Dialog(Objects.requireNonNull(MapFragment.this.getContext()));
-//        //TODO: Take a look at this
-//        disposables.add(zoneViewModel.getAllZones(Objects.requireNonNull(getActivity()))
-//          .map(Zone::getLocation)
-//          .subscribe(this::makeGeoFence));
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
@@ -459,10 +453,6 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         Objects.requireNonNull(
           zoneDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         zoneDialog.show();
-    }
-
-    private void makeGeoFence(LatLng latLng) {
-        new GeoFenceCreator(getContext(), latLng).createGeoFence();
     }
 
     @SuppressWarnings({"MissingPermission"})
