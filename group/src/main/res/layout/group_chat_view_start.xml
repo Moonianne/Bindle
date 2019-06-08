@@ -124,17 +124,6 @@
             android:textSize="12sp" />
 
         <Button
-            android:id="@+id/groupChat_viewMembers_button"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/rectangle_round_white"
-            android:fontFamily="@font/maven_pro_bold"
-            android:text="Bindlers"
-            android:textColor="@color/cPrimaryDark"
-            android:textSize="12sp" />
-
-        <Button
             android:id="@+id/group_chat_view_details_button"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
@@ -146,6 +135,17 @@
             android:textSize="12sp" />
     </LinearLayout>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/groupChat_bindlers_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorTrans"
+        app:layout_constraintBottom_toTopOf="@id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/groupChat_category"
+        app:layout_constraintVertical_bias="0.53" />
 
     <View
         android:id="@+id/bgView"
@@ -158,7 +158,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline1" />
-
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/groupChat_rv"
