@@ -230,6 +230,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
                     symbolLayers) {
                       style.removeLayer(symbolLayer);
                   }
+                  symbolLayers.clear();
                   for (String title :
                     zoneViewModel.getGroupNames()) {
                       style.removeSource(title);
