@@ -11,9 +11,9 @@
     <string name="search_for_groups_by_category">Search for groups by category</string>
 
     <string-array name="categoryNames">
-        <item name="nightlife">NIGHTLIFE</item>
-        <item name="sightseeing">SIGHTSEEING</item>
-        <item name="eat_and_drink">EAT AND DRINK</item>
+        <item name="nightlife">Nightlife</item>
+        <item name="sightseeing">Sight-Seeing</item>
+        <item name="eat_and_drink">Eat &amp; Drink</item>
     </string-array>
 
 </resources>

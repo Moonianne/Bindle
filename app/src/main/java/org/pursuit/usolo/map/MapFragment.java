@@ -29,8 +29,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.group.model.bindle.BindleBusiness;
 import com.android.interactionlistener.OnBackPressedInteraction;
 import com.android.interactionlistener.OnFragmentInteractionListener;
+import com.google.android.gms.maps.model.Marker;
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -41,10 +45,13 @@ import com.mapbox.mapboxsdk.location.modes.CameraMode;
 import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.mapbox.mapboxsdk.style.layers.FillLayer;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonOptions;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
@@ -54,6 +61,7 @@ import org.pursuit.firebasetools.model.Zone;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
 import org.pursuit.usolo.map.categories.CategoryAdapter;
+import org.pursuit.usolo.map.categories.OnCategorySelectListener;
 import org.pursuit.usolo.map.nearbygroups.NearbyGroupAdapter;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
 import org.pursuit.usolo.model.Category;
@@ -61,11 +69,13 @@ import org.pursuit.usolo.model.Category;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
 
@@ -77,10 +87,13 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     private static final String MAPBOX_STYLE_URL =
       "mapbox://styles/naomyp/cjvpowkpn0yd01co7844p4m6w";
     private static final String MARKER_IMAGE = "custom-marker";
+    private static final String CURRENT_FILTER = "FILTER";
     public static final String GROUP_PREFS = "GROUP";
     public static final String CURRENT_GROUP_KEY = "current_group";
 
-    private CompositeDisposable disposables = new CompositeDisposable();
+    private final CompositeDisposable disposables = new CompositeDisposable();
+    private Disposable groupMarkerDisposable;
+    private List<SymbolLayer> symbolLayers = new LinkedList<>();
     private ZoneViewModel zoneViewModel;
     private OnFragmentInteractionListener listener;
     private MapView mapView;
@@ -97,8 +110,8 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     private SymbolManager symbolManager;
     private String currentGroupSharedPref;
     private LocationComponent locationComponent;
-    RecyclerView recyclerViewNearby, recyclerViewCategories;
-    NearbyGroupAdapter nearbyGroupAdapter;
+    private RecyclerView recyclerViewNearby, recyclerViewCategories;
+    private NearbyGroupAdapter nearbyGroupAdapter;
 
     public static MapFragment newInstance() {
         return new MapFragment();
@@ -140,7 +153,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
-        setUpCatogoryRV();
+        setUpCategoryRV();
         setCurrentActivityView();
         nearbyGroupAdapter = new NearbyGroupAdapter(listener, Collections.emptyList());
         setGroups();
@@ -198,21 +211,108 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
           this.mapboxMap = mapboxMap);
     }
 
-    private void setUpCatogoryRV() {
+    private void setUpCategoryRV() {
         List<Category> categories = new ArrayList<>();
         List<String> categoryNames = Arrays.asList(getResources().getStringArray(R.array.categoryNames));
-        int[] iconId = {R.drawable.icon_nighltlife_purple_grad, R.drawable.icon_sightseeing_purple_grad, R.drawable.icon_eatdrink_purple_grad};
-
+        int[] iconId = {R.drawable.icon_nighltlife_purple_grad,
+          R.drawable.icon_sightseeing_purple_grad,
+          R.drawable.icon_eatdrink_purple_grad};
         int count = 0;
         for (String title : categoryNames) {
             categories.add(new Category(title, iconId[count]));
             count++;
         }
-
-        CategoryAdapter categoryAdapter = new CategoryAdapter(categories);
+        CategoryAdapter categoryAdapter = new CategoryAdapter(categories, sharedPreferences.edit(),
+          category -> {
+              mapView.getMapAsync(mapboxMap1 -> {
+                  Style style = mapboxMap1.getStyle();
+                  for (SymbolLayer symbolLayer :
+                    symbolLayers) {
+                      style.removeLayer(symbolLayer);
+                  }
+                  symbolLayers.clear();
+                  for (String title :
+                    zoneViewModel.getGroupNames()) {
+                      style.removeSource(title);
+                  }
+                  if (zoneViewModel.clearGroupNames()) {
+                      groupMarkerDisposable.dispose();
+                      groupMarkerDisposable = zoneViewModel.getAllGroups().subscribe(group ->
+                          showGroup(group, mapboxMap1.getStyle(), category),
+                        throwable -> Log.d(TAG, "onCategorySelected: " + throwable.getMessage()));
+                  }
+              });
+          });
         recyclerViewCategories.setAdapter(categoryAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewCategories.setLayoutManager(layoutManager);
+    }
+
+    private void findViews(@NonNull View view) {
+        mapView = view.findViewById(R.id.mapView);
+        recyclerViewCategories = view.findViewById(R.id.category_recycler);
+        recyclerViewNearby = view.findViewById(R.id.nearby_recycler);
+        nearbyActivityHeader = view.findViewById(R.id.happening_header);
+        nearbyActivityHeader.setVisibility(View.INVISIBLE);
+        currentActivityCard = view.findViewById(R.id.current_activity_card);
+        currentActivityHeader = view.findViewById(R.id.current_activity_textHeader);
+        groupTitle = view.findViewById(R.id.textView_activity_name);
+        groupLocation = view.findViewById(R.id.textView_activity_address);
+        view.<Button>findViewById(R.id.view_your_group_button).setOnClickListener(v -> {
+            if (currentGroupSharedPref != null)
+                listener.inflateGroupChatFragment(currentGroup);
+        });
+        view.<Button>findViewById(R.id.leave_group_button).setOnClickListener(v -> {
+            sharedPreferences.edit().clear().apply();
+            setCurrentActivityView();
+        });
+        fabProfile = view.findViewById(R.id.fab_profile);
+        View bottomSheet = view.findViewById(R.id.bottom_sheet);
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setPeekHeight(130);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        mapView.getMapAsync(mapboxMap -> {
+            MapFragment.this.mapboxMap = mapboxMap;
+            mapboxMap.setStyle(new Style.Builder().fromUrl(MAPBOX_STYLE_URL), style -> {
+                MapFragment.this.enableLocationComponent(style);
+                fabRecenterUser.setOnClickListener(v -> {
+                    CameraPosition position = MapFragment.this.getCameraPosition();
+                    mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position), 2000);
+                });
+                setZoneStyle(style);
+                groupMarkerDisposable = zoneViewModel.getAllGroups()
+                  .subscribe(group -> showGroup(group, style,
+                    Objects.requireNonNull(sharedPreferences
+                      .getString(CURRENT_FILTER, "Nightlife"))),
+                    throwable -> Log.d(TAG, "findViews: " + throwable.getMessage()));
+                disposables.add(zoneViewModel.getAllZones(Objects.requireNonNull(MapFragment.this.getContext()))
+                  .map(zone -> zoneViewModel.getMapFeature(zone))
+                  .subscribe(mapFeature -> {
+                      MapFragment.this.showZone(mapFeature.location);
+                      String sourceId = mapFeature.name + "_source";
+                      style.addSource(new GeoJsonSource(sourceId, zoneViewModel.getGeometry(mapFeature)));
+                      style.addLayer(new FillLayer(mapFeature.name, sourceId).withProperties(
+                        fillColor(Color.parseColor(MapFragment.this.getString(R.string.zone_colour)))));
+                  }, throwable -> Log.d(TAG, "findViews: " + throwable.getMessage())));
+                mapboxMap.addOnMapClickListener(point -> {
+                    PointF pointf = mapboxMap.getProjection().toScreenLocation(point);
+                    RectF rectF = zoneViewModel.getRectF(pointf);
+                    for (String name : zoneViewModel.getZoneNames()) {
+                        if (mapboxMap.queryRenderedFeatures(rectF, name).size() > 0) {
+                            showZoneDialog(name);
+                            return true;
+                        }
+                    }
+                    for (String title : zoneViewModel.getGroupNames()) {
+                        if (mapboxMap.queryRenderedFeatures(rectF, title).size() > 0) {
+                            showGroupDialog(title);
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+            });
+        });
     }
 
     private void onFabClick(View v) {
@@ -236,7 +336,9 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
 
     @Override
     public void onDestroy() {
+        Log.d(TAG, "onDestroy: " + disposables.getClass());
         disposables.dispose();
+        groupMarkerDisposable.dispose();
         super.onDestroy();
     }
 
@@ -291,71 +393,6 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         rotateBackward = AnimationUtils.loadAnimation(getContext(), R.anim.fab_rotate_backward);
     }
 
-    private void findViews(@NonNull View view) {
-        recyclerViewCategories = view.findViewById(R.id.category_recycler);
-        recyclerViewNearby = view.findViewById(R.id.nearby_recycler);
-        nearbyActivityHeader = view.findViewById(R.id.happening_header);
-        nearbyActivityHeader.setVisibility(View.INVISIBLE);
-        currentActivityCard = view.findViewById(R.id.current_activity_card);
-        currentActivityHeader = view.findViewById(R.id.current_activity_textHeader);
-        groupTitle = view.findViewById(R.id.textView_activity_name);
-        groupLocation = view.findViewById(R.id.textView_activity_address);
-        view.<Button>findViewById(R.id.view_your_group_button).setOnClickListener(v -> {
-            if (currentGroupSharedPref != null)
-                listener.inflateGroupChatFragment(currentGroup);
-        });
-        view.<Button>findViewById(R.id.leave_group_button).setOnClickListener(v -> {
-            sharedPreferences.edit().clear().apply();
-            setCurrentActivityView();
-        });
-        fabProfile = view.findViewById(R.id.fab_profile);
-        View bottomSheet = view.findViewById(R.id.bottom_sheet);
-        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        bottomSheetBehavior.setPeekHeight(130);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        mapView = view.findViewById(R.id.mapView);
-        mapView.getMapAsync(mapboxMap -> {
-            MapFragment.this.mapboxMap = mapboxMap;
-            mapboxMap.setStyle(new Style.Builder().fromUrl(MAPBOX_STYLE_URL), style -> {
-                MapFragment.this.enableLocationComponent(style);
-                fabRecenterUser.setOnClickListener(v -> {
-                    CameraPosition position = MapFragment.this.getCameraPosition();
-                    mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position), 2000);
-                });
-                setZoneStyle(style);
-                disposables.add(zoneViewModel.getEatAndDrinkGroups()
-                  .subscribe(this::showGroup));
-                disposables.add(zoneViewModel.getNightLifeGroups()
-                  .subscribe(this::showGroup));
-                disposables.add(zoneViewModel.getSightSeeingGroups()
-                  .subscribe(this::showGroup));
-                disposables.add(zoneViewModel.getOutDoorsAndRecGroups()
-                  .subscribe(this::showGroup));
-
-                disposables.add(zoneViewModel.getAllZones(Objects.requireNonNull(MapFragment.this.getContext()))
-                  .map(zone -> zoneViewModel.getMapFeature(zone))
-                  .subscribe(mapFeature -> {
-                      MapFragment.this.showZone(mapFeature.location);
-                      String sourceId = mapFeature.name + "_source";
-                      style.addSource(new GeoJsonSource(sourceId, zoneViewModel.getGeometry(mapFeature)));
-                      style.addLayer(new FillLayer(mapFeature.name, sourceId).withProperties(
-                        fillColor(Color.parseColor(MapFragment.this.getString(R.string.zone_colour)))));
-                  }, throwable -> Log.d(TAG, "findViews: " + throwable.getMessage())));
-                mapboxMap.addOnMapClickListener(point -> {
-                    PointF pointf = mapboxMap.getProjection().toScreenLocation(point);
-                    RectF rectF = zoneViewModel.getRectF(pointf);
-                    for (String name : zoneViewModel.getZoneNames()) {
-                        if (mapboxMap.queryRenderedFeatures(rectF, name).size() > 0) {
-                            MapFragment.this.showZoneDialog(name);
-                            return true;
-                        }
-                    }
-                    return false;
-                });
-            });
-        });
-    }
-
     @NotNull
     private CameraPosition getCameraPosition() {
         return new CameraPosition.Builder()
@@ -375,17 +412,22 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         symbolManager.setTextAllowOverlap(true);
     }
 
-    private void showGroup(Group group) {
-        Log.d(TAG, "showGroup: " + group.getTitle());
+    private void showGroup(@NonNull final Group group,
+                           @NonNull final Style style,
+                           @NonNull final String category) {
         Bitmap sightSeeingImage = BitmapFactory.decodeResource(getResources(), R.drawable.binocular);
-        Objects.requireNonNull(mapboxMap.getStyle()).addImage(group.getTitle(), sightSeeingImage);
-        symbolManager.create(new SymbolOptions()
-          .withLatLng(group.getLocation())
-          .withIconImage(group.getTitle())
-          .withIconSize(1.5f));
-        symbolManager.addClickListener(symbol -> {
-            showGroupDialog(symbol.getIconImage());
-        });
+        if (group.getCategory().equals(category)) {
+            if (sightSeeingImage != null) {
+                style.addImage(group.getTitle(), sightSeeingImage);
+                GeoJsonSource geoJsonSource = new GeoJsonSource(group.getTitle(), Feature.fromGeometry(
+                  Point.fromLngLat(group.getLocation().getLongitude(), group.getLocation().getLatitude())));
+                style.addSource(geoJsonSource);
+                SymbolLayer symbolLayer = new SymbolLayer(group.getTitle(), group.getTitle());
+                symbolLayer.withProperties(PropertyFactory.iconImage(group.getTitle()));
+                symbolLayers.add(symbolLayer);
+                style.addLayer(symbolLayer);
+            }
+        }
     }
 
     private void showGroupDialog(String imageName) {
