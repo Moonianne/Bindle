@@ -329,6 +329,8 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
                   .subscribe(this::showGroup));
                 disposables.add(zoneViewModel.getSightSeeingGroups()
                   .subscribe(this::showGroup));
+                disposables.add(zoneViewModel.getOutDoorsAndRecGroups()
+                  .subscribe(this::showGroup));
 
                 disposables.add(zoneViewModel.getAllZones(Objects.requireNonNull(MapFragment.this.getContext()))
                   .map(zone -> zoneViewModel.getMapFeature(zone))
@@ -374,6 +376,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     }
 
     private void showGroup(Group group) {
+        Log.d(TAG, "showGroup: " + group.getTitle());
         Bitmap sightSeeingImage = BitmapFactory.decodeResource(getResources(), R.drawable.binocular);
         Objects.requireNonNull(mapboxMap.getStyle()).addImage(group.getTitle(), sightSeeingImage);
         symbolManager.create(new SymbolOptions()

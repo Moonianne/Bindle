@@ -89,7 +89,8 @@ public final class AddLocationFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 lottieAnimationView.setVisibility(View.VISIBLE);
                 bindleBusinessesList.clear();
-                disposable = viewModel.makeBindleBusinessNetworkCall(CategoryConstants.CATEGORIES[position])
+                viewModel.setCategorySelected(CategoryConstants.FIREBASE_CATEGORY_VERSION[position]);
+                disposable = viewModel.makeBindleBusinessNetworkCall(CategoryConstants.NETWORK_CATEGORY_VERSION[position])
                         .doOnSubscribe(unit -> adapter.clear())
                         .subscribe(bindleBusiness -> {
                             bindleBusinessesList.add(bindleBusiness);

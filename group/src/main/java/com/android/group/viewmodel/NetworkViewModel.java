@@ -7,11 +7,13 @@ import com.android.group.respository.ApiRepository;
 
 import io.reactivex.Observable;
 
-public class NetworkViewModel extends ViewModel{
+public class NetworkViewModel extends ViewModel {
 
     private static NetworkViewModel viewModel;
     private OnVenueSelectedListener venueSelectedListener;
     private ApiRepository apiRepository;
+    private OnCategorySelectedListener categorySelectedListener;
+
 
     private NetworkViewModel() {
         apiRepository = new ApiRepository();
@@ -32,8 +34,21 @@ public class NetworkViewModel extends ViewModel{
         venueSelectedListener.bindleBusinessSelected(venue);
     }
 
+
     public void setVenueSelectedListener(OnVenueSelectedListener listener) {
         this.venueSelectedListener = listener;
+    }
+
+    public void setCategorySelectedListener(OnCategorySelectedListener categorySelectedListener) {
+        this.categorySelectedListener = categorySelectedListener;
+    }
+
+    public void setCategorySelected(String categorySelected){
+        categorySelectedListener.categorySelected(categorySelected);
+    }
+
+    public interface OnCategorySelectedListener{
+        void categorySelected(String category);
     }
 
     public interface OnVenueSelectedListener {

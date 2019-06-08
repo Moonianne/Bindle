@@ -36,9 +36,3 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
         return categories.size();
     }
 }
-
-
-//    public void updateList(List<Category> newCategories) {
-//        categories = newCategories;
-//        notifyDataSetChanged();
-//    }
