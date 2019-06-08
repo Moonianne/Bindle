@@ -18,7 +18,7 @@ import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.squareup.picasso.Picasso;
 
 
-public class AddLocationViewHolder extends RecyclerView.ViewHolder {
+class AddLocationViewHolder extends RecyclerView.ViewHolder {
 
     private NetworkViewModel viewModel;
     private OnFragmentInteractionCompleteListener listener;

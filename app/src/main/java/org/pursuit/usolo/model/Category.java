@@ -1,6 +1,6 @@
 package org.pursuit.usolo.model;
 
-public class Category {
+public final class Category {
 
     private String name;
     private int icon;
