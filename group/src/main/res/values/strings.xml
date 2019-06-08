@@ -14,7 +14,7 @@
         <item>Nightlife</item>
         <item>Eat &amp; Drink</item>
         <item>Sight-Seeing</item>
-        <item>Outdoors &amp; Recreation</item>
+        <!--<item>Outdoors &amp; Recreation</item>-->
     </string-array>
 
 </resources>
