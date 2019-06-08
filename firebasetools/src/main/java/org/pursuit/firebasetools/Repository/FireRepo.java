@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -319,6 +321,10 @@ public final class FireRepo {
                 Log.d(TAG, "firebase auth failed");
             }
         });
+    }
+
+    public void logOutFireBase() {
+        FirebaseAuth.getInstance().signOut();
     }
 
     private static FireRepo instance;

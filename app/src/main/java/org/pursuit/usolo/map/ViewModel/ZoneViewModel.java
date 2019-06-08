@@ -59,6 +59,10 @@ public final class ZoneViewModel extends ViewModel {
         fireRepo.loginToFireBase(email, password);
     }
 
+    public void logoutFireBase() {
+        fireRepo.logOutFireBase();
+    }
+
     public Maybe<Group> getGroup(String chatKey) {
         return fireRepo.getGroup(chatKey);
     }

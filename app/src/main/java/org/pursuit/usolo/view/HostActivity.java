@@ -8,9 +8,11 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.authentication.view.AuthenticationFragment;
@@ -44,6 +46,7 @@ public final class HostActivity extends AppCompatActivity
     private static final String TAG = "HostActivity";
     private ZoneViewModel viewModel;
     public static boolean granted;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +54,13 @@ public final class HostActivity extends AppCompatActivity
         setContentView(R.layout.activity_host);
 
         viewModel = ViewModelProviders.of(this).get(ZoneViewModel.class);
-        SharedPreferences preferences = getSharedPreferences(LOGIN_PREFS, MODE_PRIVATE);
+        preferences = getSharedPreferences(LOGIN_PREFS, MODE_PRIVATE);
         if (preferences.contains(EMAIL_PREFS) && preferences.contains(PASS_PREFS)) {
             viewModel.loginToFireBase(preferences.getString(EMAIL_PREFS, "metalraidernt@gmail.com"),
               preferences.getString(PASS_PREFS, "password123"));
             requestUserLocationPermission();
         } else {
-            inflateFragment(AuthenticationFragment.getInstance());
+            inflateAuthenticationFragment();
         }
     }
 
@@ -90,7 +93,7 @@ public final class HostActivity extends AppCompatActivity
 
     @Override
     public void inflateProfileFragment(boolean bool, String userID) {
-        inflateFragment(ProfileView.newInstance(bool, userID), true);
+            inflateFragment(ProfileView.newInstance(bool, userID), true);
     }
 
     @Override
@@ -119,6 +122,20 @@ public final class HostActivity extends AppCompatActivity
     @Override
     public void onLoginSuccess() {
         requestUserLocationPermission();
+    }
+
+    @Override
+    public void inflateAuthenticationFragment() {
+        inflateFragment(AuthenticationFragment.getInstance(), false);
+    }
+
+    @Override
+    public void logoutUser() {
+        SharedPreferences.Editor preferencesEditor = preferences.edit();
+        preferencesEditor.clear();
+        preferencesEditor.apply();
+        viewModel.logoutFireBase();
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     @Override
@@ -170,5 +187,4 @@ public final class HostActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
 }

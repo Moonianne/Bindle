@@ -17,6 +17,10 @@ public interface OnFragmentInteractionListener {
 
     void onLoginSuccess();
 
+    void inflateAuthenticationFragment();
+
+    void logoutUser();
+
     void openDirections(String VenueAddress);
 
     void inflateExploreGroupsFragment();
