@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,16 +17,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="24dp"
         android:fontFamily="@font/maven_pro_bold"
         android:text="@string/form_your_group"
         android:textColor="@color/cPrimaryDark"
-        android:textSize="28sp" />
+        android:textSize="40sp"
+        app:layout_constraintBottom_toTopOf="@id/group_name_edit_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/group_name_edit_text"
-        android:layout_width="327dp"
-        android:layout_height="50dp"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
         android:layout_gravity="center"
         android:layout_marginTop="40dp"
         android:background="@drawable/rectangle_round_light_gray"
@@ -34,22 +38,30 @@
         android:inputType="text"
         android:maxLines="1"
         android:padding="10dp"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/add_location_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/form_group_header_text_view" />
 
     <LinearLayout
         android:id="@+id/add_location_container"
-        android:layout_width="380dp"
-        android:layout_height="100dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:clickable="true"
         android:focusable="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/group_description_edit_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/group_name_edit_text">
 
 
         <android.support.constraint.ConstraintLayout
-            android:layout_width="330dp"
-            android:layout_height="70dp"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
             android:layout_gravity="center"
             android:background="@drawable/purple_rect_round"
             android:orientation="horizontal"
@@ -82,7 +94,7 @@
                 android:padding="10dp"
                 android:text="@string/add_location"
                 android:textColor="@color/colorWhite"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -94,29 +106,38 @@
 
     <EditText
         android:id="@+id/group_description_edit_text"
-        android:layout_width="327dp"
-        android:layout_height="240dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_gravity="center"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/rectangle_round_light_gray"
         android:gravity="top|start"
         android:hint="@string/provide_a_description_for_this_group"
         android:inputType="textLongMessage|textMultiLine|textCapSentences"
         android:padding="10dp"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/start_group_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_location_container" />
 
     <Button
         android:id="@+id/start_group_button"
-        android:layout_width="330dp"
+        android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_gravity="center"
+        android:layout_marginTop="16dp"
         android:background="@drawable/purple_rect_round"
-        android:elevation="4dp"
+        android:elevation="8dp"
         android:fontFamily="@font/maven_pro_bold"
         android:gravity="center"
         android:padding="4dp"
         android:text="@string/start_group"
         android:textColor="@color/colorWhite"
-        android:textSize="16sp" />
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/group_description_edit_text" />
 
-</android.support.v7.widget.LinearLayoutCompat>
+</android.support.constraint.ConstraintLayout>

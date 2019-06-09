@@ -22,7 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.HostActivity"></activity>
+        <activity android:name=".view.HostActivity"
+            android:windowSoftInputMode="adjustPan"
+            ></activity>
 
         <service android:name=".map.services.GeoFencingIntentService" />
 
