@@ -33,15 +33,22 @@ public final class ApiRepository {
     public Observable<BindleBusiness> getBindleBusinesses(String category) {
         return getFourSquareData(category)
                 .subscribeOn(Schedulers.io())
-                .flatMapIterable((Function<FourSquareResponse, Iterable<Venue>>) fourSquareResponse ->
-                        fourSquareResponse.getResponse().getVenues())
-                .map(venue -> {
-                    try {
-                        return new BindleBusiness(venue, ApiRepository.this.getYelpApiData(venue).blockingFirst().getBusinesses().get(0));
-                    } catch (IndexOutOfBoundsException e) {
-                        Log.d(TAG, "This threw it: " + e.toString());
+                .flatMapIterable(new Function<FourSquareResponse, Iterable<Venue>>() {
+                    @Override
+                    public Iterable<Venue> apply(FourSquareResponse fourSquareResponse) throws Exception {
+                        return fourSquareResponse.getResponse().getVenues();
                     }
-                    return new BindleBusiness(venue, null);
+                })
+                .map(new Function<Venue, BindleBusiness>() {
+                    @Override
+                    public BindleBusiness apply(Venue venue) throws Exception {
+                        try {
+                            return new BindleBusiness(venue, ApiRepository.this.getYelpApiData(venue).blockingFirst().getBusinesses().get(0));
+                        } catch (IndexOutOfBoundsException e) {
+                            Log.d(TAG, "This threw it: " + e.toString());
+                        }
+                        return new BindleBusiness(venue, null);
+                    }
                 })
                 .observeOn(AndroidSchedulers.mainThread());
     }
