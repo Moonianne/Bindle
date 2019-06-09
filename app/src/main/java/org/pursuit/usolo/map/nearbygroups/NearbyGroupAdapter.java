@@ -13,12 +13,13 @@ import org.pursuit.usolo.R;
 
 import java.util.List;
 
-public class NearbyGroupAdapter extends RecyclerView.Adapter<NearbyGroupViewHolder> {
+public final class NearbyGroupAdapter extends RecyclerView.Adapter<NearbyGroupViewHolder> {
 
     private OnFragmentInteractionListener listener;
     private List<Group> groupList;
 
-    public NearbyGroupAdapter(OnFragmentInteractionListener listener, List<Group> groupList) {
+    public NearbyGroupAdapter(@NonNull OnFragmentInteractionListener listener,
+                              @NonNull List<Group> groupList) {
         this.listener = listener;
         this.groupList = groupList;
     }
@@ -26,8 +27,8 @@ public class NearbyGroupAdapter extends RecyclerView.Adapter<NearbyGroupViewHold
     @NonNull
     @Override
     public NearbyGroupViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.nearby_item_layout, viewGroup, false);
-        return new NearbyGroupViewHolder(view);
+        return new NearbyGroupViewHolder(LayoutInflater.from(viewGroup.getContext())
+          .inflate(R.layout.nearby_item_layout, viewGroup, false));
     }
 
     @Override

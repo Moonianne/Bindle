@@ -14,39 +14,33 @@ import org.pursuit.firebasetools.model.User;
 import java.util.LinkedList;
 import java.util.List;
 
+import io.reactivex.disposables.Disposable;
+
 public final class GroupViewModel extends ViewModel {
 
     private static final String TAG = "GroupViewModel";
     private final FireRepo fireRepo = FireRepo.getInstance();
     private Group currentGroup;
 
-    public void setCurrentGroup(Group currentGroup) {
-        this.currentGroup = currentGroup;
-    }
-
     public void createGroup(String groupName,
                             BindleBusiness bindleBusiness,
                             String groupDescription,
                             String category) {
         List<User> userList = new LinkedList<>();
-        User user =
-          new User("Eric",
-            fireRepo.getCurrentUser().getEmail(),
-            "I like to code and dance bachata.",
-            "Nightlife",
-            "pursuit",
-            groupName,
-            null,
-            null,
-            fireRepo.getCurrentUser().getUid());
-        userList.add(user);
-        String[] formattedAddress = bindleBusiness.getVenue().getLocation().getFormattedAddress();
-        currentGroup = new Group(userList, groupDescription, category,
-          new LatLng(bindleBusiness.getVenue().getLocation().getLat(),
-            bindleBusiness.getVenue().getLocation().getLng()), groupName.toLowerCase() + "Chat",
-          groupName.toLowerCase(), 1, formattedAddress[0] + "\n" + formattedAddress[1],
-          bindleBusiness.getBusiness().getImage_url(), bindleBusiness.getVenue().getName());
-        Log.d(TAG, "createGroup: " + currentGroup.toString());
+        Disposable disposable = fireRepo
+          .getUserInfo(fireRepo.getCurrentUser().getUid())
+          .subscribe(user -> {
+              user.setCurrentGroup(groupName);
+              userList.add(user);
+              String[] formattedAddress = bindleBusiness.getVenue().getLocation().getFormattedAddress();
+              currentGroup = new Group(userList, groupDescription, category,
+                new LatLng(bindleBusiness.getVenue().getLocation().getLat(),
+                  bindleBusiness.getVenue().getLocation().getLng()), groupName.toLowerCase() + "Chat",
+                groupName, 1, formattedAddress[0] + "\n" + formattedAddress[1],
+                bindleBusiness.getBusiness().getImage_url(), bindleBusiness.getVenue().getName());
+              pushGroup();
+              Log.d(TAG, "createGroup: " + currentGroup.toString());
+          });
     }
 
     public void pushGroup() {
