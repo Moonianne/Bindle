@@ -11,28 +11,16 @@ import com.android.interactionlistener.OnFragmentInteractionListener;
 import org.pursuit.firebasetools.model.Group;
 import org.pursuit.usolo.R;
 
-public class NearbyGroupViewHolder extends RecyclerView.ViewHolder {
-
-    private Button viewGroup;
-    private TextView groupTitle, groupAddress;
-
-    public NearbyGroupViewHolder(@NonNull View itemView) {
+final class NearbyGroupViewHolder extends RecyclerView.ViewHolder {
+    NearbyGroupViewHolder(@NonNull View itemView) {
         super(itemView);
-
-        viewGroup = itemView.findViewById(R.id.view_group_nearby_button);
-        groupTitle = itemView.findViewById(R.id.venue_name_nearby);
-        groupAddress = itemView.findViewById(R.id.venue_address_nearby);
     }
 
-    public void onBind(Group group, final OnFragmentInteractionListener listener) {
-
-        groupTitle.setText(group.getTitle());
-        groupAddress.setText(group.getAddress());
-        viewGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.inflateViewGroupFragment(group);
-            }
-        });
+    final void onBind(@NonNull final Group group,
+                      @NonNull final OnFragmentInteractionListener listener) {
+        itemView.<TextView>findViewById(R.id.venue_name_nearby).setText(group.getTitle());
+        itemView.<TextView>findViewById(R.id.venue_address_nearby).setText(group.getAddress());
+        itemView.<Button>findViewById(R.id.view_group_nearby_button).setOnClickListener(v ->
+          listener.inflateViewGroupFragment(group));
     }
 }
