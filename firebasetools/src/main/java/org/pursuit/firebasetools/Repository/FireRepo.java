@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -152,8 +153,10 @@ public final class FireRepo {
         ));
     }
 
-    public void addGroup(@NonNull final Group group) {
-        groupDataBaseReference.child(group.getTitle()).setValue(group);
+    public void addGroup(@NonNull final Group group,
+                         @NonNull final OnSuccessListener listener) {
+        groupDataBaseReference.child(group.getTitle()).setValue(group)
+          .addOnSuccessListener(listener);
     }
 
     public Maybe<Group> getGroup(@NonNull final String key) {

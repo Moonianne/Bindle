@@ -1,10 +1,12 @@
 package com.android.group.viewmodel;
 
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.android.group.model.bindle.BindleBusiness;
 import com.android.group.model.foursquare.Venue;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.pursuit.firebasetools.Repository.FireRepo;
@@ -22,10 +24,11 @@ public final class GroupViewModel extends ViewModel {
     private final FireRepo fireRepo = FireRepo.getInstance();
     private Group currentGroup;
 
-    public void createGroup(String groupName,
-                            BindleBusiness bindleBusiness,
-                            String groupDescription,
-                            String category) {
+    public final void createGroup(@NonNull final String groupName,
+                                  @NonNull final BindleBusiness bindleBusiness,
+                                  @NonNull final String groupDescription,
+                                  @NonNull final String category,
+                                  @NonNull final OnSuccessListener listener) {
         List<User> userList = new LinkedList<>();
         Disposable disposable = fireRepo
           .getUserInfo(fireRepo.getCurrentUser().getUid())
@@ -38,12 +41,16 @@ public final class GroupViewModel extends ViewModel {
                   bindleBusiness.getVenue().getLocation().getLng()), groupName.toLowerCase() + "Chat",
                 groupName, 1, formattedAddress[0] + "\n" + formattedAddress[1],
                 bindleBusiness.getBusiness().getImage_url(), bindleBusiness.getVenue().getName());
-              pushGroup();
+              pushGroup(listener);
               Log.d(TAG, "createGroup: " + currentGroup.toString());
           });
     }
 
-    public void pushGroup() {
-        fireRepo.addGroup(currentGroup);
+    public Group getCurrentGroup() {
+        return currentGroup;
+    }
+
+    private void pushGroup(OnSuccessListener listener) {
+        fireRepo.addGroup(currentGroup, listener);
     }
 }

@@ -150,6 +150,12 @@ public final class HostActivity extends AppCompatActivity
     }
 
     @Override
+    public void goToGroupChatFragment(Group group) {
+        getSupportFragmentManager().popBackStackImmediate();
+        inflateGroupChatFragment(group);
+    }
+
+    @Override
     public void closeFragment() {
         getSupportFragmentManager().popBackStackImmediate();
     }
@@ -181,12 +187,12 @@ public final class HostActivity extends AppCompatActivity
 
     private void placeGeofences() {
         disposable.add(hostViewModel.getAllGroups().observeOn(AndroidSchedulers.mainThread())
-          .subscribe((Consumer<Group>) group -> {
+          .subscribe(group -> {
               Log.d(TAG, "placeGeofences: " + group.getTitle());
               new GeoFenceCreator(HostActivity.this, group.getLocation()).createGeoFence();
           }));
         disposable.add(hostViewModel.getAllZones(this).observeOn(AndroidSchedulers.mainThread())
-          .subscribe((Consumer<Zone>) zone -> {
+          .subscribe(zone -> {
               Log.d(TAG, "placeGeofences: " + zone.getName());
               new GeoFenceCreator(HostActivity.this, zone.getLocation()).createGeoFence();
           }));
@@ -194,9 +200,7 @@ public final class HostActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-
         List fragmentList = getSupportFragmentManager().getFragments();
-
         boolean handled = false;
         for (Object f : fragmentList) {
             if (f instanceof OnBackPressedInteraction) {
@@ -207,7 +211,6 @@ public final class HostActivity extends AppCompatActivity
                 }
             }
         }
-
         if (!handled) {
             super.onBackPressed();
         }

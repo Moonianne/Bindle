@@ -20,6 +20,7 @@ import com.android.group.R;
 import com.android.group.model.bindle.BindleBusiness;
 import com.android.group.viewmodel.GroupViewModel;
 import com.android.group.viewmodel.NetworkViewModel;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 public final class StartGroupFragment extends Fragment
   implements NetworkViewModel.OnVenueSelectedListener,
@@ -91,7 +92,7 @@ public final class StartGroupFragment extends Fragment
         currentCategory = category;
     }
 
-    private void setStartButtonOnClickListener(View view) {
+    private void setStartButtonOnClickListener(@NonNull final View view) {
         view.<Button>findViewById(R.id.start_group_button).setOnClickListener(v -> {
             final String groupName =
               view.<EditText>findViewById(R.id.group_name_edit_text)
@@ -108,8 +109,10 @@ public final class StartGroupFragment extends Fragment
                             groupViewModel.createGroup(groupName,
                               userSelectedBindleBusiness,
                               groupDescription,
-                              currentCategory);
-                            interactionCompleteListener.closeFragment();
+                              currentCategory, o ->
+                                interactionCompleteListener
+                                  .goToGroupChatFragment(groupViewModel.getCurrentGroup())
+                            );
                         } else {
                             makeToast("Select a Location");
                         }
