@@ -11,9 +11,11 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -27,6 +29,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.interactionlistener.OnBackPressedInteraction;
@@ -89,6 +92,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     private Disposable groupMarkerDisposable;
     private List<SymbolLayer> symbolLayers = new LinkedList<>();
     private ZoneViewModel zoneViewModel;
+    private ImageView bottomSheetArrow;
     private OnFragmentInteractionListener listener;
     private MapView mapView;
     private boolean isFabOpen;

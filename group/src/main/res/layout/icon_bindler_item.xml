@@ -22,7 +22,7 @@
         android:layout_gravity="center"
         android:fontFamily="@font/maven_pro_bold"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/cPrimaryDark"
+        android:textColor="@color/colorWhite"
         android:text="Name" />
 
 </LinearLayout>

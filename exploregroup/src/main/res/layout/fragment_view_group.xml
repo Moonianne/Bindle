@@ -115,7 +115,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="4dp"
             android:layout_marginBottom="4dp"
-            android:background="@drawable/rectangle_round_outline_purple"
+            android:background="@drawable/ripple_outline_purple"
             android:fontFamily="@font/maven_pro_bold"
             android:text="Join Group"
             android:textColor="@color/cPrimaryDark" />

@@ -51,10 +51,12 @@
 
     <TextView
         android:id="@+id/groupChat_location"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="4dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         android:fontFamily="@font/maven_pro_medium"
         android:text="location"
         android:textColor="@color/cDark"
@@ -62,29 +64,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/groupChat_title"
+        app:layout_constraintTop_toBottomOf="@id/groupChat_category"
         app:layout_constraintVertical_bias="0.04" />
-
-    <!--<TextView-->
-        <!--android:id="@+id/groupChat_description"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:layout_marginTop="4dp"-->
-        <!--android:fontFamily="@font/maven_pro_medium"-->
-        <!--android:text="description"-->
-        <!--android:textColor="@color/cDark"-->
-        <!--app:layout_constraintBottom_toTopOf="parent"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@id/groupChat_location" />-->
 
     <TextView
         android:id="@+id/groupChat_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="4dp"
         android:fontFamily="@font/maven_pro_medium"
         android:text="category"
         android:textColor="@color/cDark"
@@ -92,7 +79,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/groupChat_location"
+        app:layout_constraintTop_toBottomOf="@id/groupChat_title"
         app:layout_constraintVertical_bias="0.268" />
 
     <LinearLayout
@@ -105,28 +92,28 @@
         app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/groupChat_category">
+        app:layout_constraintTop_toBottomOf="@id/groupChat_location">
 
         <Button
             android:id="@+id/leave_group_button"
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_margin="15dp"
             android:background="@drawable/rectangle_round_white"
             android:fontFamily="@font/maven_pro_bold"
             android:text="Leave Group"
-            android:textColor="@color/cDark"
+            android:textColor="@color/cPrimaryDark"
             android:textSize="12sp" />
 
         <Button
-            android:id="@+id/groupChat_viewMembers_button"
+            android:id="@+id/group_chat_view_details_button"
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_margin="15dp"
             android:background="@drawable/rectangle_round_white"
             android:fontFamily="@font/maven_pro_bold"
-            android:text="Bindlers"
-            android:textColor="@color/cDark"
+            android:text="More Details"
+            android:textColor="@color/cPrimaryDark"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -145,6 +132,7 @@
         android:id="@+id/groupChat_bindlers_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="15dp"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

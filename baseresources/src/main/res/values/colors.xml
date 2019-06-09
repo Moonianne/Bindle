@@ -5,6 +5,7 @@
     <color name="colorTrans">#00FFFFFF</color>
     <color name="colorTransPrimaryDark">#A17755CC</color>
     <color name="colorTransPrimaryLight">#A8A3E7FC</color>
+    <color name="cDarkTrans">#B01C5CA5</color>
     <color name="cPrimaryLight">#FFB68E</color>
     <color name="cPrimary">#A3E7FC</color>
     <color name="cPrimaryDark">#7755CC</color>

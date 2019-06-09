@@ -1,106 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="400dp"
-    android:layout_gravity="center_horizontal"
-    android:background="@color/colorTrans"
-    android:orientation="vertical">
+    android:layout_height="370dp"
+    android:layout_gravity="center"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="24dp"
+    android:layout_marginBottom="24dp"
+    android:elevation="5dp"
+    android:padding="10dp"
+    app:cardBackgroundColor="@color/colorWhite"
+    android:foreground="@drawable/rectangle_round_outline_purple"
+    app:cardCornerRadius="28dp">
 
-    <android.support.v7.widget.CardView
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:layout_gravity="center"
-        android:layout_margin="8dp"
-        android:padding="20dp"
-        app:cardBackgroundColor="@color/colorWhite"
-        app:cardCornerRadius="20dp">
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:background="@color/colorWhite">
 
         <ImageView
             android:id="@+id/group_location_image_view"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:scaleType="centerCrop" />
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:background="@color/colorTransPrimaryLight" />
+            android:layout_height="230dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="135dp"
-            android:layout_gravity="bottom"
-            android:background="@color/cPrimary"
-            android:padding="5dp">
+        <TextView
+            android:id="@+id/group_name_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:paddingTop="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/maven_pro_black"
+            android:maxLines="1"
+            android:textColor="@color/cPrimaryDark"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@id/group_category_text_view"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/group_location_image_view"
+            tools:text="Group Name" />
 
-            <TextView
-                android:id="@+id/group_name_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
-                android:ellipsize="end"
-                android:fontFamily="@font/maven_pro_bold"
-                android:maxLines="1"
-                android:textColor="@color/cPrimaryDark"
-                android:textSize="24sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Group Name" />
+        <TextView
+            android:id="@+id/group_category_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:fontFamily="@font/maven_pro_bold"
+            android:textColor="@color/cPrimaryDark"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/group_location_address_text_view"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/group_name_text_view"
+            tools:text="Category : Arts And Entertainment" />
 
-            <TextView
-                android:id="@+id/group_category_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/maven_pro_medium"
-                android:textColor="@color/cPrimaryDark"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@id/group_location_address_text_view"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/group_name_text_view"
-                tools:text="Category : Arts And Entertainment" />
-
-
-            <TextView
-                android:id="@+id/group_location_address_text_view"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:ellipsize="end"
-                android:fontFamily="@font/maven_pro_medium"
-                android:textColor="@color/cPrimaryDark"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/view_group_button"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/group_category_text_view"
-                tools:text="329 E 197th Street, \nBronx, NY 10458" />
+        <TextView
+            android:id="@+id/group_location_address_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="48dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="0dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/maven_pro_bold"
+            android:textColor="@color/cPrimaryDark"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/group_category_text_view"
+            tools:text="329 E 197th Street, \nBronx, NY 10458" />
 
 
-            <Button
-                android:id="@+id/view_group_button"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_margin="8dp"
-                android:background="@drawable/rectangle_round_outline_purple"
-                android:clickable="true"
-                android:focusable="true"
-                android:fontFamily="@font/maven_pro_bold"
-                android:text="view group"
-                android:textColor="@color/cPrimaryDark"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+        <Button
+            android:id="@+id/view_group_button"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_margin="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/ripple_outline_purple"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/maven_pro_bold"
+            android:text="view group"
+            android:textColor="@color/cPrimaryDark"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.947"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
-            <!--</LinearLayout>-->
-
-        </android.support.constraint.ConstraintLayout>
-
-    </android.support.v7.widget.CardView>
-</LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>
