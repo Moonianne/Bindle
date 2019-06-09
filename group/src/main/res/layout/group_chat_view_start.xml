@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent=".40"
+        app:layout_constraintGuide_percent="0.3"
         app:layout_constraintTop_toBottomOf="@id/groupChat_bindlers_rv" />
 
     <android.support.constraint.Guideline
@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.60" />
+        app:layout_constraintGuide_begin="439dp" />
 
     <TextView
         android:id="@+id/groupChat_title"
@@ -132,7 +132,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/groupChat_bindlers_rv">
+        app:layout_constraintTop_toBottomOf="@id/guideline1">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/groupChat_rv"
