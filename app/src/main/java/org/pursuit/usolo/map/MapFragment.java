@@ -424,8 +424,12 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         zoneDialog.setContentView(R.layout.zone_dialog_layout);
         zoneDialog.<TextView>findViewById(R.id.zone_dialog_name)
           .setText(imageName);
-        zoneDialog.<Button>findViewById(R.id.view_zone_button).setOnClickListener(v -> {
-        });
+        zoneDialog.<Button>findViewById(R.id.view_zone_button).setOnClickListener(v ->
+          disposables.addAll(zoneViewModel.getGroup(imageName).observeOn(AndroidSchedulers.mainThread())
+            .subscribe(group -> {
+                listener.inflateViewGroupFragment(group);
+                zoneDialog.dismiss();
+            })));
         Objects.requireNonNull(
           zoneDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         zoneDialog.show();
