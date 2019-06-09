@@ -54,8 +54,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="4dp"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="32dp"
         android:fontFamily="@font/maven_pro_medium"
         android:text="location"
@@ -118,7 +118,7 @@
     </LinearLayout>
 
 
-    <View
+    <FrameLayout
         android:id="@+id/bgView"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -126,7 +126,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline1" />
+        app:layout_constraintTop_toBottomOf="@id/guideline1">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/groupChat_rv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintEnd_toEndOf="@id/bgView"
+            app:layout_constraintStart_toStartOf="@id/bgView"
+            app:layout_constraintTop_toBottomOf="@id/guideline1" />
+
+    </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/groupChat_bindlers_rv"
@@ -136,22 +150,10 @@
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/groupChat_category"
         app:layout_constraintVertical_bias="0.212" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/groupChat_rv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@android:color/transparent"
-        app:layout_constraintEnd_toEndOf="@id/bgView"
-        app:layout_constraintStart_toStartOf="@id/bgView"
-        app:layout_constraintTop_toBottomOf="@id/guideline1" />
 
 
 </android.support.constraint.motion.MotionLayout>
