@@ -53,10 +53,12 @@
 
     <TextView
         android:id="@+id/groupChat_location"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="4dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         android:fontFamily="@font/maven_pro_bold"
         android:text="location"
         android:textColor="@color/cPrimaryDark"
@@ -64,30 +66,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/groupChat_title"
+        app:layout_constraintTop_toBottomOf="@id/groupChat_category"
         app:layout_constraintVertical_bias="0.0" />
-
-    <!--<TextView-->
-        <!--android:id="@+id/groupChat_description"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:layout_marginTop="4dp"-->
-        <!--android:fontFamily="@font/maven_pro_medium"-->
-        <!--android:text="description"-->
-        <!--android:textColor="@color/cPrimaryDark"-->
-        <!--app:layout_constraintBottom_toTopOf="@id/guideline2"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@id/groupChat_title"-->
-        <!--app:layout_constraintVertical_bias="0.203" />-->
 
     <TextView
         android:id="@+id/groupChat_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="8dp"
         android:fontFamily="@font/maven_pro_black"
         android:text="category"
         android:textColor="@color/cPrimaryDark"
@@ -95,7 +81,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/groupChat_location"
+        app:layout_constraintTop_toBottomOf="@+id/groupChat_title"
         app:layout_constraintVertical_bias="0.0" />
 
     <LinearLayout
@@ -109,14 +95,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/groupChat_category"
+        app:layout_constraintTop_toBottomOf="@+id/groupChat_location"
         app:layout_constraintVertical_bias="0.0">
 
         <Button
             android:id="@+id/leave_group_button"
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_height="30dp"
+            android:layout_margin="15dp"
             android:background="@drawable/rectangle_round_white"
             android:fontFamily="@font/maven_pro_bold"
             android:text="Leave Group"
@@ -126,11 +112,11 @@
         <Button
             android:id="@+id/group_chat_view_details_button"
             android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_margin="15dp"
             android:background="@drawable/rectangle_round_white"
             android:fontFamily="@font/maven_pro_bold"
-            android:text="Details"
+            android:text="More Details"
             android:textColor="@color/cPrimaryDark"
             android:textSize="12sp" />
     </LinearLayout>
@@ -140,6 +126,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorTrans"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

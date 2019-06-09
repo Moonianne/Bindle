@@ -55,7 +55,7 @@ public class GroupChatView extends Fragment implements OnBackPressedInteraction 
     private GroupChatViewModel viewModel;
     private TextView groupTitle, groupLocation, groupCategory;
     private EditText groupMessageEditText;
-    private Button groupSendButton, groupLeaveButton, groupBindlersButton, groupDetailsButton;
+    private Button groupSendButton, groupLeaveButton, groupDetailsButton;
     private RecyclerView groupChatRecycler, bindlerRecycler;
     private BindlerAdapter bindlerAdapter;
     private LinearLayoutManager layoutManager;
@@ -159,7 +159,6 @@ public class GroupChatView extends Fragment implements OnBackPressedInteraction 
         groupCategory = view.findViewById(R.id.groupChat_category);
         groupSendButton = view.findViewById(R.id.groupChat_sendButton);
         groupLeaveButton = view.findViewById(R.id.leave_group_button);
-        groupBindlersButton = view.findViewById(R.id.groupChat_viewMembers_button);
         groupMessageEditText = view.findViewById(R.id.groupChat_messageEditText);
         groupDetailsButton = view.findViewById(R.id.group_chat_view_details_button);
     }
