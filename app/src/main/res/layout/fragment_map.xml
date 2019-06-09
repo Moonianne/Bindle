@@ -78,32 +78,28 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="16dp"
                             android:layout_marginTop="16dp"
-                            android:layout_marginBottom="8dp"
                             android:fontFamily="@font/maven_pro_bold"
                             android:text="Meeting at the MET"
                             android:textColor="@color/cPrimaryDark"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintVertical_bias="0.0"
                             mapbox:layout_constraintLeft_toLeftOf="parent"
                             mapbox:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
                             android:id="@+id/textView_activity_address"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
+                            android:layout_marginStart="16dp"
                             android:layout_marginEnd="4dp"
                             android:layout_marginBottom="8dp"
                             android:fontFamily="@font/maven_pro_medium"
                             android:text="1000 5th Ave \n New York, NY 10028"
                             android:textColor="@color/cDark"
-                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintVertical_bias="0.0"
-                            mapbox:layout_constraintLeft_toRightOf="@+id/textView_activity_name"
-                            mapbox:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintStart_toEndOf="@+id/textView_activity_name"
+                            app:layout_constraintTop_toBottomOf="@+id/textView_activity_name"
+                            mapbox:layout_constraintLeft_toRightOf="@+id/textView_activity_name" />
 
                         <Button
                             android:id="@+id/view_your_group_button"
