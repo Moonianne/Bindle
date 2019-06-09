@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.HostActivity"
-            android:windowSoftInputMode="adjustPan"
+            android:windowSoftInputMode="adjustPan|adjustResize"
             ></activity>
 
         <service android:name=".map.services.GeoFencingIntentService" />
