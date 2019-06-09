@@ -48,12 +48,12 @@
             android:text="Address: "
             android:textColor="@color/cPrimaryDark"
             android:textSize="16sp"
-            app:layout_constraintEnd_toStartOf="@+id/select_text_view"
+            app:layout_constraintEnd_toStartOf="@+id/button_select"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/venue_name" />
 
         <Button
-            android:id="@+id/select_text_view"
+            android:id="@+id/button_select"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_marginEnd="4dp"
@@ -65,13 +65,13 @@
             android:text="Select"
             android:textColor="@color/cPrimaryDark"
             android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@id/more_info_text_view"
+            app:layout_constraintBottom_toTopOf="@id/button_more_info"
             app:layout_constraintRight_toRightOf="parent"
             tools:layout_editor_absoluteX="278dp"
             tools:layout_editor_absoluteY="84dp" />
 
         <Button
-            android:id="@+id/more_info_text_view"
+            android:id="@+id/button_more_info"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_marginVertical="8dp"
