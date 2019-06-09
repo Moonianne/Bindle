@@ -24,6 +24,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/add_location_recycler_view"
         android:layout_width="match_parent"
+        android:background="@color/cPrimary"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,26 +35,26 @@
         android:id="@+id/category_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:overlapAnchor="false"
+        android:spinnerMode="dialog"
         app:layout_constraintBottom_toTopOf="@id/add_location_recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/add_location_search_view"
-        android:overlapAnchor = "false"
-        android:spinnerMode="dialog" />
+        app:layout_constraintTop_toBottomOf="@id/add_location_search_view" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/bindle_color_load"
         android:layout_width="400dp"
         android:layout_height="400dp"
-        android:visibility="invisible"
-        app:lottie_autoPlay="true"
-        app:lottie_fileName="bindle_logo_anim_color_loading.json"
-        app:lottie_loop="true"
         android:adjustViewBounds="true"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="bindle_logo_anim_color_loading.json"
+        app:lottie_loop="true" />
 
 
 </android.support.constraint.ConstraintLayout>
