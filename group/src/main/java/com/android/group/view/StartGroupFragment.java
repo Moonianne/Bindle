@@ -3,19 +3,16 @@ package com.android.group.view;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +23,10 @@ import com.android.group.viewmodel.NetworkViewModel;
 
 public final class StartGroupFragment extends Fragment
   implements NetworkViewModel.OnVenueSelectedListener,
-  NetworkViewModel.OnCategorySelectedListener{
+  NetworkViewModel.OnCategorySelectedListener {
+
+    public static final String GROUP_PREFS = "GROUP";
+    public static final String CURRENT_GROUP_KEY = "current_group";
 
     private NetworkViewModel networkViewModel;
     private GroupViewModel groupViewModel;
@@ -103,11 +103,12 @@ public final class StartGroupFragment extends Fragment
                 if (!groupDescription.equals("")) {
                     if (currentCategory != null) {
                         if (userSelectedBindleBusiness != null) {
+                            getActivity().getSharedPreferences(GROUP_PREFS,
+                              Context.MODE_PRIVATE).edit().putString(CURRENT_GROUP_KEY, groupName).apply();
                             groupViewModel.createGroup(groupName,
                               userSelectedBindleBusiness,
                               groupDescription,
                               currentCategory);
-                            groupViewModel.pushGroup();
                             interactionCompleteListener.closeFragment();
                         } else {
                             makeToast("Select a Location");

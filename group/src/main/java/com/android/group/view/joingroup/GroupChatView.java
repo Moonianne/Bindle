@@ -40,6 +40,7 @@ import org.pursuit.firebasetools.model.Group;
 import org.pursuit.firebasetools.model.Message;
 
 import java.util.Collections;
+import java.util.LinkedList;
 
 
 public class GroupChatView extends Fragment implements OnBackPressedInteraction {
@@ -109,7 +110,11 @@ public class GroupChatView extends Fragment implements OnBackPressedInteraction 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
-        bindlerAdapter = new BindlerAdapter (interactionListener, group.getUserList());
+        if (group.getUserList() == null) {
+            bindlerAdapter = new BindlerAdapter(interactionListener, new LinkedList<>());
+        } else {
+            bindlerAdapter = new BindlerAdapter(interactionListener, group.getUserList());
+        }
         setUpGroupInfo();
         setUpChatRV();
         setUpBindlerRV();
@@ -173,8 +178,8 @@ public class GroupChatView extends Fragment implements OnBackPressedInteraction 
 
     private void updateMessageList(Query query) {
         fireBaseAdapter = new GroupMessageAdapter(new FirebaseRecyclerOptions.Builder<Message>()
-                .setQuery(query, viewModel.getParser())
-                .build(), viewModel, interactionListener);
+          .setQuery(query, viewModel.getParser())
+          .build(), viewModel, interactionListener);
         fireBaseAdapter.notifyDataSetChanged();
     }
 
@@ -200,7 +205,7 @@ public class GroupChatView extends Fragment implements OnBackPressedInteraction 
             }
         });
         groupMessageEditText
-                .setFilters(new InputFilter[]{new InputFilter.LengthFilter(DEFAULT_MSG_LENGTH_LIMIT)});
+          .setFilters(new InputFilter[]{new InputFilter.LengthFilter(DEFAULT_MSG_LENGTH_LIMIT)});
     }
 
     private void sendMessageOnClick() {
@@ -217,8 +222,8 @@ public class GroupChatView extends Fragment implements OnBackPressedInteraction 
                 super.onItemRangeInserted(positionStart, itemCount);
                 int lastVisiblePosition = layoutManager.findLastCompletelyVisibleItemPosition();
                 if (lastVisiblePosition == -1 ||
-                        (positionStart >= (fireBaseAdapter.getItemCount() - 1) &&
-                                lastVisiblePosition == (positionStart - 1))) {
+                  (positionStart >= (fireBaseAdapter.getItemCount() - 1) &&
+                    lastVisiblePosition == (positionStart - 1))) {
                     groupChatRecycler.scrollToPosition(positionStart);
                 }
             }
@@ -227,7 +232,7 @@ public class GroupChatView extends Fragment implements OnBackPressedInteraction 
 
     private void inflateDialogImageBox() {
         View view = LayoutInflater.from(getContext())
-                .inflate(R.layout.group_details_dialog, null);
+          .inflate(R.layout.group_details_dialog, null);
         setViews(view);
         setAlertDialog(view);
     }
@@ -242,24 +247,24 @@ public class GroupChatView extends Fragment implements OnBackPressedInteraction 
 
     private void setViews(View view) {
         Picasso.get().load(group.getImage_url())
-                .into(view.<ImageView>findViewById(R.id.group_details_business_image_view));
+          .into(view.<ImageView>findViewById(R.id.group_details_business_image_view));
         view.<TextView>findViewById(R.id.group_details_business_name_text_view)
-                .setText(group.getBuiness_name());
+          .setText(group.getBuiness_name());
         view.<TextView>findViewById(R.id.group_details_business_address_text_view)
-                .setText(group.getAddress());
+          .setText(group.getAddress());
         view.<TextView>findViewById(R.id.group_details_description_text_view)
-                .setText(group.getDescription());
+          .setText(group.getDescription());
         view.<Button>findViewById(R.id.group_details_button_directions)
-                .setOnClickListener(v -> interactionListener.openDirections(group.getAddress()));
+          .setOnClickListener(v -> interactionListener.openDirections(group.getAddress()));
     }
 
     @Override
     public boolean onBackPressed() {
         MotionLayout motionLayout = getView().findViewById(R.id.start_layout);
-        if (motionLayout.getProgress() != 0){
+        if (motionLayout.getProgress() != 0) {
             motionLayout.transitionToStart();
             return true;
-        }else {
+        } else {
             return false;
         }
     }

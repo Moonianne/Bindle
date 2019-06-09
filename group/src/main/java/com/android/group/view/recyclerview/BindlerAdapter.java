@@ -40,8 +40,10 @@ public class BindlerAdapter extends RecyclerView.Adapter<BindlerViewHolder> {
         return userList.size();
     }
 
-    public void setDataChange(List<User> userList){
-        this.userList = userList;
-        notifyDataSetChanged();
+    public void setDataChange(List<User> userList) {
+        if (userList != null) {
+            notifyDataSetChanged();
+            this.userList = userList;
+        }
     }
 }

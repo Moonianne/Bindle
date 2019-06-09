@@ -30,6 +30,7 @@ import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 public final class ZoneViewModel extends ViewModel {
@@ -161,5 +162,9 @@ public final class ZoneViewModel extends ViewModel {
     public boolean clearGroupNames() {
         groupNames.clear();
         return groupNames.size() == 0;
+    }
+
+    public Disposable removeUserFromGroup(String groupKey) {
+        return fireRepo.removeUserFromGroup(groupKey);
     }
 }

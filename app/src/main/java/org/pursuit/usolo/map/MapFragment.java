@@ -129,6 +129,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         sharedPreferences = getActivity().getSharedPreferences(GROUP_PREFS, Context.MODE_PRIVATE);
         if (sharedPreferences.contains(CURRENT_GROUP_KEY)) {
             currentGroupSharedPref = sharedPreferences.getString(CURRENT_GROUP_KEY, "");
+            Log.d(TAG, "onCreate: " + currentGroupSharedPref);
         }
     }
 
@@ -157,7 +158,6 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         fab1.setOnClickListener(v -> onFabClick(v));
         fab2.setOnClickListener(v -> onFabClick(v));
         fabProfile.setOnClickListener(v -> onFabClick(v));
-
         assignAnimations();
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         fabRecenterUser.show();
@@ -212,27 +212,29 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
             categories.add(new Category(title, iconId[count]));
             count++;
         }
-        CategoryAdapter categoryAdapter = new CategoryAdapter(categories, sharedPreferences.edit(),
-          category -> {
-              mapView.getMapAsync(mapboxMap1 -> {
-                  Style style = mapboxMap1.getStyle();
-                  for (SymbolLayer symbolLayer :
-                    symbolLayers) {
-                      style.removeLayer(symbolLayer);
-                  }
-                  symbolLayers.clear();
-                  for (String title :
-                    zoneViewModel.getGroupNames()) {
-                      style.removeSource(title);
-                  }
-                  if (zoneViewModel.clearGroupNames()) {
-                      groupMarkerDisposable.dispose();
-                      groupMarkerDisposable = zoneViewModel.getAllGroups().subscribe(group ->
-                          showGroup(group, mapboxMap1.getStyle(), category),
-                        throwable -> Log.d(TAG, "onCategorySelected: " + throwable.getMessage()));
-                  }
-              });
-          });
+        CategoryAdapter categoryAdapter =
+          new CategoryAdapter(categories, sharedPreferences.edit(),
+            category -> {
+                mapView.getMapAsync(mapboxMap1 -> {
+                    Style style = mapboxMap1.getStyle();
+                    for (SymbolLayer symbolLayer :
+                      symbolLayers) {
+                        style.removeLayer(symbolLayer);
+                    }
+                    symbolLayers.clear();
+                    for (String title :
+                      zoneViewModel.getGroupNames()) {
+                        style.removeSource(title);
+                    }
+                    if (zoneViewModel.clearGroupNames()) {
+                        groupMarkerDisposable.dispose();
+                        groupMarkerDisposable = zoneViewModel.getAllGroups().subscribe(group ->
+                            showGroup(group, mapboxMap1.getStyle(), category),
+                          throwable ->
+                            Log.d(TAG, "onCategorySelected: " + throwable.getMessage()));
+                    }
+                });
+            });
         recyclerViewCategories.setAdapter(categoryAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewCategories.setLayoutManager(layoutManager);
@@ -253,7 +255,9 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
                 listener.inflateGroupChatFragment(currentGroup);
         });
         view.<Button>findViewById(R.id.leave_group_button).setOnClickListener(v -> {
+            disposables.add(zoneViewModel.removeUserFromGroup(currentGroupSharedPref));
             sharedPreferences.edit().clear().apply();
+            currentGroupSharedPref = null;
             setCurrentActivityView();
         });
         fabProfile = view.findViewById(R.id.fab_profile);
@@ -373,7 +377,6 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     private void setCurrentActivityView() {
         currentActivityHeader.setText(R.string.current_activity_none);
         currentActivityCard.setVisibility(View.INVISIBLE);
-
     }
 
     private void assignAnimations() {
@@ -483,7 +486,10 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         setCurrentActivityView();
         if (sharedPreferences.contains(CURRENT_GROUP_KEY)) {
             currentGroupSharedPref = sharedPreferences.getString(CURRENT_GROUP_KEY, "");
+            Log.d(TAG, "onResume: " + currentGroupSharedPref);
             getGroup();
+        } else {
+            currentGroupSharedPref = null;
         }
         setGroups();
         if (zoneViewModel.getRecentGroupList().size() > 0)
