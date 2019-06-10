@@ -2,11 +2,14 @@ package org.pursuit.usolo.map.utils;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import org.pursuit.usolo.R;
+import org.pursuit.usolo.view.HostActivity;
 
 public class Notification {
 
@@ -25,11 +28,17 @@ public class Notification {
 
     private android.app.Notification buildNotification() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-          .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
-          .setContentTitle("Test Maps")
-          .setContentText("GeoFenceActivated - " + message)
+          .setSmallIcon(R.drawable.bindle_logo)
+          .setContentTitle("Bindle Point Nearby!")
+          .setContentText(message)
+          .setContentIntent(getPendingIntent())
           .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         return builder.build();
+    }
+
+    private PendingIntent getPendingIntent(){
+        return PendingIntent.getActivity(context,3,
+          new Intent(context, HostActivity.class),PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private void createNotificationChannel() {
@@ -46,6 +55,5 @@ public class Notification {
         notificationManager.notify(NOTIFICATION_ID, buildNotification());
         context = null;
     }
-
 
 }

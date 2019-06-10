@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
@@ -17,17 +16,24 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.pursuit.usolo.map.services.GeoFencingIntentService;
 
-public class GeoFenceCreator {
+import io.reactivex.annotations.NonNull;
+
+public final class GeoFenceCreator {
 
     private static final String TAG = "GeoFenceCreator";
+    public static final String LOCATION_NAME = "Location Name";
     private GeofencingClient geofencingClient;
     private Geofence geofence;
     private Context context;
     private LatLng latLng;
+    private String locationName;
 
-    public GeoFenceCreator(Context context, LatLng latLng) {
+    public GeoFenceCreator(@NonNull final Context context,
+                           @NonNull final LatLng latLng,
+                           @NonNull final String locationName) {
         this.context = context;
         this.latLng = latLng;
+        this.locationName = locationName;
     }
 
     private void initGeoFenceClient() {
@@ -36,7 +42,7 @@ public class GeoFenceCreator {
 
     private void buildGeoFence() {
         geofence = new Geofence.Builder()
-          .setRequestId("Pursuit")
+          .setRequestId(locationName)
           .setCircularRegion(latLng.getLatitude(), latLng.getLongitude(), 300f)
           .setExpirationDuration(Geofence.NEVER_EXPIRE)
           .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
@@ -46,8 +52,14 @@ public class GeoFenceCreator {
     private void addGeoFenceToClient() {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             geofencingClient.addGeofences(getGeoFencingRequest(), getGeoFencePendingIntent())
-              .addOnSuccessListener(aVoid -> Log.d(TAG, "onSuccess: added fence"))
-              .addOnFailureListener(e -> Log.d(TAG, "onFailure: " + e));
+              .addOnSuccessListener(aVoid -> {
+                  tearDown();
+                  Log.d(TAG, "onSuccess: added fence");
+              })
+              .addOnFailureListener(e -> {
+                  tearDown();
+                  Log.d(TAG, "onFailure: " + e);
+              });
         }
     }
 
@@ -59,8 +71,9 @@ public class GeoFenceCreator {
     }
 
     private PendingIntent getGeoFencePendingIntent() {
-        return PendingIntent.getService(context, 0,
-          new Intent(context, GeoFencingIntentService.class),
+        Intent geofenceIntent = new Intent(context, GeoFencingIntentService.class);
+        geofenceIntent.putExtra(LOCATION_NAME, locationName);
+        return PendingIntent.getService(context, 0, geofenceIntent,
           PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
