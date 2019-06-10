@@ -32,6 +32,7 @@ import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
 import org.pursuit.usolo.map.utils.GeoFenceCreator;
+import org.pursuit.usolo.map.utils.Notification;
 import org.pursuit.usolo.viewmodel.HostViewModel;
 import org.pursuit.zonechat.view.ZoneChatFragment;
 
@@ -39,7 +40,6 @@ import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
 
 public final class HostActivity extends AppCompatActivity
   implements OnFragmentInteractionListener, StartGroupFragment.OnFragmentInteractionListener,
@@ -60,7 +60,6 @@ public final class HostActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_host);
-
         hostViewModel = ViewModelProviders.of(this).get(HostViewModel.class);
         viewModel = ViewModelProviders.of(this).get(ZoneViewModel.class);
         preferences = getSharedPreferences(LOGIN_PREFS, MODE_PRIVATE);
@@ -78,7 +77,7 @@ public final class HostActivity extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             granted = true;
-            placeGeofences();
+            initGeofences();
             Log.d(TAG, "onRequestPermissionsResult: " + "thisran");
             inflateFragment(MapFragment.newInstance());
         } else {
@@ -166,7 +165,7 @@ public final class HostActivity extends AppCompatActivity
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
         } else {
             granted = true;
-            placeGeofences();
+            initGeofences();
             inflateFragment(MapFragment.newInstance());
         }
     }
@@ -185,16 +184,16 @@ public final class HostActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
-    private void placeGeofences() {
+    private void initGeofences() {
         disposable.add(hostViewModel.getAllGroups().observeOn(AndroidSchedulers.mainThread())
           .subscribe(group -> {
-              Log.d(TAG, "placeGeofences: " + group.getTitle());
-              new GeoFenceCreator(HostActivity.this, group.getLocation()).createGeoFence();
+              Log.d(TAG, "initGeofences: " + group.getTitle());
+              new GeoFenceCreator(HostActivity.this, group.getLocation(), group.getTitle()).createGeoFence();
           }));
         disposable.add(hostViewModel.getAllZones(this).observeOn(AndroidSchedulers.mainThread())
           .subscribe(zone -> {
-              Log.d(TAG, "placeGeofences: " + zone.getName());
-              new GeoFenceCreator(HostActivity.this, zone.getLocation()).createGeoFence();
+              Log.d(TAG, "initGeofences: " + zone.getName());
+              new GeoFenceCreator(HostActivity.this, zone.getLocation(), zone.getName()).createGeoFence();
           }));
     }
 
