@@ -1,4 +1,5 @@
 <resources>
     <string name="click_on_polygon_toast">You Clicked a GeoFence!</string>
     <string name="zone_colour">#3f7755CC</string>
+    <string name="name_of_app">Bindle</string>
 </resources>

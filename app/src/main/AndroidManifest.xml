@@ -10,7 +10,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/bindle_logo"
-        android:label="@string/app_name"
+        android:label="@string/name_of_app"
         android:roundIcon="@drawable/bindle_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -23,9 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".view.HostActivity"
-            android:windowSoftInputMode="adjustPan|adjustResize"></activity>
+        <activity android:name=".view.HostActivity"></activity>
 
         <service android:name=".map.services.GeoFencingIntentService" />
 
