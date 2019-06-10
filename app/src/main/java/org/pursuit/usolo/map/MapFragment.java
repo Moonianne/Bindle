@@ -18,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -319,7 +320,13 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         switch (v.getId()) {
             case R.id.fabStartGroup:
                 fabRecenterUser.hide();
-                listener.inflateStartGroupFragment();
+                String currentGroupName = sharedPreferences.getString(CURRENT_GROUP_KEY, "");
+                if (currentGroupName.equals("")) {
+                    listener.inflateStartGroupFragment();
+                }else{
+                    Snackbar.make(getView(),"Already In Group " + currentGroupName, Snackbar.LENGTH_INDEFINITE)
+                      .setAction("Go to Group", v1 -> listener.inflateGroupChatFragment(currentGroup)).show();
+                }
                 break;
             case R.id.fabFindGroup:
                 fabRecenterUser.hide();
