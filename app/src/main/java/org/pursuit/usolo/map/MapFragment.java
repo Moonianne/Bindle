@@ -324,8 +324,8 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
                 if (currentGroupName.equals("")) {
                     listener.inflateStartGroupFragment();
                 }else{
-                    Snackbar.make(getView(),"Already in Group: " + currentGroupName, Snackbar.LENGTH_INDEFINITE)
-                      .setAction("Go to Group", v1 -> listener.inflateGroupChatFragment(currentGroup)).show();
+                    Snackbar snackbar = Snackbar.make(getView(), "Already in Group: \n" + currentGroupName, Snackbar.LENGTH_LONG);
+                    snackbar.setAction("Go to Group", v1 -> listener.inflateGroupChatFragment(currentGroup)).show();
                 }
                 break;
             case R.id.fabFindGroup:
