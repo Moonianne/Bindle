@@ -421,7 +421,6 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     private void showGroup(@NonNull final Group group,
                            @NonNull final Style style,
                            @NonNull final String category) {
-
         Bitmap image = null;
         switch (category) {
             case CategoryConstants.NIGHTLIFE:
@@ -434,7 +433,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
                 image = BitmapFactory.decodeResource(getResources(), R.drawable.eatdrink_icon_32);
                 break;
         }
-        if (image != null) {
+        if (image != null && group.getCategory().equals(category)) {
             setIcon(group, style, image);
         }
     }
