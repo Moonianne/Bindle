@@ -33,6 +33,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.group.model.bindle.BindleBusiness;
+import com.android.group.network.constants.CategoryConstants;
 import com.android.interactionlistener.OnBackPressedInteraction;
 import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.mapbox.geojson.Feature;
@@ -419,24 +421,27 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     private void showGroup(@NonNull final Group group,
                            @NonNull final Style style,
                            @NonNull final String category) {
-        Bitmap sightSeeingImage = BitmapFactory.decodeResource(getResources(), R.drawable.sightseeing_icon_32);
-        Bitmap nightlifeImage = BitmapFactory.decodeResource(getResources(), R.drawable.nightlife_icon_32);
-        Bitmap eatDrinkImage = BitmapFactory.decodeResource(getResources(), R.drawable.eatdrink_icon_32);
 
-        String nightLife = getResources().getStringArray(R.array.categoryNames)[0];
-        String sightSeeing = getResources().getStringArray(R.array.categoryNames)[1];
-        String eatDrink = getResources().getStringArray(R.array.categoryNames)[2];
-
-        if (category.equals(nightLife)) {
-            setIcon(group, style, nightlifeImage);
-        } else if (category.equals(sightSeeing)) {
-            setIcon(group, style, sightSeeingImage);
-        } else if (category.equals(eatDrink)) {
-            setIcon(group, style, eatDrinkImage);
+        Bitmap image = null;
+        switch (category) {
+            case CategoryConstants.NIGHTLIFE:
+                image = BitmapFactory.decodeResource(getResources(), R.drawable.nightlife_icon_32);
+                break;
+            case CategoryConstants.SIGHTSEEING:
+                image = BitmapFactory.decodeResource(getResources(), R.drawable.sightseeing_icon_32);
+                break;
+            case CategoryConstants.EAT_AND_DRINK:
+                image = BitmapFactory.decodeResource(getResources(), R.drawable.eatdrink_icon_32);
+                break;
+        }
+        if (image != null) {
+            setIcon(group, style, image);
         }
     }
 
-    private void setIcon(@NonNull Group group, @NonNull Style style, Bitmap image) {
+    private void setIcon(@NonNull final Group group,
+                         @NonNull final Style style,
+                         @NonNull final Bitmap image) {
         style.addImage(group.getTitle(), image);
         GeoJsonSource geoJsonSource = new GeoJsonSource(group.getTitle(), Feature.fromGeometry(
           Point.fromLngLat(group.getLocation().getLongitude(), group.getLocation().getLatitude())));
