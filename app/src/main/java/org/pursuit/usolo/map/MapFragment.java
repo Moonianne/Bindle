@@ -323,7 +323,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
                 String currentGroupName = sharedPreferences.getString(CURRENT_GROUP_KEY, "");
                 if (currentGroupName.equals("")) {
                     listener.inflateStartGroupFragment();
-                }else{
+                } else {
                     Snackbar snackbar = Snackbar.make(getView(), "Already in Group: \n" + currentGroupName, Snackbar.LENGTH_LONG);
                     snackbar.setAction("Go to Group", v1 -> listener.inflateGroupChatFragment(currentGroup)).show();
                 }
@@ -419,19 +419,32 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     private void showGroup(@NonNull final Group group,
                            @NonNull final Style style,
                            @NonNull final String category) {
-        Bitmap sightSeeingImage = BitmapFactory.decodeResource(getResources(), R.drawable.binocular);
-        if (group.getCategory().equals(category)) {
-            if (sightSeeingImage != null) {
-                style.addImage(group.getTitle(), sightSeeingImage);
-                GeoJsonSource geoJsonSource = new GeoJsonSource(group.getTitle(), Feature.fromGeometry(
-                  Point.fromLngLat(group.getLocation().getLongitude(), group.getLocation().getLatitude())));
-                style.addSource(geoJsonSource);
-                SymbolLayer symbolLayer = new SymbolLayer(group.getTitle(), group.getTitle());
-                symbolLayer.withProperties(PropertyFactory.iconImage(group.getTitle()));
-                symbolLayers.add(symbolLayer);
-                style.addLayer(symbolLayer);
-            }
+        Bitmap sightSeeingImage = BitmapFactory.decodeResource(getResources(), R.drawable.sightseeing_icon_32);
+        Bitmap nightlifeImage = BitmapFactory.decodeResource(getResources(), R.drawable.nightlife_icon_32);
+        Bitmap eatDrinkImage = BitmapFactory.decodeResource(getResources(), R.drawable.eatdrink_icon_32);
+
+        String nightLife = getResources().getStringArray(R.array.categoryNames)[0];
+        String sightSeeing = getResources().getStringArray(R.array.categoryNames)[1];
+        String eatDrink = getResources().getStringArray(R.array.categoryNames)[2];
+
+        if (category.equals(nightLife)) {
+            setIcon(group, style, nightlifeImage);
+        } else if (category.equals(sightSeeing)) {
+            setIcon(group, style, sightSeeingImage);
+        } else if (category.equals(eatDrink)) {
+            setIcon(group, style, eatDrinkImage);
         }
+    }
+
+    private void setIcon(@NonNull Group group, @NonNull Style style, Bitmap image) {
+        style.addImage(group.getTitle(), image);
+        GeoJsonSource geoJsonSource = new GeoJsonSource(group.getTitle(), Feature.fromGeometry(
+          Point.fromLngLat(group.getLocation().getLongitude(), group.getLocation().getLatitude())));
+        style.addSource(geoJsonSource);
+        SymbolLayer symbolLayer = new SymbolLayer(group.getTitle(), group.getTitle());
+        symbolLayer.withProperties(PropertyFactory.iconImage(group.getTitle()));
+        symbolLayers.add(symbolLayer);
+        style.addLayer(symbolLayer);
     }
 
     private void showGroupDialog(String imageName) {
