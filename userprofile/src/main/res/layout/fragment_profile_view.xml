@@ -6,258 +6,373 @@
     android:layout_height="match_parent"
     tools:context=".view.ProfileView">
 
-    <TextView
-        android:id="@+id/locationView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/maven_pro_medium"
-        android:text="location"
-        android:textColor="@color/cPrimaryDark"
-        android:textSize="20sp"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/upload_profile_photoButton" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/profilephoto_border"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="8dp"
-        android:elevation="5dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/userprofile_border"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_display_name" />
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_width="145dp"
-        android:layout_height="145dp"
-        android:layout_marginTop="16dp"
-        app:cardBackgroundColor="@color/colorWhite"
-        app:cardCornerRadius="70dp"
-        app:layout_constraintBottom_toBottomOf="@id/profilephoto_border"
-        app:layout_constraintEnd_toEndOf="@id/profilephoto_border"
-        app:layout_constraintStart_toStartOf="@id/profilephoto_border"
-        app:layout_constraintTop_toTopOf="@id/profilephoto_border"
-        app:layout_constraintVertical_bias="0.214">
-
-        <ImageView
-            android:id="@+id/profilephoto"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop"
-            android:src="@drawable/sightseeing_image" />
+            android:layout_height="wrap_content"
+            android:padding="16dp">
 
-    </android.support.v7.widget.CardView>
+            <TextView
+                android:id="@+id/locationView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/maven_pro_medium"
+                android:text="location"
+                android:textColor="@color/cPrimaryDark"
+                android:textSize="20sp"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/upload_profile_photoButton" />
 
+            <View
+                android:id="@+id/divider0"
+                android:layout_width="32dp"
+                android:layout_height="0.9dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="24dp"
+                android:background="@color/cPrimaryDark"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/locationView"/>
 
-    <TextView
-        android:id="@+id/profile_display_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="8dp"
-        android:fontFamily="@font/maven_pro_bold"
-        android:foregroundGravity="center"
-        android:gravity="center"
-        android:text="DisplayName"
-        android:textColor="@color/cPrimaryDark"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/profilephoto_border"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="52dp"
+                android:layout_marginEnd="8dp"
+                android:elevation="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/userprofile_border"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider_display" />
 
-    <Button
-        android:id="@+id/edit_display_name_button"
-        android:layout_width="150dp"
-        android:layout_height="30dp"
-        android:background="@drawable/ripple_outline_purple"
-        android:fontFamily="@font/maven_pro_bold"
-        android:text="Edit Display Name"
-        android:textColor="@color/cPrimaryDark"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@id/profilephoto_border"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profile_display_name" />
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="145dp"
+                android:layout_height="145dp"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="@color/colorWhite"
+                app:cardCornerRadius="70dp"
+                app:layout_constraintBottom_toBottomOf="@id/profilephoto_border"
+                app:layout_constraintEnd_toEndOf="@id/profilephoto_border"
+                app:layout_constraintStart_toStartOf="@id/profilephoto_border"
+                app:layout_constraintTop_toTopOf="@id/profilephoto_border"
+                app:layout_constraintVertical_bias="0.214">
 
-    <TextView
-        android:id="@+id/interest_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:fontFamily="@font/maven_pro_medium"
-        android:gravity="center"
-        android:text="My Interests"
-        android:textColor="@color/cPrimaryDark"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/locationView" />
+                <ImageView
+                    android:id="@+id/profilephoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/sightseeing_image" />
 
-    <TextView
-        android:id="@+id/interests_textview"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="16dp"
-        android:fontFamily="@font/maven_pro_medium"
-        android:gravity="center"
-        android:text="art, music, beer"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@id/interest_editText"
-        app:layout_constraintEnd_toEndOf="@id/interest_editText"
-        app:layout_constraintStart_toStartOf="@id/interest_editText"
-        app:layout_constraintTop_toTopOf="@id/interest_editText" />
-
-    <EditText
-        android:id="@+id/interest_editText"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="8dp"
-        android:inputType="textMultiLine"
-        android:maxLines="3"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/interest_header" />
-
-    <ImageView
-        android:id="@+id/finishEdit_interestsButton"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:foreground="?attr/selectableItemBackground"
-        android:background="@drawable/ic_done_dark_24dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_interestsButton"
-        app:layout_constraintEnd_toEndOf="@+id/edit_interestsButton"
-        app:layout_constraintStart_toStartOf="@+id/edit_interestsButton"
-        app:layout_constraintTop_toTopOf="@+id/edit_interestsButton" />
-
-    <ImageView
-        android:id="@+id/edit_interestsButton"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="8dp"
-        android:foreground="?attr/selectableItemBackground"
-        android:background="@drawable/ic_edit_dark_24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/interest_header"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/interest_header" />
-
-    <TextView
-        android:id="@+id/aboutMe_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/maven_pro_medium"
-        android:text="About Me"
-        android:textColor="@color/cPrimaryDark"
-        android:textSize="20sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/interest_editText" />
-
-    <ImageView
-        android:id="@+id/edit_aboutMe_button"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:foreground="?attr/selectableItemBackground"
-        android:background="@drawable/ic_edit_dark_24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/finishEdit_aboutMe_button"
-        app:layout_constraintEnd_toEndOf="@+id/finishEdit_aboutMe_button"
-        app:layout_constraintStart_toStartOf="@+id/finishEdit_aboutMe_button"
-        app:layout_constraintTop_toTopOf="@+id/finishEdit_aboutMe_button" />
+            </android.support.v7.widget.CardView>
 
 
-    <TextView
-        android:id="@+id/aboutme_textview"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="16dp"
-        android:fontFamily="@font/maven_pro_medium"
-        android:gravity="center"
-        android:text="A little about me..."
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@id/aboutMe_editText"
-        app:layout_constraintLeft_toLeftOf="@id/aboutMe_editText"
-        app:layout_constraintRight_toRightOf="@id/aboutMe_editText"
-        app:layout_constraintTop_toTopOf="@id/aboutMe_editText"
-        tools:layout_editor_absoluteX="8dp" />
+            <TextView
+                android:id="@+id/profile_display_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="52dp"
+                android:layout_marginEnd="8dp"
+                android:fontFamily="@font/maven_pro_bold"
+                android:foregroundGravity="center"
+                android:gravity="center"
+                android:text="DisplayName"
+                android:textColor="@color/cPrimaryDark"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/aboutMe_editText"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="center"
-        android:inputType="textMultiLine"
-        android:maxLength="400"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/aboutMe_header"
-        app:layout_constraintVertical_bias="0.0" />
+            <View
+                android:id="@+id/divider_display"
+                android:layout_width="64dp"
+                android:layout_height="0.9dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="24dp"
+                android:background="@color/cPrimaryDark"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profile_display_name"/>
 
-    <ImageView
-        android:id="@+id/finishEdit_aboutMe_button"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/ic_done_dark_24dp"
-        android:visibility="invisible"
-        android:foreground="?attr/selectableItemBackground"
-        app:layout_constraintBottom_toBottomOf="@+id/aboutMe_header"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.232"
-        app:layout_constraintStart_toEndOf="@+id/aboutMe_header" />
+            <Button
+                android:id="@+id/edit_display_name_button"
+                android:layout_width="150dp"
+                android:layout_height="30dp"
+                android:background="@drawable/ripple_outline_purple"
+                android:fontFamily="@font/maven_pro_bold"
+                android:text="Edit Display Name"
+                android:textColor="@color/cPrimaryDark"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@id/profilephoto_border"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider_display" />
 
-    <Button
-        android:id="@+id/logOut_button"
-        android:layout_width="65dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/ripple_outline_purple"
-        android:fontFamily="@font/maven_pro_bold"
-        android:text="Log Out"
-        android:textColor="@color/cPrimaryDark"
-        android:textSize="11sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/upload_profile_photoButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/ripple_outline_purple"
-        android:fontFamily="@font/maven_pro_bold"
-        android:padding="8dp"
-        android:text="Edit Profile Photo"
-        android:textColor="@color/cPrimaryDark"
-        android:textSize="11sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profilephoto_border" />
+            <android.support.v7.widget.CardView
+                android:id="@+id/interest_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:padding="16dp"
+                app:cardBackgroundColor="@color/cPrimaryDark"
+                app:cardCornerRadius="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider0">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/interest_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/maven_pro_medium"
+                        android:gravity="center"
+                        android:text="My Interests"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="20sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:id="@+id/divider1"
+                        android:layout_width="0dp"
+                        android:layout_height="0.7dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@color/colorWhite"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/interest_header"/>
+
+                    <TextView
+                        android:id="@+id/interests_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:fontFamily="@font/maven_pro_medium"
+                        android:gravity="center"
+                        android:layout_marginTop="8dp"
+                        android:padding="16dp"
+                        android:text="art, music, beer"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider1" />
+
+                    <EditText
+                        android:id="@+id/interest_editText"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="8dp"
+                        android:inputType="textMultiLine"
+                        android:maxLines="3"
+                        android:textColor="@color/colorWhite"
+                        android:visibility="invisible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/interest_header" />
+
+                    <ImageView
+                        android:id="@+id/finishEdit_interestsButton"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/ic_done_dark_24dp"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="@+id/edit_interestsButton"
+                        app:layout_constraintEnd_toEndOf="@+id/edit_interestsButton"
+                        app:layout_constraintStart_toStartOf="@+id/edit_interestsButton"
+                        app:layout_constraintTop_toTopOf="@+id/edit_interestsButton" />
+
+                    <ImageView
+                        android:id="@+id/edit_interestsButton"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/ic_edit_dark_24dp"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:layout_constraintBottom_toBottomOf="@+id/interest_header"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/interest_header" />
+
+                </android.support.constraint.ConstraintLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/aboutme_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:padding="16dp"
+                app:cardBackgroundColor="@color/cPrimaryDark"
+                app:cardCornerRadius="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/interest_card">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/aboutMe_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:gravity="start"
+                        android:foregroundGravity="left"
+                        android:fontFamily="@font/maven_pro_medium"
+                        android:text="About Me"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="20sp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <View
+                        android:id="@+id/divider"
+                        android:layout_width="0dp"
+                        android:layout_height="0.7dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="24dp"
+                        android:background="@color/colorWhite"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/aboutMe_header"/>
+
+                    <ImageView
+                        android:id="@+id/edit_aboutMe_button"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/ic_edit_dark_24dp"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:layout_constraintBottom_toBottomOf="@+id/finishEdit_aboutMe_button"
+                        app:layout_constraintEnd_toEndOf="@+id/finishEdit_aboutMe_button"
+                        app:layout_constraintStart_toStartOf="@+id/finishEdit_aboutMe_button"
+                        app:layout_constraintTop_toTopOf="@+id/finishEdit_aboutMe_button" />
+
+                    <TextView
+                        android:id="@+id/aboutme_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/maven_pro_medium"
+                        android:foregroundGravity="left"
+                        android:gravity="start"
+                        android:padding="16dp"
+                        android:text="A little about me..."
+                        android:textColor="@color/colorWhite"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/divider" />
+
+                    <EditText
+                        android:id="@+id/aboutMe_editText"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center"
+                        android:inputType="textMultiLine"
+                        android:maxLength="400"
+                        android:textColor="@color/colorWhite"
+                        android:visibility="invisible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/aboutMe_header"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                    <ImageView
+                        android:id="@+id/finishEdit_aboutMe_button"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/ic_done_dark_24dp"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="@+id/aboutMe_header"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.232"
+                        app:layout_constraintStart_toEndOf="@+id/aboutMe_header" />
+                </android.support.constraint.ConstraintLayout>
+            </android.support.v7.widget.CardView>
+
+            <Button
+                android:id="@+id/logOut_button"
+                android:layout_width="65dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/ripple_outline_purple"
+                android:fontFamily="@font/maven_pro_bold"
+                android:text="Log Out"
+                android:textColor="@color/cPrimaryDark"
+                android:textSize="11sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/upload_profile_photoButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/ripple_outline_purple"
+                android:fontFamily="@font/maven_pro_bold"
+                android:padding="8dp"
+                android:text="Edit Profile Photo"
+                android:textColor="@color/cPrimaryDark"
+                android:textSize="11sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profilephoto_border" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
+
 
 </android.support.constraint.ConstraintLayout>
