@@ -33,6 +33,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.group.model.bindle.BindleBusiness;
+import com.android.group.network.constants.CategoryConstants;
 import com.android.interactionlistener.OnBackPressedInteraction;
 import com.android.interactionlistener.OnFragmentInteractionListener;
 import com.mapbox.geojson.Feature;
@@ -323,7 +325,7 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
                 String currentGroupName = sharedPreferences.getString(CURRENT_GROUP_KEY, "");
                 if (currentGroupName.equals("")) {
                     listener.inflateStartGroupFragment();
-                }else{
+                } else {
                     Snackbar snackbar = Snackbar.make(getView(), "Already in Group: \n" + currentGroupName, Snackbar.LENGTH_LONG);
                     snackbar.setAction("Go to Group", v1 -> listener.inflateGroupChatFragment(currentGroup)).show();
                 }
@@ -419,19 +421,35 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
     private void showGroup(@NonNull final Group group,
                            @NonNull final Style style,
                            @NonNull final String category) {
-        Bitmap sightSeeingImage = BitmapFactory.decodeResource(getResources(), R.drawable.binocular);
-        if (group.getCategory().equals(category)) {
-            if (sightSeeingImage != null) {
-                style.addImage(group.getTitle(), sightSeeingImage);
-                GeoJsonSource geoJsonSource = new GeoJsonSource(group.getTitle(), Feature.fromGeometry(
-                  Point.fromLngLat(group.getLocation().getLongitude(), group.getLocation().getLatitude())));
-                style.addSource(geoJsonSource);
-                SymbolLayer symbolLayer = new SymbolLayer(group.getTitle(), group.getTitle());
-                symbolLayer.withProperties(PropertyFactory.iconImage(group.getTitle()));
-                symbolLayers.add(symbolLayer);
-                style.addLayer(symbolLayer);
-            }
+
+        Bitmap image = null;
+        switch (category) {
+            case CategoryConstants.NIGHTLIFE:
+                image = BitmapFactory.decodeResource(getResources(), R.drawable.nightlife_icon_32);
+                break;
+            case CategoryConstants.SIGHTSEEING:
+                image = BitmapFactory.decodeResource(getResources(), R.drawable.sightseeing_icon_32);
+                break;
+            case CategoryConstants.EAT_AND_DRINK:
+                image = BitmapFactory.decodeResource(getResources(), R.drawable.eatdrink_icon_32);
+                break;
         }
+        if (image != null) {
+            setIcon(group, style, image);
+        }
+    }
+
+    private void setIcon(@NonNull final Group group,
+                         @NonNull final Style style,
+                         @NonNull final Bitmap image) {
+        style.addImage(group.getTitle(), image);
+        GeoJsonSource geoJsonSource = new GeoJsonSource(group.getTitle(), Feature.fromGeometry(
+          Point.fromLngLat(group.getLocation().getLongitude(), group.getLocation().getLatitude())));
+        style.addSource(geoJsonSource);
+        SymbolLayer symbolLayer = new SymbolLayer(group.getTitle(), group.getTitle());
+        symbolLayer.withProperties(PropertyFactory.iconImage(group.getTitle()));
+        symbolLayers.add(symbolLayer);
+        style.addLayer(symbolLayer);
     }
 
     private void showGroupDialog(String imageName) {
