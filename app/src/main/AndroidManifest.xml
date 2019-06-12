@@ -25,7 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.HostActivity"></activity>
+        <activity android:name=".view.HostActivity"
+            android:screenOrientation="locked"></activity>
 
         <service android:name=".map.services.GeoFencingIntentService" />
 
