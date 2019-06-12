@@ -485,7 +485,9 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
                 imageView.setImageResource(R.drawable.eatdrink_icon_32);
                 break;
         }
-        zoneDialog.<Button>findViewById(R.id.view_zone_button).setOnClickListener(v ->
+        Button button = zoneDialog.findViewById(R.id.view_zone_button);
+        button.setText("View Group");
+        button.setOnClickListener(v ->
           disposables.add(zoneViewModel.getGroup(iD)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(group -> {
