@@ -11,11 +11,9 @@ import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.button.MaterialButton;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -33,7 +31,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.group.model.bindle.BindleBusiness;
 import com.android.group.network.constants.CategoryConstants;
 import com.android.interactionlistener.OnBackPressedInteraction;
 import com.android.interactionlistener.OnFragmentInteractionListener;
@@ -221,27 +218,25 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         }
         CategoryAdapter categoryAdapter =
           new CategoryAdapter(categories, sharedPreferences.edit(),
-            category -> {
-                mapView.getMapAsync(mapboxMap1 -> {
-                    Style style = mapboxMap1.getStyle();
-                    for (SymbolLayer symbolLayer :
-                      symbolLayers) {
-                        style.removeLayer(symbolLayer);
-                    }
-                    symbolLayers.clear();
-                    for (String title :
-                      zoneViewModel.getGroupNames()) {
-                        style.removeSource(title);
-                    }
-                    if (zoneViewModel.clearGroupNames()) {
-                        groupMarkerDisposable.dispose();
-                        groupMarkerDisposable = zoneViewModel.getAllGroups().subscribe(group ->
-                            showGroup(group, mapboxMap1.getStyle(), category),
-                          throwable ->
-                            Log.d(TAG, "onCategorySelected: " + throwable.getMessage()));
-                    }
-                });
-            });
+            category -> mapView.getMapAsync(mapboxMap1 -> {
+                Style style = mapboxMap1.getStyle();
+                for (SymbolLayer symbolLayer :
+                  symbolLayers) {
+                    style.removeLayer(symbolLayer);
+                }
+                symbolLayers.clear();
+                for (String title :
+                  zoneViewModel.getGroupNames()) {
+                    style.removeSource(title);
+                }
+                if (zoneViewModel.clearGroupNames()) {
+                    groupMarkerDisposable.dispose();
+                    groupMarkerDisposable = zoneViewModel.getAllGroups().subscribe(group ->
+                        MapFragment.this.showGroup(group, mapboxMap1.getStyle(), category),
+                      throwable ->
+                        Log.d(TAG, "onCategorySelected: " + throwable.getMessage()));
+                }
+            }));
         recyclerViewCategories.setAdapter(categoryAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewCategories.setLayoutManager(layoutManager);
@@ -300,13 +295,14 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
                     RectF rectF = zoneViewModel.getRectF(pointf);
                     for (String name : zoneViewModel.getZoneNames()) {
                         if (mapboxMap.queryRenderedFeatures(rectF, name).size() > 0) {
-                            showZoneDialog(name);
+                            showMapDialog(name);
                             return true;
                         }
                     }
                     for (String title : zoneViewModel.getGroupNames()) {
                         if (mapboxMap.queryRenderedFeatures(rectF, title).size() > 0) {
-                            showGroupDialog(title);
+                            showMapDialog(title, sharedPreferences
+                              .getString(CURRENT_FILTER, "Nightlife"));
                             return true;
                         }
                     }
@@ -451,19 +447,53 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
         style.addLayer(symbolLayer);
     }
 
-    private void showGroupDialog(String imageName) {
+
+    private void showMapDialog(String iD) {
+        showMapDialog(iD, null);
+    }
+
+    private void showMapDialog(String iD, String category) {
         zoneDialog.setContentView(R.layout.zone_dialog_layout);
-        zoneDialog.<TextView>findViewById(R.id.zone_dialog_name)
-          .setText(imageName);
-        zoneDialog.<Button>findViewById(R.id.view_zone_button).setOnClickListener(v ->
-          disposables.addAll(zoneViewModel.getGroup(imageName).observeOn(AndroidSchedulers.mainThread())
+        zoneDialog.<TextView>findViewById(R.id.zone_dialog_name).setText(iD);
+        if (category != null) {
+            setupDialogGroupFeature(iD, category);
+        } else {
+            zoneDialog.<Button>findViewById(R.id.view_zone_button).setOnClickListener(v ->
+              disposables.add(zoneViewModel.getZone(iD)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(zone -> {
+                    listener.inflateZoneChatFragment(zone);
+                    zoneDialog.dismiss();
+                })));
+        }
+        Objects.requireNonNull(
+          zoneDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        zoneDialog.show();
+    }
+
+    private void setupDialogGroupFeature(@NonNull final String iD,
+                                         @NonNull final String category) {
+        ImageView imageView = zoneDialog.findViewById(R.id.imageView_zone_group);
+        switch (category) {
+            case CategoryConstants.NIGHTLIFE:
+                imageView.setImageResource(R.drawable.nightlife_icon_32);
+                break;
+            case CategoryConstants.SIGHTSEEING:
+                imageView.setImageResource(R.drawable.sightseeing_icon_32);
+                break;
+            case CategoryConstants.EAT_AND_DRINK:
+                imageView.setImageResource(R.drawable.eatdrink_icon_32);
+                break;
+        }
+        Button button = zoneDialog.findViewById(R.id.view_zone_button);
+        button.setText("View Group");
+        button.setOnClickListener(v ->
+          disposables.add(zoneViewModel.getGroup(iD)
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(group -> {
                 listener.inflateViewGroupFragment(group);
                 zoneDialog.dismiss();
             })));
-        Objects.requireNonNull(
-          zoneDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        zoneDialog.show();
     }
 
     private void showZone(@NonNull final LatLng location) {
@@ -472,22 +502,6 @@ public final class MapFragment extends Fragment implements OnBackPressedInteract
           .withLatLng(location)
           .withIconImage(MARKER_IMAGE)
           .withIconSize(.5f));
-    }
-
-    private void showZoneDialog(String iD) {
-        zoneDialog.setContentView(R.layout.zone_dialog_layout);
-        zoneDialog.<TextView>findViewById(R.id.zone_dialog_name).setText(iD);
-        zoneDialog.<Button>findViewById(R.id.view_zone_button).setOnClickListener(v -> {
-            disposables.add(zoneViewModel.getZone(iD)
-              .observeOn(AndroidSchedulers.mainThread())
-              .subscribe(zone -> {
-                  listener.inflateZoneChatFragment(zone);
-                  zoneDialog.dismiss();
-              }));
-        });
-        Objects.requireNonNull(
-          zoneDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        zoneDialog.show();
     }
 
     @SuppressWarnings({"MissingPermission"})
