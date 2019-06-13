@@ -183,12 +183,13 @@ public final class ZoneChatFragment extends Fragment implements OnBackPressedInt
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
-
-                int lastVisiblePosition = layoutManager.findLastCompletelyVisibleItemPosition();
-                if (lastVisiblePosition == -1 || (positionStart >= (fireBaseAdapter.getItemCount() - 1) &&
-                  lastVisiblePosition == (positionStart - 1))) {
-                    chatRecycler.scrollToPosition(positionStart);
-                }
+                        chatRecycler.smoothScrollToPosition(positionStart);
+                        // TODO: delete this once we are sure this works as intended
+//                int lastVisiblePosition = layoutManager.findLastCompletelyVisibleItemPosition();
+//                if (lastVisiblePosition == -1 || (positionStart >= (fireBaseAdapter.getItemCount() - 1) &&
+//                  lastVisiblePosition == (positionStart - 1))) {
+//                    chatRecycler.scrollToPosition(positionStart);
+//                }
             }
         });
     }
