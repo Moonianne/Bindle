@@ -12,40 +12,11 @@
         layout="@layout/zonechat_start_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="70dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-
-    <EditText
-        android:id="@+id/messageEditText"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginHorizontal="8dp"
-        android:background="@drawable/rectangle_round_white"
-        android:hint=" message"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/sendButton" />
-
-    <Button
-        android:id="@+id/sendButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="8dp"
-        android:background="@drawable/ic_send_white_24dp"
-        android:enabled="false"
-        android:fontFamily="@font/maven_pro_medium"
-        android:textColor="@color/cDark"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/messageEditText"
-        app:layout_constraintRight_toRightOf="parent" />
+        />
 
 
 </android.support.constraint.ConstraintLayout>
