@@ -1,7 +1,13 @@
 package com.android.group.view;
 
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +31,7 @@ import com.android.group.viewmodel.NetworkViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.CompositeDisposable;
 
 public final class AddLocationFragment extends Fragment {
 
@@ -35,7 +41,8 @@ public final class AddLocationFragment extends Fragment {
     private AddLocationAdapter adapter;
     private LottieAnimationView lottieAnimationView;
     private List<BindleBusiness> bindleBusinessesList = new ArrayList<>();
-    private Disposable disposable;
+    private CompositeDisposable disposable = new CompositeDisposable();
+    private String categorySelected;
 
     public AddLocationFragment() {
     }
@@ -48,9 +55,16 @@ public final class AddLocationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_add_location, container, false);
+        LocationManager manager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        Location location = null;
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+          ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
+
         findViews();
         getViewModel();
-        initSearchView();
+        initSearchView(location);
         initCategorySpinner();
         initRecyclerView();
         return rootView;
@@ -64,12 +78,21 @@ public final class AddLocationFragment extends Fragment {
         viewModel = NetworkViewModel.getSingleInstance();
     }
 
-    private void initSearchView() {
+    private void initSearchView(Location location) {
         SearchView searchView = rootView.findViewById(R.id.add_location_search_view);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String search) {
-                return true;
+                Log.d(TAG, "onQueryTextSubmit: " + location.getLatitude());
+                bindleBusinessesList.clear();
+                disposable.add(viewModel
+                  .makeBindleBusinessNetworkCall(categorySelected, search, location.getLatitude() + "," + location.getLongitude())
+                  .subscribe(bindleBusiness -> {
+                      bindleBusinessesList.add(bindleBusiness);
+                      adapter.addData(bindleBusiness);
+                      lottieAnimationView.setVisibility(View.GONE);
+                  }));
+                return false;
             }
 
             @Override
@@ -83,20 +106,21 @@ public final class AddLocationFragment extends Fragment {
     private void initCategorySpinner() {
         Spinner categorySpinner = rootView.findViewById(R.id.category_spinner);
         categorySpinner.setAdapter(ArrayAdapter.createFromResource(
-                getContext(), R.array.foursquare_category_array, android.R.layout.simple_dropdown_item_1line));
+          getContext(), R.array.foursquare_category_array, android.R.layout.simple_dropdown_item_1line));
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 lottieAnimationView.setVisibility(View.VISIBLE);
                 bindleBusinessesList.clear();
-                viewModel.setCategorySelected(CategoryConstants.FIREBASE_CATEGORY_VERSION[position]);
-                disposable = viewModel.makeBindleBusinessNetworkCall(CategoryConstants.NETWORK_CATEGORY_VERSION[position])
-                        .doOnSubscribe(unit -> adapter.clear())
-                        .subscribe(bindleBusiness -> {
-                            bindleBusinessesList.add(bindleBusiness);
-                            adapter.addData(bindleBusiness);
-                            lottieAnimationView.setVisibility(View.GONE);
-                        },throwable -> Log.d(TAG, "accept: " + throwable));
+                categorySelected = CategoryConstants.NETWORK_CATEGORY_VERSION[position];
+                viewModel.setCategorySelected(categorySelected);
+                disposable.add(viewModel.makeBindleBusinessNetworkCall(CategoryConstants.NETWORK_CATEGORY_VERSION[position])
+                  .doOnSubscribe(unit -> adapter.clear())
+                  .subscribe(bindleBusiness -> {
+                      bindleBusinessesList.add(bindleBusiness);
+                      adapter.addData(bindleBusiness);
+                      lottieAnimationView.setVisibility(View.GONE);
+                  }, throwable -> Log.d(TAG, "accept: " + throwable)));
             }
 
             @Override

@@ -13,11 +13,12 @@ import com.android.group.network.YelpSingleton;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
-import io.reactivex.internal.operators.observable.ObservableCombineLatest;
 import io.reactivex.schedulers.Schedulers;
 
 public final class ApiRepository {
+
     // TODO: 2019-05-23 Change name of this repository to something more general for yelp addition
     private static final String TAG = "ApiRepository";
     private YelpService yelpService;
@@ -25,40 +26,56 @@ public final class ApiRepository {
 
     public ApiRepository() {
         yelpService = YelpSingleton.getInstance()
-                .create(YelpService.class);
+          .create(YelpService.class);
         businessService = FourSquareRetrofit.getInstance()
-                .create(BusinessService.class);
+          .create(BusinessService.class);
     }
 
-    public Observable<BindleBusiness> getBindleBusinesses(String category) {
+    public Observable<BindleBusiness> getBindleBusinesses(@NonNull final String category) {
         return getFourSquareData(category)
-                .subscribeOn(Schedulers.io())
-                .flatMapIterable(new Function<FourSquareResponse, Iterable<Venue>>() {
-                    @Override
-                    public Iterable<Venue> apply(FourSquareResponse fourSquareResponse) throws Exception {
-                        return fourSquareResponse.getResponse().getVenues();
-                    }
-                })
-                .map(new Function<Venue, BindleBusiness>() {
-                    @Override
-                    public BindleBusiness apply(Venue venue) throws Exception {
-                        try {
-                            return new BindleBusiness(venue, ApiRepository.this.getYelpApiData(venue).blockingFirst().getBusinesses().get(0));
-                        } catch (IndexOutOfBoundsException e) {
-                            Log.d(TAG, "This threw it: " + e.toString());
-                        }
-                        return new BindleBusiness(venue, null);
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread());
+          .subscribeOn(Schedulers.io())
+          .flatMapIterable((Function<FourSquareResponse, Iterable<Venue>>) fourSquareResponse ->
+            fourSquareResponse.getResponse().getVenues())
+          .map(venue -> {
+              try {
+                  return new BindleBusiness(venue, ApiRepository.this.getYelpApiData(venue).blockingFirst().getBusinesses().get(0));
+              } catch (IndexOutOfBoundsException e) {
+                  Log.d(TAG, "This threw it: " + e.toString());
+              }
+              return new BindleBusiness(venue, null);
+          }).observeOn(AndroidSchedulers.mainThread());
     }
 
-    private Observable<FourSquareResponse> getFourSquareData(String category) {
+    public Observable<BindleBusiness> getBindleBusinesses(@NonNull final String category,
+                                                          @NonNull final String query,
+                                                          @NonNull final String latLng) {
+        return getFourSquareData(category,query,latLng)
+          .subscribeOn(Schedulers.io())
+          .flatMapIterable((Function<FourSquareResponse, Iterable<Venue>>) fourSquareResponse ->
+            fourSquareResponse.getResponse().getVenues())
+          .map(venue -> {
+              try {
+                  return new BindleBusiness(venue, ApiRepository.this.getYelpApiData(venue).blockingFirst().getBusinesses().get(0));
+              } catch (IndexOutOfBoundsException e) {
+                  Log.d(TAG, "This threw it: " + e.toString());
+              }
+              return new BindleBusiness(venue, null);
+          }).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    private Observable<FourSquareResponse> getFourSquareData(@NonNull final String category) {
         return businessService.getBusinesses(category);
     }
 
-    private Observable<YelpResponse> getYelpApiData(Venue venue) {
+    private Observable<FourSquareResponse> getFourSquareData(@NonNull final String category,
+                                                             @NonNull final String query,
+                                                             @NonNull final String latlng) {
+        return businessService.getBusinesses(category,query,latlng);
+    }
+
+    private Observable<YelpResponse> getYelpApiData(@NonNull final Venue venue) {
         return yelpService.getBusinesses(venue.getName());
     }
+
 
 }

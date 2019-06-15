@@ -30,6 +30,10 @@ public class NetworkViewModel extends ViewModel {
         return apiRepository.getBindleBusinesses(category);
     }
 
+    public Observable<BindleBusiness> makeBindleBusinessNetworkCall(String category, String query, String latLng) {
+        return apiRepository.getBindleBusinesses(category, query, latLng);
+    }
+
     public void setUserSelectedVenue(BindleBusiness venue) {
         venueSelectedListener.bindleBusinessSelected(venue);
     }
@@ -43,11 +47,11 @@ public class NetworkViewModel extends ViewModel {
         this.categorySelectedListener = categorySelectedListener;
     }
 
-    public void setCategorySelected(String categorySelected){
+    public void setCategorySelected(String categorySelected) {
         categorySelectedListener.categorySelected(categorySelected);
     }
 
-    public interface OnCategorySelectedListener{
+    public interface OnCategorySelectedListener {
         void categorySelected(String category);
     }
 
