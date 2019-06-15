@@ -15,7 +15,7 @@ public final class SearchViewListFilter {
     public static List<BindleBusiness> getFilteredList(String query, List<BindleBusiness> bindleBusinesses) {
         bindleBusinessList.clear();
         for (BindleBusiness bindleBusiness : bindleBusinesses) {
-            if (bindleBusiness.getVenue().getName().toLowerCase().contains(query.toLowerCase())) {
+            if (bindleBusiness.getVenue().getName().toLowerCase().startsWith(query.toLowerCase())) {
                 bindleBusinessList.add(bindleBusiness);
             }
         }

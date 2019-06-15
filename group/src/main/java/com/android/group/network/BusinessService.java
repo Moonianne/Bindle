@@ -11,4 +11,11 @@ public interface BusinessService {
 
     @GET("v2/venues/search?near=NY&client_id=SP2WL1QS355XNGMTHC02WIMLYWX05HITY2IIKCTGBBV034PR&client_secret=J13NZIPPJMBQMGHBZK4LC55WOPQRF1DMIXWB1T2AM2SF2WIH&v=20190518")
     Observable<FourSquareResponse> getBusinesses(@Query("categoryId") String category);
+
+    @GET("v2/venues/search?near=NY&client_id=SP2WL1QS355XNGMTHC02WIMLYWX05HITY2IIKCTGBBV034PR&client_secret=J13NZIPPJMBQMGHBZK4LC55WOPQRF1DMIXWB1T2AM2SF2WIH&v=20190518")
+    Observable<FourSquareResponse> getBusinesses(@Query("categoryId") String category,
+                                                 @Query("query") String query,
+                                                 @Query("ll") String latLng);
+
+
 }
