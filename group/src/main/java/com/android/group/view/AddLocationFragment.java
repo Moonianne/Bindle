@@ -43,6 +43,7 @@ public final class AddLocationFragment extends Fragment {
     private List<BindleBusiness> bindleBusinessesList = new ArrayList<>();
     private CompositeDisposable disposable = new CompositeDisposable();
     private String categorySelected;
+    private String networkCategory;
 
     public AddLocationFragment() {
     }
@@ -86,7 +87,7 @@ public final class AddLocationFragment extends Fragment {
                 Log.d(TAG, "onQueryTextSubmit: " + location.getLatitude());
                 bindleBusinessesList.clear();
                 disposable.add(viewModel
-                  .makeBindleBusinessNetworkCall(categorySelected, search, location.getLatitude() + "," + location.getLongitude())
+                  .makeBindleBusinessNetworkCall(networkCategory, search, location.getLatitude() + "," + location.getLongitude())
                   .subscribe(bindleBusiness -> {
                       bindleBusinessesList.add(bindleBusiness);
                       adapter.addData(bindleBusiness);
@@ -108,13 +109,15 @@ public final class AddLocationFragment extends Fragment {
         categorySpinner.setAdapter(ArrayAdapter.createFromResource(
           getContext(), R.array.foursquare_category_array, android.R.layout.simple_dropdown_item_1line));
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 lottieAnimationView.setVisibility(View.VISIBLE);
                 bindleBusinessesList.clear();
-                categorySelected = CategoryConstants.NETWORK_CATEGORY_VERSION[position];
+                categorySelected = CategoryConstants.FIREBASE_CATEGORY_VERSION[position];
+                networkCategory = CategoryConstants.NETWORK_CATEGORY_VERSION[position];
                 viewModel.setCategorySelected(categorySelected);
-                disposable.add(viewModel.makeBindleBusinessNetworkCall(CategoryConstants.NETWORK_CATEGORY_VERSION[position])
+                disposable.add(viewModel.makeBindleBusinessNetworkCall(networkCategory)
                   .doOnSubscribe(unit -> adapter.clear())
                   .subscribe(bindleBusiness -> {
                       bindleBusinessesList.add(bindleBusiness);
