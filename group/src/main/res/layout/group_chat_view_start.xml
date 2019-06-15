@@ -140,8 +140,9 @@
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/rect_round_top_blue"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/groupChat_messageEditText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline1" />
@@ -149,14 +150,45 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/groupChat_rv"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="@id/bgView"
         app:layout_constraintStart_toStartOf="@id/bgView"
-        app:layout_constraintTop_toBottomOf="@id/guideline1" />
+        app:layout_constraintTop_toBottomOf="@id/guideline1"
+        app:layout_constraintBottom_toTopOf="@id/groupChat_messageEditText"/>
+
+    <EditText
+        android:id="@+id/groupChat_messageEditText"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:padding="4dp"
+        android:background="@drawable/rectangle_round_white"
+        android:hint=" message"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/groupChat_sendButton" />
+
+    <Button
+        android:id="@+id/groupChat_sendButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/ic_send_white_24dp"
+        android:enabled="false"
+        android:fontFamily="@font/maven_pro_medium"
+        android:textColor="@color/cDark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/groupChat_messageEditText"
+        app:layout_constraintRight_toRightOf="parent" />
 
 
 </android.support.constraint.motion.MotionLayout>

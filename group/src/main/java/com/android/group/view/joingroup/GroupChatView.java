@@ -219,12 +219,7 @@ public class GroupChatView extends Fragment implements OnBackPressedInteraction 
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
-                int lastVisiblePosition = layoutManager.findLastCompletelyVisibleItemPosition();
-                if (lastVisiblePosition == -1 ||
-                  (positionStart >= (fireBaseAdapter.getItemCount() - 1) &&
-                    lastVisiblePosition == (positionStart - 1))) {
-                    groupChatRecycler.scrollToPosition(positionStart);
-                }
+                groupChatRecycler.smoothScrollToPosition(positionStart);
             }
         });
     }
