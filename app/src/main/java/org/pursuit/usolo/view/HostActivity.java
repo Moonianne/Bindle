@@ -197,7 +197,7 @@ public final class HostActivity extends AppCompatActivity
 //          .subscribe(zone -> {
 //              Log.d(TAG, "initGeofences: " + zone.getName());
 //          }));
-        new Notification(this, "Entered Bindle Point!");
+        new Notification(this, "Entered Museum of The Moving Image");
     }
 
     @Override
