@@ -12,9 +12,12 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.pursuit.usolo.map.services.GeoFencingIntentService;
+
+import java.util.ArrayList;
 
 import io.reactivex.annotations.NonNull;
 
@@ -81,6 +84,15 @@ public final class GeoFenceCreator {
         initGeoFenceClient();
         buildGeoFence();
         addGeoFenceToClient();
+    }
+
+    public void removeGeofence() {
+        initGeoFenceClient();
+        geofencingClient.removeGeofences(new ArrayList<String>() {{ add(locationName);}})
+          .addOnSuccessListener(aVoid -> {
+            Log.d(TAG, "onSuccess: " + locationName + " removed");
+            removeGeofence();
+        }).addOnFailureListener(e -> Log.d(TAG, "onFailure: " + locationName + "not removed : " + e));
     }
 
     public void tearDown() {

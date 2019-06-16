@@ -38,8 +38,9 @@ import org.pursuit.zonechat.view.ZoneChatFragment;
 
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Predicate;
 
 public final class HostActivity extends AppCompatActivity
   implements OnFragmentInteractionListener, StartGroupFragment.OnFragmentInteractionListener,
@@ -185,16 +186,18 @@ public final class HostActivity extends AppCompatActivity
     }
 
     private void initGeofences() {
-        disposable.add(hostViewModel.getAllGroups().observeOn(AndroidSchedulers.mainThread())
-          .subscribe(group -> {
-              Log.d(TAG, "initGeofences: " + group.getTitle());
-              new GeoFenceCreator(HostActivity.this, group.getLocation(), group.getTitle()).createGeoFence();
-          }));
-        disposable.add(hostViewModel.getAllZones(this).observeOn(AndroidSchedulers.mainThread())
-          .subscribe(zone -> {
-              Log.d(TAG, "initGeofences: " + zone.getName());
-              new GeoFenceCreator(HostActivity.this, zone.getLocation(), zone.getName()).createGeoFence();
-          }));
+//        disposable.add(hostViewModel.getAllGroups()
+//          .doOnNext(group -> new GeoFenceCreator(HostActivity.this, group.getLocation(), group.getTitle()).createGeoFence())
+//          .subscribe(group -> {
+//              Log.d(TAG, "initGeofences: " + group.getTitle());
+//          }));
+//        disposable.add(hostViewModel.getAllZones(HostActivity.this)
+//          .filter(zone -> zone.getName().equals("pursuit") || zone.getName().equals("Museum of Moving Image"))
+//          .doOnNext(zone -> new GeoFenceCreator(HostActivity.this, zone.getLocation(), zone.getName()).createGeoFence())
+//          .subscribe(zone -> {
+//              Log.d(TAG, "initGeofences: " + zone.getName());
+//          }));
+        new Notification(this, "Entered Bindle Point!");
     }
 
     @Override
