@@ -8,5 +8,5 @@
 Bindle is an 
 
 
-[![bindle-logo.png](https://i.postimg.cc/j2s6SnDk/Screenshot-1562715079.png)]
+![bindle-logo.png](https://i.postimg.cc/j2s6SnDk/Screenshot-1562715079.png)
 
