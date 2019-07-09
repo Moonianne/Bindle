@@ -5,7 +5,8 @@
 
 
 # About
-Bindle is an 
+Bindle is a travel companion Android app that allows users to connect with nearby solo travelers to make spontaneous plans at the place they are visiting.
+
 
 
 ![bindle-logo.png](https://i.postimg.cc/j2s6SnDk/Screenshot-1562715079.png)
