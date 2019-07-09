@@ -1,7 +1,7 @@
 # Bindle
 
 
-[![bindle-logo.png](https://i.postimg.cc/9fmc1WqH/bindle-logo.png)](https://postimg.cc/ZWQk5zcw)
+[![bindle-logo.png](https://i.postimg.cc/MZPtptY7/bindle-logo.png)](https://postimg.cc/Z0N6f82n)
 
 
 # About
