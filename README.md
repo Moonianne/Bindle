@@ -17,8 +17,8 @@ Bindle became an idea after we (The Bindle Team) were sharing stories of traveli
 
 ## The Team
 
-[Joe Salcedo](https://github.com/joesalcedonyc)
-[Eric Diaz](https://github.com/ericdiazjr21)
-[Naomy Portillo](https://github.com/rosannaNaomy)
-[Gerardo Jimenez](github.com/moonianne)
+*[Joe Salcedo](https://github.com/joesalcedonyc)
+*[Eric Diaz](https://github.com/ericdiazjr21)
+*[Naomy Portillo](https://github.com/rosannaNaomy)
+*[Gerardo Jimenez](github.com/moonianne)
 
