@@ -10,4 +10,7 @@ Bindle is a travel companion Android app that allows users to connect with nearb
 
 
 ![landing](https://i.postimg.cc/76cCpCg2/Screenshot-1562715079.png)
+![landing-bottom](https://i.postimg.cc/XX6rYT1N/Screenshot-1562715216.png)
+
+
 
