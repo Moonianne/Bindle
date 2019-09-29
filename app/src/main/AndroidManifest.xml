@@ -14,6 +14,7 @@
         android:roundIcon="@drawable/bindle_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".privacy.PrivacyActivity"></activity>
         <activity
             android:name=".view.SplashActivity"
             android:launchMode="singleTop"
@@ -25,8 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.HostActivity"
-            android:screenOrientation="locked"></activity>
+        <activity
+            android:name=".view.HostActivity"
+            android:parentActivityName=".view.HostActivity"
+            android:screenOrientation="locked" />
 
         <service android:name=".map.services.GeoFencingIntentService" />
 

@@ -28,4 +28,6 @@ public interface OnFragmentInteractionListener {
     void inflateViewGroupFragment(Group group);
 
     void inflateGroupChatFragment(Group group);
+
+    void onPrivacyPolicyClicked();
 }

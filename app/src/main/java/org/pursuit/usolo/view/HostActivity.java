@@ -31,20 +31,18 @@ import org.pursuit.userprofile.view.ProfileView;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
-import org.pursuit.usolo.map.utils.GeoFenceCreator;
 import org.pursuit.usolo.map.utils.Notification;
+import org.pursuit.usolo.privacy.PrivacyActivity;
 import org.pursuit.usolo.viewmodel.HostViewModel;
 import org.pursuit.zonechat.view.ZoneChatFragment;
 
 import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Predicate;
 
 public final class HostActivity extends AppCompatActivity
-  implements OnFragmentInteractionListener, StartGroupFragment.OnFragmentInteractionListener,
-  OnFragmentInteractionCompleteListener {
+        implements OnFragmentInteractionListener, StartGroupFragment.OnFragmentInteractionListener,
+        OnFragmentInteractionCompleteListener {
 
     private static final String LOGIN_PREFS = "USER_LOGIN";
     private static final String EMAIL_PREFS = "EMAIL_PREFS";
@@ -66,7 +64,7 @@ public final class HostActivity extends AppCompatActivity
         preferences = getSharedPreferences(LOGIN_PREFS, MODE_PRIVATE);
         if (preferences.contains(EMAIL_PREFS) && preferences.contains(PASS_PREFS)) {
             viewModel.loginToFireBase(preferences.getString(EMAIL_PREFS, "metalraidernt@gmail.com"),
-              preferences.getString(PASS_PREFS, "password123"));
+                    preferences.getString(PASS_PREFS, "password123"));
             requestUserLocationPermission();
         } else {
             inflateAuthenticationFragment();
@@ -123,6 +121,11 @@ public final class HostActivity extends AppCompatActivity
     }
 
     @Override
+    public void onPrivacyPolicyClicked() {
+        startActivity(PrivacyActivity.Companion.getIntent(this));
+    }
+
+    @Override
     public void openDirections(String venueAddress) {
         Uri parseAddress = Uri.parse("google.navigation:q=" + venueAddress + "&mode=transit");
         Intent navIntent = new Intent(android.content.Intent.ACTION_VIEW, parseAddress);
@@ -162,7 +165,7 @@ public final class HostActivity extends AppCompatActivity
 
     public void requestUserLocationPermission() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-          ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
         } else {
             granted = true;
@@ -177,8 +180,8 @@ public final class HostActivity extends AppCompatActivity
 
     public void inflateFragment(Fragment fragment, boolean addToBack) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager()
-          .beginTransaction().setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
-          .replace(R.id.main_container, fragment);
+                .beginTransaction().setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
+                .replace(R.id.main_container, fragment);
         if (addToBack) {
             fragmentTransaction.addToBackStack(null);
         }
