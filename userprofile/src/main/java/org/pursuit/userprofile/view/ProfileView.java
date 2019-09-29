@@ -56,6 +56,7 @@ public final class ProfileView extends Fragment {
     private TextView displayNameView, aboutMeView, interestsView, locationView;
     private Button logOutButton, uploadPhotoButton, editDisplayName;
     private OnFragmentInteractionListener listener;
+    private TextView privacyPolicyView;
 
     public static ProfileView newInstance(boolean bool, String userID) {
         isCurrentUserProfile = bool;
@@ -91,6 +92,8 @@ public final class ProfileView extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         findViews(view);
+
+        privacyPolicyView.setOnClickListener(this::onPrivacyPolicyClicked);
         if (isCurrentUserProfile) {
             compositeDisposable.add(profileViewModel.getCurrentUserInfo()
               .observeOn(AndroidSchedulers.mainThread())
@@ -290,5 +293,10 @@ public final class ProfileView extends Fragment {
         logOutButton = view.findViewById(R.id.logOut_button);
         uploadPhotoButton = view.findViewById(R.id.upload_profile_photoButton);
         editDisplayName = view.findViewById(R.id.edit_display_name_button);
+        privacyPolicyView = view.findViewById(R.id.privacyButton);
+    }
+
+    private void onPrivacyPolicyClicked(View v){
+        listener.onPrivacyPolicyClicked();
     }
 }
