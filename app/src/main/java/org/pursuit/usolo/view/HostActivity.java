@@ -31,6 +31,7 @@ import org.pursuit.userprofile.view.ProfileView;
 import org.pursuit.usolo.R;
 import org.pursuit.usolo.map.MapFragment;
 import org.pursuit.usolo.map.ViewModel.ZoneViewModel;
+import org.pursuit.usolo.map.utils.GeoFenceCreator;
 import org.pursuit.usolo.map.utils.Notification;
 import org.pursuit.usolo.privacy.PrivacyActivity;
 import org.pursuit.usolo.viewmodel.HostViewModel;
@@ -189,18 +190,17 @@ public final class HostActivity extends AppCompatActivity
     }
 
     private void initGeofences() {
-//        disposable.add(hostViewModel.getAllGroups()
-//          .doOnNext(group -> new GeoFenceCreator(HostActivity.this, group.getLocation(), group.getTitle()).createGeoFence())
-//          .subscribe(group -> {
-//              Log.d(TAG, "initGeofences: " + group.getTitle());
-//          }));
-//        disposable.add(hostViewModel.getAllZones(HostActivity.this)
-//          .filter(zone -> zone.getName().equals("pursuit") || zone.getName().equals("Museum of Moving Image"))
-//          .doOnNext(zone -> new GeoFenceCreator(HostActivity.this, zone.getLocation(), zone.getName()).createGeoFence())
-//          .subscribe(zone -> {
-//              Log.d(TAG, "initGeofences: " + zone.getName());
-//          }));
-        new Notification(this, "Just entered Museum of The Moving Image");
+        disposable.add(hostViewModel.getAllGroups()
+          .doOnNext(group -> new GeoFenceCreator(HostActivity.this, group.getLocation(), group.getTitle()).createGeoFence())
+          .subscribe(group -> {
+              Log.d(TAG, "initGeofences: " + group.getTitle());
+          }));
+        disposable.add(hostViewModel.getAllZones(HostActivity.this)
+          .filter(zone -> zone.getName().equals("pursuit") || zone.getName().equals("Museum of Moving Image"))
+          .doOnNext(zone -> new GeoFenceCreator(HostActivity.this, zone.getLocation(), zone.getName()).createGeoFence())
+          .subscribe(zone -> {
+              Log.d(TAG, "initGeofences: " + zone.getName());
+          }));
     }
 
     @Override
